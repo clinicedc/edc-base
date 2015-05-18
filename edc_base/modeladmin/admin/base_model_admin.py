@@ -376,7 +376,6 @@ class BaseModelAdmin (admin.ModelAdmin):
         next_url_tuple = (None, None, None)
         if visit_attr and entry_order:
             visit_instance = getattr(obj, visit_attr)
-            # site_rule_groups.update_all(visit_instance)
             site_rule_groups.update_rules_for_source_model(obj, visit_instance)
             next_entry = ScheduledEntryMetaDataHelper(
                 visit_instance.get_appointment(),

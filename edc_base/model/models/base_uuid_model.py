@@ -1,5 +1,7 @@
+from revision import RevisionField
+
 from ..constants import BASE_UUID_MODEL_UPDATE_FIELDS
-from ..fields import UUIDAutoField, RevisionField
+from ..fields import UUIDAutoField
 
 from .base_model import BaseModel
 
