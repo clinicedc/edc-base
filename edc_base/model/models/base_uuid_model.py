@@ -1,7 +1,9 @@
+import uuid
+
+from django.db import models
 from revision import RevisionField
 
 from ..constants import BASE_UUID_MODEL_UPDATE_FIELDS
-from ..fields import UUIDAutoField
 
 from .base_model import BaseModel
 
@@ -10,13 +12,14 @@ class BaseUuidModel(BaseModel):
 
     """Base model class for all models using an UUID and not an INT for the primary key. """
 
-    id = UUIDAutoField(
+    id = models.UUIDField(
         primary_key=True,
-        help_text="system field. uuid primary key."
-    )
+        default=uuid.uuid4,
+        editable=False,
+        help_text="System field. UUID primary key.")
 
     revision = RevisionField(
-        help_text="system field. Git repository branch:commit."
+        help_text="System field. Git repository tag:branch:commit."
     )
 
     def save(self, *args, **kwargs):

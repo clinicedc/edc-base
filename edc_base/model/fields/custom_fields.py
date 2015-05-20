@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import CharField, DateTimeField, DecimalField
 from django.forms import RegexField
 
-from edc.choices.common import DATE_ESTIMATED, IDENTITY_TYPE
+from ...choices import DATE_ESTIMATED, IDENTITY_TYPE
 
 
 class TransCharField(CharField):
