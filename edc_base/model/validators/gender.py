@@ -1,14 +1,10 @@
 from django.core.exceptions import ValidationError
 
-from edc.core.bhp_variables.models import StudySpecific
-from edc.core.bhp_variables.choices import GENDER_OF_CONSENT
+from ...choices import GENDER_OF_CONSENT
 
 
 def GenderOfConsent(value):
-    ss = StudySpecific.objects.all()[0]
-
-    gender_allowed = ss.gender_of_consent
-
+    gender_allowed = GENDER_OF_CONSENT
     if gender_allowed == 'MF':
         allowed = ('MF', 'Male and Female')
         entry = ('value', value)

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from datetime import datetime
 from unipath import Path
 
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,3 +105,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 GIT_DIR = BASE_DIR.ancestor(1)
+
+MIN_AGE_OF_CONSENT = 16
+MAX_AGE_OF_CONSENT = 64
+STUDY_OPEN_DATETIME = datetime.today()
+STUDY_CLOSE_DATETIME = datetime.today()
