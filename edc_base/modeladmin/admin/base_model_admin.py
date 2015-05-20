@@ -14,7 +14,7 @@ from django.utils.encoding import force_unicode
 from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
 from edc.subject.rule_groups.classes import site_rule_groups
 
-from edc.base.modeladmin import NextUrlError
+from ...modeladmin.exceptions import NextUrlError
 
 logger = logging.getLogger(__name__)
 
