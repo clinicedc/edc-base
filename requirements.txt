@@ -1,0 +1,5 @@
+Django==1.8.1
+django-crypto-fields
+django-extensions==1.5.5
+django-revision
+Unipath==1.1
