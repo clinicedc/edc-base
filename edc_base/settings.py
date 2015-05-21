@@ -106,7 +106,5 @@ STATIC_URL = '/static/'
 
 GIT_DIR = BASE_DIR.ancestor(1)
 
-MIN_AGE_OF_CONSENT = 16
-MAX_AGE_OF_CONSENT = 64
 STUDY_OPEN_DATETIME = datetime.today()
 STUDY_CLOSE_DATETIME = datetime.today()

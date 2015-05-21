@@ -9,10 +9,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.utils.encoding import force_unicode
 
-from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
-from edc.subject.rule_groups.classes import site_rule_groups
+from edc_entry.helpers import ScheduledEntryMetaDataHelper
+from edc_rule_groups.classes import site_rule_groups
 
 from ...modeladmin.exceptions import NextUrlError
 
@@ -62,7 +61,7 @@ class BaseModelAdmin (admin.ModelAdmin):
             extra_context.update(
                 title=('{group_title}: Add {title}').format(
                     group_title=request.GET.get('group_title'),
-                    title=force_unicode(self.model._meta.verbose_name)
+                    title=self.model._meta.verbose_name
                 )
             )
         extra_context.update(self.get_dashboard_context(request))
@@ -78,7 +77,7 @@ class BaseModelAdmin (admin.ModelAdmin):
             extra_context.update(
                 title=('{group_title}: Add {title}').format(
                     group_title=request.GET.get('group_title'),
-                    title=force_unicode(self.model._meta.verbose_name)))
+                    title=self.model._meta.verbose_name))
         extra_context.update(self.get_dashboard_context(request))
         result = super(BaseModelAdmin, self).change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)

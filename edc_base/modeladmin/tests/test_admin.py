@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from ...modeladmin import NextUrlError
+
 from .models import TestModel
 
 admin.autodiscover()
