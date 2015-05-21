@@ -12,4 +12,3 @@ IDENTITY_TYPE = (
     ('OMANG_RCPT', 'Omang Receipt'),
     ('OTHER', 'Other'),
 )
-

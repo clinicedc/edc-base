@@ -5,7 +5,7 @@ from django.db import models
 
 from django_extensions.db.models import TimeStampedModel
 
-from revision import RevisionField
+from django_revision import RevisionField
 
 from ..constants import BASE_MODEL_UPDATE_FIELDS
 from ..fields import HostnameModificationField
