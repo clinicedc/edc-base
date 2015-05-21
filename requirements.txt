@@ -1,6 +1,6 @@
 Django==1.8
-django-crypto-fields==0.1
+django-crypto-fields==0.1.4
 django-extensions==1.5.5
-django-revision==0.1
+django-revision==0.1.6a1
 Unipath==1.1
-edc-constants==0.1
+edc-constants==0.1.0
