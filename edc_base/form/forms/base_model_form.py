@@ -1,10 +1,9 @@
 import re
 
 from django import forms
-from django.db.models import OneToOneField, ForeignKey, get_model
+from django.apps import apps
+from django.db.models import OneToOneField, ForeignKey
 from django.db.models.query import QuerySet
-
-from edc.subject.visit_tracking.models import BaseVisitTracking
 
 from ..classes import LogicCheck
 
@@ -44,7 +43,7 @@ class BaseModelForm(forms.ModelForm):
                     self.fields['registered_subject'].queryset = self.instance.registered_subject.__class__.objects.none()
             except:
                 if 'registered_subject' not in self.initial and 'registered_subject' not in self.data:
-                    RegisteredSubject = get_model('registration', 'RegisteredSubject')
+                    RegisteredSubject = apps.get_model('registration', 'RegisteredSubject')
                     self.fields['registered_subject'].queryset = RegisteredSubject.objects.none()
 
     def get_subject_identifier(self, cleaned_data):
@@ -58,11 +57,12 @@ class BaseModelForm(forms.ModelForm):
             # look for a visit model field
             for field in self._meta.model._meta.fields:
                 if isinstance(field, (OneToOneField, ForeignKey)):
-                    if isinstance(field.rel.to, BaseVisitTracking):
-                        attrname = field.attrname
-                        visit = cleaned_data.get(attrname, None)
-                        if visit:
-                            subject_identifier = visit.get_subject_identifier()
+                    try:
+                        if field.rel.to:
+                            subject_identifier = cleaned_data[field.name].get_subject_identifier()
+                        break
+                    except AttributeError:
+                        pass
         return subject_identifier
 
     def clean(self):
@@ -71,7 +71,7 @@ class BaseModelForm(forms.ModelForm):
         # check if dispatched
         try:
             options = {}
-            for key, value in cleaned_data.items():
+            for key, value in list(cleaned_data.items()):
                 if not isinstance(value, QuerySet):  # m2m fields
                     options.update({key: value})
             model_instance = self._meta.model(pk=self.instance.pk, **options)
@@ -98,7 +98,7 @@ class BaseModelForm(forms.ModelForm):
             pass
         # check for OTHER in choices tuples, if selected, should have a value on Other specify.
         other = []
-        [other.append(k) for k in cleaned_data.iterkeys() if cleaned_data.get(k, None) in ['other', 'Other', 'OTHER']]
+        [other.append(k) for k in cleaned_data.keys() if cleaned_data.get(k, None) in ['other', 'Other', 'OTHER']]
         for k in other:
             if '{0}_other'.format(k) in cleaned_data:
                 if not cleaned_data.get('{0}_other'.format(k)):
@@ -110,7 +110,7 @@ class BaseModelForm(forms.ModelForm):
 
     def check_for_other_in_m2m(self, cleaned_data):
         """Raises ValidtionError for an m2m if it cannot confirm \'Other Specify\' is paired with a value in a following \'other\' field."""
-        for field_name, field_value in cleaned_data.items():
+        for field_name, field_value in list(cleaned_data.items()):
             self.check_for_value_in_m2m(cleaned_data, field_name, field_value, '{0}_other'.format(field_name), ['specify', 'explain'], 'other')
 #             if isinstance(value, QuerySet):
 #                 words = ['specify', 'explain']
@@ -204,7 +204,7 @@ class BaseModelForm(forms.ModelForm):
 
         self.validate_cleaned_data(cleaned_data)
         if self.get_validation_error() and not supress_exception:
-            for message in self.get_validation_error().itervalues():
+            for message in self.get_validation_error().values():
                 raise forms.ValidationError(message)
         return self.get_validation_error()
 
