@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/botswana-harvard/edc-base.svg?branch=develop)](https://travis-ci.org/botswana-harvard/edc-base)
+[![PyPI version](https://badge.fury.io/py/edc-base.svg)](http://badge.fury.io/py/edc-base)
 
 # edc-base
 
