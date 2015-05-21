@@ -46,4 +46,3 @@ def datetime_not_before_study_start(value_datetime):
     if value_datetime < settings.STUDY_OPEN_DATETIME:
         raise ValidationError(
             'Invalid date. Study opened on {}. Got {}.' % (settings.STUDY_OPEN_DATETIME, value_datetime))
-
