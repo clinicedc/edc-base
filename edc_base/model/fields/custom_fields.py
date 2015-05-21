@@ -91,7 +91,9 @@ class IsDateEstimatedField(CharField):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('max_length', 25)
         kwargs.setdefault('choices', DATE_ESTIMATED)
-        kwargs.setdefault('help_text', _('If the exact date is not known, please indicate which part of the date is estimated.'))
+        kwargs.setdefault(
+            'help_text',
+            _('If the exact date is not known, please indicate which part of the date is estimated.'))
         CharField.__init__(self, *args, **kwargs)
 
     def get_internal_type(self):
@@ -333,7 +335,9 @@ class BloodPressureField(CharField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('max_length', 7)
-        kwargs.setdefault('help_text', _('The format is 999/999, but either of the two numbers can be two or three digits'))
+        kwargs.setdefault(
+            'help_text',
+            _('The format is 999/999, but either of the two numbers can be two or three digits'))
         CharField.__init__(self, *args, **kwargs)
 
     def get_internal_type(self):
