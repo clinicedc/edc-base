@@ -2,7 +2,6 @@ from django.db import models
 
 from .base_model import BaseModel
 
-from ..fields import TransCharField
 from ..managers import BaseListManager
 
 
@@ -10,7 +9,7 @@ class BaseListModel(BaseModel):
 
     """Basic model for list data used in dropdown and radio widgets having display value and store value pairs."""
 
-    name = TransCharField(
+    name = models.CharField(
         verbose_name='Name',
         max_length=250,
         unique=True,
