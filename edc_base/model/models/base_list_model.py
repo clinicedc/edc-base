@@ -50,7 +50,7 @@ class BaseListModel(BaseModel):
     )
     objects = BaseListManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
