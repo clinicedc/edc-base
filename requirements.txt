@@ -3,4 +3,5 @@ django-crypto-fields==0.1.4
 django-extensions==1.5.5
 django-revision==0.1.6
 Unipath==1.1
+python-dateutil==2.4.2
 edc-constants==0.1.0
