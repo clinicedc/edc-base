@@ -10,8 +10,6 @@ from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-from edc_entry.helpers import ScheduledEntryMetaDataHelper
-from edc_rule_groups.classes import site_rule_groups
 
 from ...modeladmin.exceptions import NextUrlError
 
@@ -372,6 +370,8 @@ class BaseModelAdmin (admin.ModelAdmin):
         If there is not a "next" model, returns an empty tuple (None, None, None).
 
         Called from response_add and response_change."""
+        from edc_entry.helpers import ScheduledEntryMetaDataHelper
+        from edc_rule_groups.classes import site_rule_groups
         next_url_tuple = (None, None, None)
         if visit_attr and entry_order:
             visit_instance = getattr(obj, visit_attr)
