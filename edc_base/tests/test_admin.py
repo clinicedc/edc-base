@@ -1,16 +1,61 @@
-# from django.contrib import admin
-# from django.contrib.auth.models import User
-# from django.core.urlresolvers import reverse
-# from django.http import HttpResponseRedirect
-# from django.test import TestCase
-# from django.test.client import RequestFactory
-# 
-# from ..modeladmin import NextUrlError
-# 
-# from .models import TestModel
-# 
-# 
-# class TestAdmin(TestCase):
+from django.apps import apps
+from django.contrib import admin
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.test import TestCase
+from django.test.client import RequestFactory
+
+from ..modeladmin import NextUrlError
+
+from .models import TestModel
+
+from ..modeladmin.admin.base_model_admin import BaseModelAdmin
+
+from edc_registration.models import RegisteredSubject
+
+
+class Appointment(models.Model):
+
+    registered_subject = models.ForeignKey(RegisteredSubject)
+
+    class Meta:
+        app_label = 'edc_base'
+
+
+class NewTestModel(models.Model):
+
+    registered_subject = models.ForeignKey(RegisteredSubject)
+
+    class Meta:
+        app_label = 'edc_base'
+
+
+class NewTestModel2(models.Model):
+
+    appointment = models.ForeignKey(Appointment)
+
+    class Meta:
+        app_label = 'edc_base'
+
+
+class TestAdmin(TestCase):
+
+    def test_search_fields(self):
+        class TestModelAdmin(BaseModelAdmin):
+            search_fields = ['f1']
+        admin.register(NewTestModel, TestModelAdmin)
+        test_model_admin = TestModelAdmin(NewTestModel, None)
+        self.assertIn('registered_subject__subject_identifier', test_model_admin.search_fields)
+
+#     def test_search_fields2(self):
+#         class TestModelAdmin(BaseModelAdmin):
+#             search_fields = ['f1']
+#         admin.register(NewTestModel2, TestModelAdmin)
+#         test_model_admin = TestModelAdmin(NewTestModel2, None)
+#         self.assertIn('appointment__registered_subject__subject_identifier', test_model_admin.search_fields)
+
 # 
 #     urls = "urls"
 # 
