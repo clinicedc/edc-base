@@ -9,19 +9,12 @@ from django.test.client import RequestFactory
 
 from ..modeladmin import NextUrlError
 
-from .models import TestModel
 
 from ..modeladmin.admin.base_model_admin import BaseModelAdmin
+from ..model.models import TestModel
+
 
 from edc_registration.models import RegisteredSubject
-
-
-class Appointment(models.Model):
-
-    registered_subject = models.ForeignKey(RegisteredSubject)
-
-    class Meta:
-        app_label = 'edc_base'
 
 
 class NewTestModel(models.Model):
@@ -32,12 +25,12 @@ class NewTestModel(models.Model):
         app_label = 'edc_base'
 
 
-class NewTestModel2(models.Model):
-
-    appointment = models.ForeignKey(Appointment)
-
-    class Meta:
-        app_label = 'edc_base'
+# class NewTestModel2(models.Model):
+# 
+#     appointment = models.ForeignKey(Appointment)
+# 
+#     class Meta:
+#         app_label = 'edc_base'
 
 
 class TestAdmin(TestCase):

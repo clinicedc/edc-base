@@ -1,6 +1,14 @@
 from dateutil.relativedelta import relativedelta
 
 
+def age(born, reference_date):
+    if not born:
+        raise ValueError('DOB cannot be None.')
+    elif born > reference_date:
+        raise ValueError('Reference date precedes DOB.')
+    return relativedelta(reference_date, born)
+
+
 def formatted_age(born, reference_date):
 
     if born:

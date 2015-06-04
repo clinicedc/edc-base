@@ -1,1 +1,2 @@
-from .models import TestForeignKey, TestM2m, TestModel
+from .models import TestForeignKey, TestM2m
+from .test_fields import TestFields
