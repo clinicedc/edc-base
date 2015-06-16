@@ -8,8 +8,6 @@ Base model, manager, field, validator, form and admin classes for Edc.
 Installation
 ------------
 
-	pip install edc-base
-
 In the __settings__ file add:
 
 	STUDY_OPEN_DATETIME = datetime.today()
