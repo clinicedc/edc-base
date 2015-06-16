@@ -30,7 +30,7 @@ HistoricalRecord is an almost identical version of `simple_history.models.Histor
 with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
 `get_extra_fields()` method is overridden to change the *history_id* primary key from an 
 `IntegerField` to a `UUIDField` so that it can work with edc-sync. Method `add_extra_methods()`
-is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc-sync` is 
+is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc_sync` is 
 in INSTALLED_APP.
 
 
@@ -46,7 +46,7 @@ in INSTALLED_APP.
 			app_label = 'my_app' 	
 
 The audit trail models created by `simple_history` have a foreign key to `auth.User`.
-In order for the models to work with `edc-sync` specify the edc-sync User model in settings:
+In order for the models to work with `edc_sync` specify the edc_sync User model in settings:
 	
 	AUTH_USER_MODEL = 'edc_sync.User' 
 
