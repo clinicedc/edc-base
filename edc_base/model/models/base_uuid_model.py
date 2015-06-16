@@ -9,7 +9,6 @@ class BaseUuidModel(BaseModel):
 
     id = UUIDAutoField(
         primary_key=True,
-        # default=uuid.uuid4,
         editable=False,
         help_text="System field. UUID primary key.")
 

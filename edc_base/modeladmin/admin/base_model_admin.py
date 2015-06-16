@@ -1,8 +1,7 @@
 import re
 
-from datetime import datetime
-
 from django.contrib import admin
+from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
@@ -38,7 +37,11 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         super(BaseModelAdmin, self).__init__(*args)
 
     def save_model(self, request, obj, form, change):
-        self.update_modified_stamp(request, obj, change)
+        if not change:
+            obj.user_created = request.user.username
+        if change:
+            obj.user_modified = request.user.username
+            # obj.modified = timezone.now()
         super(BaseModelAdmin, self).save_model(request, obj, form, change)
 
     def contribute_to_extra_context(self, extra_context, object_id=None):
@@ -283,14 +286,6 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         form = self.get_form_post(form, request, obj, **kwargs)
         form = self.auto_number(form)
         return form
-
-    def update_modified_stamp(self, request, obj, change):
-        """Forces username to be saved on add/change and other stuff, called from save_model"""
-        if not change:
-            obj.user_created = request.user.username
-        if change:
-            obj.user_modified = request.user.username
-            obj.modified = datetime.today()
 
     def insert_translation_help_text(self, form):
         WIDGET = 1

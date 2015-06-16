@@ -8,10 +8,10 @@ class HostnameModificationField (CharField):
 
     description = _("Custom field for hostname modified")
 
-    def pre_save(self, model, add):
+    def pre_save(self, model_instance, add):
         """Updates socket.gethostname() on each save."""
         value = socket.gethostname()
-        setattr(model, self.attname, value)
+        setattr(model_instance, self.attname, value)
         return value
 
     def get_internal_type(self):

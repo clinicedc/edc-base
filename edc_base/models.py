@@ -1,6 +1,6 @@
 from django.db import models
 
-from .base_uuid_model import BaseUuidModel
+from edc_base.model.models import BaseUuidModel, HistoricalRecords
 
 
 class TestModel(BaseUuidModel):
@@ -10,6 +10,8 @@ class TestModel(BaseUuidModel):
     f3 = models.CharField(max_length=10, null=True, blank=False)
     f4 = models.CharField(max_length=10, null=True, blank=False)
     f5 = models.CharField(max_length=10)
+
+    history = HistoricalRecords()
 
     class Meta:
         app_label = 'edc_base'
