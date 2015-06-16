@@ -119,7 +119,3 @@ class UUIDAutoField (ExtensionsUUIDField):
 
     """
     description = _("UuidAutoField")
-
-    #def __init__(self, *args, **kwargs):
-    #    assert kwargs.get('primary_key', False) is True, "%ss must have primary_key=True." % self.__class__.__name__
-    #    super(UUIDAutoField, self).__init__(self, *args, **kwargs)
