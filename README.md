@@ -8,8 +8,6 @@ Base model, manager, field, validator, form and admin classes for Edc.
 Installation
 ------------
 
-	pip install edc-base
-
 In the __settings__ file add:
 
 	STUDY_OPEN_DATETIME = datetime.today()
@@ -26,11 +24,11 @@ Optional __settings__ attributes:
 Audit trail (HistoricalRecord):
 -------------------------------
 
-HistoricalRecord is an almost identical version of ''simple_history.models.HistoricalRecord''
-with the exception of two methods:  ''get_extra_fields'' and ''add_extra_methods''. Method 
-''get_extra_fields'' method is overridden to change the 'history_id' primary key from an 
-IntegerField to a UUIDField so that it can work with edc-sync. Method ''add_extra_methods''
-is overridden to add the methods from edc_sync.mixins.SyncMixin if 'edc-sync' is 
+HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
+with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
+`get_extra_fields()` method is overridden to change the *history_id* primary key from an 
+`IntegerField` to a `UUIDField` so that it can work with edc-sync. Method `add_extra_methods()`
+is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc_sync` is 
 in INSTALLED_APP.
 
 
@@ -45,8 +43,8 @@ in INSTALLED_APP.
 		class Meta:
 			app_label = 'my_app' 	
 
-The audit trail models created by 'simple_history'' have a foreign key to ''auth.User''.
-In order for the  models to work with ''edc-sync'' specify the edc-sync User model in settings:
+The audit trail models created by `simple_history` have a foreign key to `auth.User`.
+In order for the models to work with `edc_sync` specify the edc_sync User model in settings:
 	
 	AUTH_USER_MODEL = 'edc_sync.User' 
 
@@ -54,9 +52,6 @@ In order for the  models to work with ''edc-sync'' specify the edc-sync User mod
 Notes
 -----
 
-User created and modified fields behave as follows (which may not be what you want):
-* check thread.request for authenticated user or fall back to OS user.
+User created and modified fields behave as follows:
 * created is only set on pre-save add
 * modified is always updated
-* if you set the user modified explicitly the value is overwritten in pre-save.
- 
