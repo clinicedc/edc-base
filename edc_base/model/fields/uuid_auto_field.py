@@ -1,4 +1,4 @@
-import uuid
+from uuid import UUID, uuid4
 
 from django.utils.translation import ugettext as _
 from django.db.models import UUIDField
@@ -18,14 +18,13 @@ class UUIDAutoField(UUIDField):
     description = _("UuidAutoField")
 
     def create_uuid(self):
-        return uuid.uuid4()
+        return uuid4()
 
     def pre_save(self, model_instance, add):
         value = super(UUIDField, self).pre_save(model_instance, add)
         if add and value is None:
             value = self.create_uuid()
             setattr(model_instance, self.attname, value)
-            return value
         else:
             if not value:
                 value = self.create_uuid()
