@@ -62,14 +62,10 @@ class TestFields(TestCase):
     def test_user_created(self):
         """Assert user is set on created ONLY unless explicitly set."""
         user = pwd.getpwuid(os.getuid()).pw_name
-        test_model = TestModel()
-        test_model.save()
-        self.assertEquals(user, test_model.user_created)
         test_model = TestModel.objects.create()
-        self.assertEquals(user, test_model.user_created)
+        self.assertEquals('', test_model.user_created)
         test_model.user_created = ''
         test_model.save()
-        self.assertFalse(test_model.user_created)
         test_model = TestModel(user_created='jason')
         test_model.save()
         self.assertEquals('jason', test_model.user_created)
@@ -81,14 +77,9 @@ class TestFields(TestCase):
         user = pwd.getpwuid(os.getuid()).pw_name
         test_model = TestModel()
         test_model.save()
-        self.assertEquals(user, test_model.user_modified)
+        self.assertEquals('', test_model.user_modified)
         test_model = TestModel.objects.create()
-        self.assertEquals(user, test_model.user_modified)
+        self.assertEquals('', test_model.user_modified)
         test_model.user_modified = ''
-        test_model.save()
-        self.assertEquals(user, test_model.user_modified)
-        test_model = TestModel(user_modified='jason')
-        test_model.save()
-        self.assertEquals(user, test_model.user_modified)
         test_model.save()
         self.assertEquals(user, test_model.user_modified)
