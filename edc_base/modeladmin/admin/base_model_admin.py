@@ -1,6 +1,5 @@
 import re
 
-from django.contrib import admin
 from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
@@ -39,9 +38,10 @@ class BaseModelAdmin (SimpleHistoryAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.user_created = request.user.username
+            obj.created = timezone.now()
         if change:
             obj.user_modified = request.user.username
-            # obj.modified = timezone.now()
+            obj.modified = timezone.now()
         super(BaseModelAdmin, self).save_model(request, obj, form, change)
 
     def contribute_to_extra_context(self, extra_context, object_id=None):

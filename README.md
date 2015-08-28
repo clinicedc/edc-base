@@ -12,6 +12,7 @@ In the __settings__ file add:
 
 	STUDY_OPEN_DATETIME = datetime.today()
 	STUDY_CLOSE_DATETIME = datetime.today()
+	GENDER_OF_CONSENT = ['M', 'F']
 
 Optional __settings__ attributes:
 
@@ -47,6 +48,27 @@ The audit trail models created by `simple_history` have a foreign key to `auth.U
 In order for the models to work with `edc_sync` specify the edc_sync User model in settings:
 	
 	AUTH_USER_MODEL = 'edc_sync.User' 
+
+
+Field Validators
+----------------
+
+__CompareNumbersValidator:__ Compare the field value to a static value. For example, validate that the
+age of consent is between 18 and 64. 
+
+	consent_age = models.IntegerField(
+	    validators=[
+	        CompareNumbersValidator(18, '>=', message='Age of consent must be {}. Got {}'),
+	        CompareNumbersValidator(64, '<=', message='Age of consent must be {}. Got {}')
+	    ]
+
+Or you can use the special validators `MinConsentAgeValidator`, `MaxConsentAgeValidator`:
+
+	consent_age = models.IntegerField(
+	    validators=[
+	        MinConsentAgeValidator(18),
+	        MaxConsentAgeValidator(64)
+	    ]
 
 
 Notes

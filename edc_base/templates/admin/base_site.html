@@ -1,0 +1,9 @@
+{% extends "bhp_base_site.html" %}
+{% load admin_static %}{% load url from future %}
+{% load common_tags %}
+
+{% block title %}{{ title }} | EDC Site Admin {% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% project_title %} - Data</h1>
+{% endblock %}

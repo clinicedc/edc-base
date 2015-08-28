@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.contrib import admin
 
 
@@ -11,5 +11,5 @@ class BaseStackedInline (admin.StackedInline):
             obj.user_created = request.user.username
         if change:
             obj.user_modified = request.user.username
-            obj.modified = datetime.today()
+            obj.modified = timezone.now()
         super(BaseStackedInline, self).save_model(request, obj, form, change)
