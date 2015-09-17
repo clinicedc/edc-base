@@ -1,13 +1,15 @@
 import os
 import pwd
-import uuid
+import re
 import socket
+import uuid
 
 from django.test import TestCase
 
 from django.db import models
 
-from edc_base.model.models import BaseUuidModel, HistoricalRecords
+from edc_base.model.models import BaseUuidModel
+from edc_base.audit_trail import AuditTrail
 
 
 class TestModel(BaseUuidModel):
@@ -18,7 +20,7 @@ class TestModel(BaseUuidModel):
     f4 = models.CharField(max_length=10, null=True, blank=False)
     f5 = models.CharField(max_length=10)
 
-    history = HistoricalRecords()
+    history = AuditTrail()
 
     class Meta:
         app_label = 'edc_base'
@@ -26,34 +28,37 @@ class TestModel(BaseUuidModel):
 
 class TestFields(TestCase):
 
+    def setUp(self):
+        self.uuid_regex = re.compile('[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}')
+
     def test_uuid_none_on_instance(self):
         test_model = TestModel()
         self.assertIsNone(test_model.id)
 
     def test_uuid_set_on_create(self):
         test_model = TestModel.objects.create()
-        self.assertIsNotNone(test_model.id)
-        self.assertIsInstance(test_model.id, uuid.UUID)
+        self.assertIsNotNone(test_model.pk)
+        self.assertTrue(re.match(self.uuid_regex, test_model.pk))
 
     def test_uuid_set_on_save(self):
         test_model = TestModel()
         self.assertIsNone(test_model.id)
         test_model.save()
-        self.assertIsInstance(test_model.id, uuid.UUID)
+        self.assertTrue(re.match(self.uuid_regex, test_model.pk))
 
     def test_uuid_unique(self):
         test_model1 = TestModel.objects.create()
         self.assertIsNotNone(test_model1.id)
-        self.assertIsInstance(test_model1.id, uuid.UUID)
+        self.assertTrue(re.match(self.uuid_regex, test_model1.pk))
         test_model2 = TestModel.objects.create()
         self.assertIsNotNone(test_model2.id)
-        self.assertIsInstance(test_model2.id, uuid.UUID)
+        self.assertTrue(re.match(self.uuid_regex, test_model2.pk))
         test_model3 = TestModel()
         self.assertIsNone(test_model3.id)
         test_model3.save()
-        self.assertIsInstance(test_model3.id, uuid.UUID)
-        self.assertFalse(test_model1 == test_model2)
-        self.assertFalse(test_model2 == test_model3)
+        self.assertTrue(re.match(self.uuid_regex, test_model3.pk))
+        self.assertFalse(test_model1.pk == test_model2.pk)
+        self.assertFalse(test_model2.pk == test_model3.pk)
 
     def test_hostname_modification(self):
         hostname = socket.gethostname()
@@ -68,7 +73,7 @@ class TestFields(TestCase):
     def test_hostname_created(self):
         hostname = socket.gethostname()
         test_model = TestModel()
-        self.assertIsInstance(test_model.hostname_created, str)
+        self.assertIsNotNone(test_model.hostname_created)
         self.assertEquals(hostname, test_model.hostname_created)
         test_model = TestModel.objects.create()
         self.assertEquals(hostname, test_model.hostname_created)

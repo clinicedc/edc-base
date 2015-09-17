@@ -11,7 +11,8 @@ class MinConsentAgeValidator(CompareNumbersValidator):
 
     def __call__(self, dob):
         rdelta = relativedelta(date.today(), dob)
-        return super().__call__(rdelta.years)
+        return CompareNumbersValidator(
+            self.comparision_value, self.comparision_operator).__call__(rdelta.years)
 
 
 class MaxConsentAgeValidator(CompareNumbersValidator):
@@ -21,4 +22,5 @@ class MaxConsentAgeValidator(CompareNumbersValidator):
 
     def __call__(self, dob):
         rdelta = relativedelta(date.today(), dob)
-        return super().__call__(rdelta.years)
+        return CompareNumbersValidator(
+            self.comparision_value, self.comparision_operator).__call__(rdelta.years)

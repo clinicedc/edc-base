@@ -1,4 +1,8 @@
+from django import get_version
+
 from .base_list_model import BaseListModel
 from .base_model import BaseModel
 from .base_uuid_model import BaseUuidModel
-from .historical_records import HistoricalRecords
+
+if not get_version().startswith('1.6'):
+    from .historical_records import HistoricalRecords

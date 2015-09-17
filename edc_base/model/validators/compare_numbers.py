@@ -9,6 +9,9 @@ class CompareNumbersValidator():
 
     def __init__(self, comparision_value, comparision_operator=None, message=None):
         self.comparision_operator = comparision_operator or self.default_comparision_operator
+        if comparision_value:
+            if not isinstance(comparision_value, (int, float)):
+                raise TypeError('Expected to compare numbers. Got {}'.format(comparision_value))
         self.comparision_value = comparision_value
         self.message = message or self.default_message
         operators = ['<', '<=', '>', '>=', '!=']

@@ -22,11 +22,6 @@ setup(
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',
-    install_requires=[
-        'django-crypto-fields>=0.1',
-        'django-revision>=0.1',
-        'edc-constants>=0.1',
-    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

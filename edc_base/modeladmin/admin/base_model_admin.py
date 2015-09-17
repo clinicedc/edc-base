@@ -1,14 +1,18 @@
 import re
 
+from django import get_version
 from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-from simple_history.admin import SimpleHistoryAdmin
-
 from ...modeladmin.exceptions import NextUrlError
+
+if get_version().startswith('1.6'):
+    from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
+else:
+    from simple_history.admin import SimpleHistoryAdmin
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
