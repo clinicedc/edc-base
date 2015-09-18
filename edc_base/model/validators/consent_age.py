@@ -24,4 +24,3 @@ class MaxConsentAgeValidator(CompareNumbersValidator):
         rdelta = relativedelta(date.today(), dob)
         return CompareNumbersValidator(
             self.comparision_value, self.comparision_operator).__call__(rdelta.years)
-
