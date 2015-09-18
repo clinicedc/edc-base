@@ -43,7 +43,7 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         if not change:
             obj.user_created = request.user.username
             obj.created = timezone.now()
-        if change:
+        else:
             obj.user_modified = request.user.username
             obj.modified = timezone.now()
         super(BaseModelAdmin, self).save_model(request, obj, form, change)

@@ -21,6 +21,14 @@ if get_version().startswith('1.6'):
             assert kwargs.get('primary_key', False) is True, "%ss must have primary_key=True." % self.__class__.__name__
             UUIDField.__init__(self, *args, **kwargs)
 
+        def south_field_triple(self):
+            "Returns a suitable description of this field for South."
+            # We'll just introspect the _actual_ field.
+            from south.modelsinspector import introspector
+            field_class = "django.db.models.fields.CharField"
+            args, kwargs = introspector(self)
+            # That's our definition!
+            return (field_class, args, kwargs)
 
 else:
 
