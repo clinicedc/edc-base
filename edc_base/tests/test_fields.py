@@ -2,7 +2,6 @@ import os
 import pwd
 import re
 import socket
-import uuid
 
 from django.test import TestCase
 
@@ -38,25 +37,25 @@ class TestFields(TestCase):
     def test_uuid_set_on_create(self):
         test_model = TestModel.objects.create()
         self.assertIsNotNone(test_model.pk)
-        self.assertTrue(re.match(self.uuid_regex, test_model.pk))
+        self.assertTrue(re.match(self.uuid_regex, str(test_model.pk)))
 
     def test_uuid_set_on_save(self):
         test_model = TestModel()
         self.assertIsNone(test_model.id)
         test_model.save()
-        self.assertTrue(re.match(self.uuid_regex, test_model.pk))
+        self.assertTrue(re.match(self.uuid_regex, str(test_model.pk)))
 
     def test_uuid_unique(self):
         test_model1 = TestModel.objects.create()
         self.assertIsNotNone(test_model1.id)
-        self.assertTrue(re.match(self.uuid_regex, test_model1.pk))
+        self.assertTrue(re.match(self.uuid_regex, str(test_model1.pk)))
         test_model2 = TestModel.objects.create()
         self.assertIsNotNone(test_model2.id)
-        self.assertTrue(re.match(self.uuid_regex, test_model2.pk))
+        self.assertTrue(re.match(self.uuid_regex, str(test_model2.pk)))
         test_model3 = TestModel()
         self.assertIsNone(test_model3.id)
         test_model3.save()
-        self.assertTrue(re.match(self.uuid_regex, test_model3.pk))
+        self.assertTrue(re.match(self.uuid_regex, str(test_model3.pk)))
         self.assertFalse(test_model1.pk == test_model2.pk)
         self.assertFalse(test_model2.pk == test_model3.pk)
 
@@ -82,7 +81,7 @@ class TestFields(TestCase):
 
     def test_user_created(self):
         """Assert user is set on created ONLY unless explicitly set."""
-        user = pwd.getpwuid(os.getuid()).pw_name
+        pwd.getpwuid(os.getuid()).pw_name
         test_model = TestModel.objects.create()
         self.assertEquals('', test_model.user_created)
         test_model.user_created = ''
