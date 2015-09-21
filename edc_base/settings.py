@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django import get_version
 from datetime import datetime
 from unipath import Path
 
@@ -32,15 +33,19 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'edc_base',
-)
+    'django.contrib.staticfiles']
+if get_version().startswith('1.6'):
+    INSTALLED_APPS.append('django_extensions')
+    INSTALLED_APPS.append('edc_audit')
+else:
+    INSTALLED_APPS.append('simple_history')
+INSTALLED_APPS.append('edc_base')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,9 +56,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'edc_base.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION = 'edc_base.wsgi.application'
 
 
 # Database
@@ -90,7 +96,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Gaborone'
 
 USE_I18N = True
 

@@ -2,13 +2,11 @@ import socket
 
 from django.core.urlresolvers import reverse
 from django.db import models
-
 from django_extensions.db.models import TimeStampedModel
-
 from django_revision import RevisionField
 
 from ..constants import BASE_MODEL_UPDATE_FIELDS
-from ..fields import HostnameModificationField
+from ..fields import HostnameModificationField, UserField
 
 
 class BaseModel(TimeStampedModel):
@@ -16,37 +14,28 @@ class BaseModel(TimeStampedModel):
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer)."""
 
-    user_created = models.CharField(
+    user_created = UserField(
         max_length=50,
         verbose_name='user created',
         editable=False,
-        default="",
-        db_index=True,
-        help_text="System field. (updated by admin)"
     )
 
-    user_modified = models.CharField(
+    user_modified = UserField(
         max_length=50,
         verbose_name='user modified',
         editable=False,
-        default="",
-        db_index=True,
-        help_text="System field. (updated by admin)",
     )
 
     hostname_created = models.CharField(
         max_length=50,
         editable=False,
         default=socket.gethostname(),
-        db_index=True,
         help_text="System field. (modified on create only)",
     )
 
     hostname_modified = HostnameModificationField(
         max_length=50,
         editable=False,
-        default=socket.gethostname(),
-        db_index=True,
         help_text="System field. (modified on every save)",
     )
 

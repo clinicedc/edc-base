@@ -1,0 +1,21 @@
+{% load url from future %}
+{% load admin_urls %}
+{% load common_tags %}
+
+{% if model_help_text_meta %}
+  {% if model_help_text|get_item:field.field.name %}
+    {% if subject_dashboard_url == 'this does not work' %}
+      <p class="help edit-help"><A href="{% url  model_help_text_meta|admin_urlname:'change' model_help_text.pk %}?next=subject_dashboard_url&dashboard_type={{dashboard_type}}&dashboard_model={{dashboard_model}}&dashboard_id={{dashboard_id}}&app_label={{model_help_text.app_label}}&object_name={{model_help_text.object_name}}&field_name={{field.field.name}}">edit help</A></p>
+    {% else %}
+      <p class="help add-help"><A href="{% url  model_help_text_meta|admin_urlname:'add'%}?next=add&app_label={{opts.app_label}}&module_name={{opts.module_name}}&field_name={{field.field.name}}">add help</A></p>
+    {% endif %}
+  {% else %}
+    {% if help_link %}
+      {% if subject_dashboard_url%}
+        <p class="help add-help"><A href="{% url  model_help_text_meta|admin_urlname:'add' %}?next=subject_dashboard_url&dashboard_type={{dashboard_type}}&dashboard_model={{dashboard_model}}&dashboard_id={{dashboard_id}}&app_label={{model_help_text.app_label}}&object_name={{model_help_text.object_name}}&field_name={{field.field.name}}">add help</A></p>
+      {% else%}
+        <p class="help add-help"><A href="{% url  model_help_text_meta|admin_urlname:'add' %}?next=add&app_label={{opts.app_label}}&module_name={{opts.module_name}}&field_name={{field.field.name}}">add help</A></p>
+       {% endif %}
+     {% endif %}
+  {% endif %}
+{% endif %}

@@ -1,35 +1,10 @@
 import re
+
 from django.utils.translation import ugettext as _
-from django.db import models
 from django.db.models import CharField, DateTimeField, DecimalField
 from django.forms import RegexField
 
 from ...choices import DATE_ESTIMATED, IDENTITY_TYPE
-
-
-class TransCharField(CharField):
-    """Custom field for translation form field"""
-
-    description = _("Custom field for translation form field")
-
-    __metaclass__ = models.SubfieldBase
-
-    def to_python(self, value):
-        """Translates the value."""
-        if not value:  # ugettext will fail if value is None
-            return value
-        return _(value)
-
-    def get_internal_type(self):
-        return "CharField"
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
 
 
 class OtherCharField(CharField):
@@ -37,10 +12,12 @@ class OtherCharField(CharField):
 
     description = _("Custom field for 'Other specify' form field")
 
+    DEFAULT_MAX_LENGTH = 35
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('blank', True)
-        kwargs.setdefault('max_length', 35)
+        kwargs.setdefault('max_length', self.DEFAULT_MAX_LENGTH)
         kwargs.setdefault('verbose_name', _('...if "Other", specify'))
         CharField.__init__(self, *args, **kwargs)
 
@@ -49,11 +26,22 @@ class OtherCharField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
         return (field_class, args, kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super(OtherCharField, self).deconstruct()
+        if kwargs.get('max_length', None) == self.DEFAULT_MAX_LENGTH:
+            del kwargs['max_length']
+        if self.editable is not False:
+            kwargs['editable'] = True
+        if self.blank is not True:
+            kwargs['blank'] = False
+        if self.verbose_name is not _('...if "Other", specify'):
+            kwargs['verbose_name'] = _('...if "Other", specify')
+        return name, path, args, kwargs
 
 
 class DobField(DateTimeField):
@@ -74,7 +62,6 @@ class DobField(DateTimeField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.DateTimeField"
         args, kwargs = introspector(self)
@@ -101,7 +88,6 @@ class IsDateEstimatedField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -136,7 +122,6 @@ class NameField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -171,7 +156,6 @@ class InitialsField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -195,7 +179,6 @@ class WeightField(DecimalField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.DecimalField"
         args, kwargs = introspector(self)
@@ -235,7 +218,6 @@ class OmangField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -281,7 +263,6 @@ class IdentityTypeField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -317,7 +298,6 @@ class CellPhoneField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)
@@ -357,7 +337,7 @@ class BloodPressureField(CharField):
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
-        # We'll just introspect ourselves, since we inherit.
+
         from south.modelsinspector import introspector
         field_class = "django.db.models.fields.CharField"
         args, kwargs = introspector(self)

@@ -1,28 +1,21 @@
-import logging
 import re
-import six
 
-from datetime import datetime
-
-from django.contrib import admin
+from django import get_version
+from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-
 from ...modeladmin.exceptions import NextUrlError
 
-logger = logging.getLogger(__name__)
+if get_version().startswith('1.6'):
+    from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
+else:
+    from simple_history.admin import SimpleHistoryAdmin
 
 
-class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
-nullhandler = logger.addHandler(NullHandler())
-
-
-class BaseModelAdmin (admin.ModelAdmin):
+class BaseModelAdmin (SimpleHistoryAdmin):
 
     list_per_page = 15
 
@@ -37,13 +30,22 @@ class BaseModelAdmin (admin.ModelAdmin):
         if not isinstance(self.instructions, list):
             raise ImproperlyConfigured(
                 'ModelAdmin {0} attribute \'instructions\' must be a list.'.format(self.__class__))
-        if not isinstance(self.required_instructions, six.string_types):
+        if not isinstance(self.required_instructions, str):
             raise ImproperlyConfigured(
-                'ModelAdmin {0} attribute \'required_instructions\' must be a list.'.format(self.__class__))
+                'ModelAdmin {0} attribute \'required_instructions\' must be a string.'.format(self.__class__))
+        self.append_default_search_fields(args[0], ['subject_identifier', 'id'])
+        self.append_search_fields(args[0])  # called by mixins
+        self.append_list_display(args[0])  # called by mixins
+        self.append_list_filter(args[0])  # called by mixins
         super(BaseModelAdmin, self).__init__(*args)
 
     def save_model(self, request, obj, form, change):
-        self.update_modified_stamp(request, obj, change)
+        if not change:
+            obj.user_created = request.user.username
+            obj.created = timezone.now()
+        else:
+            obj.user_modified = request.user.username
+            obj.modified = timezone.now()
         super(BaseModelAdmin, self).save_model(request, obj, form, change)
 
     def contribute_to_extra_context(self, extra_context, object_id=None):
@@ -192,10 +194,12 @@ class BaseModelAdmin (admin.ModelAdmin):
                     # which jumps to the next form on the subject dashboard instead of going
                     # back to the subject dashboard
                     try:
-                        next_url, visit_model_instance, entry_order = self.next_url_in_scheduled_entry_meta_data(obj, visit_attr, entry_order)
+                        next_url, visit_model_instance, entry_order = self.next_url_in_scheduled_entry_meta_data(
+                            obj, visit_attr, entry_order)
                         if next_url:
                             url = ('{next_url}?next={next}&dashboard_type={dashboard_type}&dashboard_id={dashboard_id}'
-                                   '&dashboard_model={dashboard_model}&show={show}{visit_attr}{visit_model_instance}{entry_order}{help_link}'
+                                   '&dashboard_model={dashboard_model}&show={show}{visit_attr}{visit_model_instance}'
+                                   '{entry_order}{help_link}'
                                    ).format(next_url=next_url,
                                             next=next_url_name,
                                             dashboard_type=dashboard_type,
@@ -203,7 +207,8 @@ class BaseModelAdmin (admin.ModelAdmin):
                                             dashboard_model=dashboard_model,
                                             show=show,
                                             visit_attr='&visit_attr={0}'.format(visit_attr),
-                                            visit_model_instance='&{0}={1}'.format(visit_attr, visit_model_instance.pk),
+                                            visit_model_instance='&{0}={1}'.format(
+                                                visit_attr, visit_model_instance.pk),
                                             entry_order='&entry_order={0}'.format(entry_order),
                                             help_link='&help_link={0}'.format(help_link))
                     except NoReverseMatch:
@@ -213,8 +218,9 @@ class BaseModelAdmin (admin.ModelAdmin):
                     # FIXME: i think the URL for the cancel button/link is calculated for by the dashboard
                     #        for the template or reversed on the template, so this might
                     #        be code that cannot be reached
+                    # TODO: this defaults to the value subject_dashboard_url, not the variable!!!
                     url = reverse(
-                        'subject_dashboard_url', kwargs={  # TODO: this defaults to the value subject_dashboard_url, not the variable!!!
+                        'subject_dashboard_url', kwargs={
                             'dashboard_type': dashboard_type,
                             'dashboard_id': dashboard_id,
                             'dashboard_model': dashboard_model,
@@ -285,14 +291,6 @@ class BaseModelAdmin (admin.ModelAdmin):
         form = self.auto_number(form)
         return form
 
-    def update_modified_stamp(self, request, obj, change):
-        """Forces username to be saved on add/change and other stuff, called from save_model"""
-        if not change:
-            obj.user_created = request.user.username
-        if change:
-            obj.user_modified = request.user.username
-            obj.modified = datetime.today()
-
     def insert_translation_help_text(self, form):
         WIDGET = 1
         for fld in list(form.base_fields.items()):
@@ -319,7 +317,8 @@ class BaseModelAdmin (admin.ModelAdmin):
 
     def reverse_next_to_dashboard(self, next_url_name, request, obj, **kwargs):
         url = ''
-        if next_url_name and request.GET.get('dashboard_id') and request.GET.get('dashboard_model') and request.GET.get('dashboard_type'):
+        if (next_url_name and request.GET.get('dashboard_id') and
+                request.GET.get('dashboard_model') and request.GET.get('dashboard_type')):
             kwargs = {'dashboard_id': request.GET.get('dashboard_id'),
                       'dashboard_model': request.GET.get('dashboard_model'),
                       'dashboard_type': request.GET.get('dashboard_type')}
@@ -331,7 +330,8 @@ class BaseModelAdmin (admin.ModelAdmin):
             app_label = request.GET.get('app_label')
             module_name = request.GET.get('module_name').lower()
             mode = next_url_name
-            url = reverse('admin:{app_label}_{module_name}_{mode}'.format(app_label=app_label, module_name=module_name, mode=mode))
+            url = reverse('admin:{app_label}_{module_name}_{mode}'.format(
+                app_label=app_label, module_name=module_name, mode=mode))
         else:
             # normally you should not be here.
             try:
@@ -342,7 +342,9 @@ class BaseModelAdmin (admin.ModelAdmin):
                     # try reversing to the url from just section_name
                     url = reverse(next_url_name, kwargs={'section_name': kwargs.get('section_name')})
                 except NoReverseMatch:
-                    raise NoReverseMatch('response_add failed to reverse url \'{0}\' with kwargs {1}. Is this a dashboard url?'.format(next_url_name, kwargs))
+                    raise NoReverseMatch(
+                        'response_add failed to reverse url \'{0}\' with kwargs {1}. '
+                        'Is this a dashboard url?'.format(next_url_name, kwargs))
             except:
                 raise
         return url
@@ -389,3 +391,34 @@ class BaseModelAdmin (admin.ModelAdmin):
                     next_entry.entry.entry_order
                 )
         return next_url_tuple
+
+    def append_default_search_fields(self, model, attr_names=None):
+        """Appends a search lookup string for each attr_name in attr_names.
+
+        Does not detect appointment__registered_subject__subject_identifier or
+        <model>__registered_subject__subject_identifier."""
+        attr_names = attr_names or []
+        self.search_fields = list(self.search_fields)
+        fields = {field.name: field for field in model._meta.fields}
+        for attr_name in attr_names:
+            if attr_name in fields:
+                self.search_fields.append(attr_name)
+                continue
+            for name, field in fields.items():
+                try:
+                    for fld in field.rel.to._meta.fields:
+                        if fld.name == attr_name:
+                            self.search_fields.append('__'.join([name, attr_name]))
+                            continue
+                except AttributeError:
+                    pass
+        self.search_fields = tuple(self.search_fields)
+
+    def append_search_fields(self, model):
+        self.search_fields = list(self.search_fields)
+
+    def append_list_display(self, model):
+        self.list_display = list(self.list_display)
+
+    def append_list_filter(self, model):
+        self.list_filter = list(self.list_filter)
