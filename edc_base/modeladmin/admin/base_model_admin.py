@@ -7,12 +7,17 @@ from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+
 from ...modeladmin.exceptions import NextUrlError
 
 if get_version().startswith('1.6'):
     from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
+    from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
+    from edc.subject.rule_groups.classes import site_rule_groups
 else:
     from simple_history.admin import SimpleHistoryAdmin
+    from edc_entry.helpers import ScheduledEntryMetaDataHelper
+    from edc_rule_groups.classes import site_rule_groups
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
@@ -372,8 +377,6 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         If there is not a "next" model, returns an empty tuple (None, None, None).
 
         Called from response_add and response_change."""
-        from edc_entry.helpers import ScheduledEntryMetaDataHelper
-        from edc_rule_groups.classes import site_rule_groups
         next_url_tuple = (None, None, None)
         if visit_attr and entry_order:
             visit_instance = getattr(obj, visit_attr)
