@@ -1,9 +1,11 @@
-from edc_base.model.validators import TelephoneNumber
+from edc_base.model.validators.phone import phone_number
 
 
 def BWCellNumber(value):
-    TelephoneNumber(value, '^[7]{1}[12345678]{1}[0-9]{6}$', 'cell')
+    regex = '^[7]{1}[12345678]{1}[0-9]{6}$'
+    phone_number(value, regex, 'cell')
 
 
 def BWTelephoneNumber(value):
-    TelephoneNumber(value, '^[2-8]{1}[0-9]{6}$', 'telephone')
+    regex = '^[0-9+\(\)#\.\s\/ext-]+$'
+    phone_number(value, regex, 'telephone')
