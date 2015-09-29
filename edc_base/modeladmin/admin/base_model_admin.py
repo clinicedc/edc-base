@@ -23,6 +23,7 @@ else:
 class BaseModelAdmin (SimpleHistoryAdmin):
 
     list_per_page = 15
+    date_hierarchy = 'created'
 
     instructions = ['Please complete the questions below.']
     required_instructions = (
@@ -32,17 +33,23 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         'required or may need to be corrected when you attempt to save.')
 
     def __init__(self, *args):
+        super(BaseModelAdmin, self).__init__(*args)
         if not isinstance(self.instructions, list):
             raise ImproperlyConfigured(
                 'ModelAdmin {0} attribute \'instructions\' must be a list.'.format(self.__class__))
         if not isinstance(self.required_instructions, str):
             raise ImproperlyConfigured(
                 'ModelAdmin {0} attribute \'required_instructions\' must be a string.'.format(self.__class__))
-        self.append_default_search_fields(args[0], ['subject_identifier', 'id'])
-        self.append_search_fields(args[0])  # called by mixins
-        self.append_list_display(args[0])  # called by mixins
-        self.append_list_filter(args[0])  # called by mixins
-        super(BaseModelAdmin, self).__init__(*args)
+        self.search_fields = list(self.search_fields)
+        try:
+            self.model.subject_identifier
+            self.search_fields.append('subject_identifier')
+        except (AttributeError, TypeError):
+            pass
+        self.search_fields = tuple(set(self.search_fields))
+        self.list_filter = list(self.list_filter)
+        self.list_filter.extend(['created', 'modified', 'user_created', 'user_modified', 'hostname_created'])
+        self.list_filter = tuple(set(self.list_filter))
 
     def save_model(self, request, obj, form, change):
         if not change:
@@ -394,34 +401,3 @@ class BaseModelAdmin (SimpleHistoryAdmin):
                     next_entry.entry.entry_order
                 )
         return next_url_tuple
-
-    def append_default_search_fields(self, model, attr_names=None):
-        """Appends a search lookup string for each attr_name in attr_names.
-
-        Does not detect appointment__registered_subject__subject_identifier or
-        <model>__registered_subject__subject_identifier."""
-        attr_names = attr_names or []
-        self.search_fields = list(self.search_fields)
-        fields = {field.name: field for field in model._meta.fields}
-        for attr_name in attr_names:
-            if attr_name in fields:
-                self.search_fields.append(attr_name)
-                continue
-            for name, field in fields.items():
-                try:
-                    for fld in field.rel.to._meta.fields:
-                        if fld.name == attr_name:
-                            self.search_fields.append('__'.join([name, attr_name]))
-                            continue
-                except AttributeError:
-                    pass
-        self.search_fields = tuple(self.search_fields)
-
-    def append_search_fields(self, model):
-        self.search_fields = list(self.search_fields)
-
-    def append_list_display(self, model):
-        self.list_display = list(self.list_display)
-
-    def append_list_filter(self, model):
-        self.list_filter = list(self.list_filter)
