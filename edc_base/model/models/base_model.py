@@ -14,6 +14,8 @@ class BaseModel(TimeStampedModel):
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer)."""
 
+    get_latest_by = 'modified'
+
     user_created = UserField(
         max_length=50,
         verbose_name='user created',
