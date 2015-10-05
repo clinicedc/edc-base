@@ -13,19 +13,22 @@ if get_version().startswith('1.6') and six.PY2:
         from edc.base.model.fields import IdentityTypeField
         from edc.base.model.fields import IsDateEstimatedField
         from edc.core.crypto_fields.classes import FieldCryptor
-        from edc.core.crypto_fields.utils import mask_encrypted
+        # from edc.core.crypto_fields.utils import mask_encrypted
     except ImportError as e:
         print(e)
         from edc_base.model.fields import IdentityTypeField
         from edc_base.model.fields import IsDateEstimatedField
         from django_crypto_fields.classes import FieldCryptor
-        from django_crypto_fields.utils import mask_encrypted
+        # from django_crypto_fields.utils import mask_encrypted
         from django_crypto_fields.fields import (
             FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField)
 else:
     from edc_base.model.fields import IdentityTypeField
     from edc_base.model.fields import IsDateEstimatedField
     from django_crypto_fields.classes import FieldCryptor
-    from django_crypto_fields.utils import mask_encrypted
+    # from django_crypto_fields.utils import mask_encrypted
     from django_crypto_fields.fields import (
         FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField)
+
+def mask_encrypted(value):
+    return FieldCryptor('rsa', 'local').mask(value)

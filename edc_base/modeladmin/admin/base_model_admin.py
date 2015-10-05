@@ -24,22 +24,17 @@ class BaseModelAdmin (SimpleHistoryAdmin):
 
     list_per_page = 15
     date_hierarchy = 'created'
-
-    instructions = ['Please complete the questions below.']
-    required_instructions = (
-        'Required questions are in bold. '
-        'When all required data has been entered click SAVE to return to the dashboard '
-        'or SAVE NEXT to go to the next form (if available). Additional questions may be '
-        'required or may need to be corrected when you attempt to save.')
+    instructions = None
+    required_instructions = None
 
     def __init__(self, *args):
         super(BaseModelAdmin, self).__init__(*args)
-        if not isinstance(self.instructions, list):
-            raise ImproperlyConfigured(
-                'ModelAdmin {0} attribute \'instructions\' must be a list.'.format(self.__class__))
-        if not isinstance(self.required_instructions, str):
-            raise ImproperlyConfigured(
-                'ModelAdmin {0} attribute \'required_instructions\' must be a string.'.format(self.__class__))
+        self.instructions = self.instructions or ['Please complete the questions below.']
+        self.required_instructions = self.required_instructions or (
+            'Required questions are in bold. '
+            'When all required data has been entered click SAVE to return to the dashboard '
+            'or SAVE NEXT to go to the next form (if available). Additional questions may be '
+            'required or may need to be corrected when you attempt to save.')
         self.search_fields = list(self.search_fields)
         try:
             self.model.subject_identifier
@@ -60,30 +55,38 @@ class BaseModelAdmin (SimpleHistoryAdmin):
             obj.modified = timezone.now()
         super(BaseModelAdmin, self).save_model(request, obj, form, change)
 
-    def contribute_to_extra_context(self, extra_context, object_id=None):
+    def contribute_to_extra_context(self, extra_context, request=None, object_id=None):
+        instructions = ['Please complete the questions below.']
+        required_instructions = (
+            'Required questions are in bold. '
+            'When all required data has been entered click SAVE to return to the dashboard '
+            'or SAVE NEXT to go to the next form (if available). Additional questions may be '
+            'required or may need to be corrected when you attempt to save.')
+        extra_context.update(instructions=instructions)
+        extra_context.update(required_instructions=required_instructions)
         return extra_context
 
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or dict()
-        extra_context = self.contribute_to_extra_context(extra_context)
-        extra_context.update(instructions=self.instructions)
-        extra_context.update(required_instructions=self.required_instructions)
+        extra_context = self.contribute_to_extra_context(extra_context, request=request)
+#         extra_context.update(instructions=self.instructions)
+#         extra_context.update(required_instructions=self.required_instructions)
         extra_context.update(form_language_code=request.GET.get('form_language_code', ''))
-        if request.GET.get('group_title'):
-            extra_context.update(
-                title=('{group_title}: Add {title}').format(
-                    group_title=request.GET.get('group_title'),
-                    title=self.model._meta.verbose_name
-                )
-            )
+#         if request.GET.get('group_title'):
+#             extra_context.update(
+#                 title=('{group_title}: Add {title}').format(
+#                     group_title=request.GET.get('group_title'),
+#                     title=self.model._meta.verbose_name
+#                 )
+#             )
         extra_context.update(self.get_dashboard_context(request))
         return super(BaseModelAdmin, self).add_view(request, form_url=form_url, extra_context=extra_context)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or dict()
-        extra_context = self.contribute_to_extra_context(extra_context, object_id)
-        extra_context.update(instructions=self.instructions)
-        extra_context.update(required_instructions=self.required_instructions)
+        extra_context = self.contribute_to_extra_context(extra_context, object_id=object_id)
+#         extra_context.update(instructions=self.instructions)
+#         extra_context.update(required_instructions=self.required_instructions)
         extra_context.update(form_language_code=request.GET.get('form_language_code', ''))
         if request.GET.get('group_title'):
             extra_context.update(
