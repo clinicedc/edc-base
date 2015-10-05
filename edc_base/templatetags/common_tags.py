@@ -7,7 +7,7 @@ from datetime import date
 from django import template
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.utils.safestring import mark_safe
 from django.utils import timezone
@@ -183,7 +183,7 @@ def get_item(items, key):
 def get_field(obj, field_attr=None):
     try:
         return getattr(obj, field_attr)
-    except AttributeError:
+    except (AttributeError, ObjectDoesNotExist):
         pass
     return None
 
