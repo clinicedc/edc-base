@@ -16,8 +16,12 @@ if get_version().startswith('1.6'):
     from edc.subject.rule_groups.classes import site_rule_groups
 else:
     from simple_history.admin import SimpleHistoryAdmin
+
+try:
     from edc_entry.helpers import ScheduledEntryMetaDataHelper
     from edc_rule_groups.classes import site_rule_groups
+except ImportError:
+    pass
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
