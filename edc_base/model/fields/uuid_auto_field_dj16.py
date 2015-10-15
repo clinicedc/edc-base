@@ -1,9 +1,10 @@
+from distutils.version import StrictVersion
 from django import get_version
 from django.utils.translation import ugettext as _
 from django_extensions.db.fields import UUIDField
 
-if not get_version().startswith('1.6'):
-    raise ImportError('This module requires Django 1.6')
+if StrictVersion(get_version()) >= StrictVersion('1.8.0'):
+    raise ImportError('This module expects version < Django 1.8.0, Got {}'.format(get_version()))
 
 
 class UUIDAutoField(UUIDField):
@@ -15,7 +16,7 @@ class UUIDAutoField(UUIDField):
     description = _("UuidAutoField")
 
     def __init__(self, *args, **kwargs):
-        assert kwargs.get('primary_key', False) is True, "%ss must have primary_key=True." % self.__class__.__name__
+        kwargs.setdefault('primary_key', True)
         UUIDField.__init__(self, *args, **kwargs)
 
     def south_field_triple(self):

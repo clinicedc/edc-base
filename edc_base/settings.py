@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from distutils.version import StrictVersion
 from django import get_version
 from datetime import datetime
 from unipath import Path
@@ -114,3 +115,10 @@ GIT_DIR = BASE_DIR.ancestor(1)
 
 STUDY_OPEN_DATETIME = datetime.today()
 STUDY_CLOSE_DATETIME = datetime.today()
+
+if StrictVersion(get_version()) < StrictVersion('1.8.0'):
+    DEVICE_ID = '99'
+    SERVER_DEVICE_ID_LIST = ['99']
+    MIDDLEMAN_DEVICE_ID_LIST = ['98']
+    FIELD_MAX_LENGTH = 'default'
+    IS_SECURE_DEVICE = True
