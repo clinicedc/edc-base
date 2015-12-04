@@ -12,6 +12,10 @@ def phone_number(value, pattern, word):
 
 
 def CellNumber(value):
+    """
+        sample for BW:
+            CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$'
+    """
     try:
         regex = settings.CELLPHONE_REGEX
     except AttributeError:
@@ -20,6 +24,10 @@ def CellNumber(value):
 
 
 def TelephoneNumber(value):
+    """
+        sample for BW:
+            TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
+    """
     try:
         regex = settings.TELEPHONE_REGEX
     except AttributeError:
