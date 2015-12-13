@@ -9,7 +9,7 @@ if StrictVersion(get_version()) < StrictVersion('1.8.0') and six.PY2:
             EncryptedLastnameField as LastnameField,
             EncryptedCharField, EncryptedTextField,
             EncryptedIdentityField as IdentityField,
-            EncryptedDecimalField)
+            EncryptedDecimalField, BaseEncryptedField)
         from edc.base.model.fields import IdentityTypeField
         from edc.base.model.fields import IsDateEstimatedField
         from edc.core.crypto_fields.classes import FieldCryptor
@@ -28,7 +28,8 @@ else:
     from django_crypto_fields.classes import FieldCryptor
     # from django_crypto_fields.utils import mask_encrypted
     from django_crypto_fields.fields import (
-        FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField)
+        FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField,
+        BaseField as BaseEncryptedField)
 
 
 def mask_encrypted(value):
