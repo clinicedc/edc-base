@@ -127,7 +127,7 @@ class BaseModelForm(forms.ModelForm):
         """
         label = kwargs.get('label', 'items to be selected')
         leading = kwargs.get('leading')
-        m2m = kwargs.get('m2m')
+        m2m = kwargs.get('m2m', [])
         other = kwargs.get('other')
 
         # if leading question is 'Yes', a m2m item cannot be 'Not applicable'
