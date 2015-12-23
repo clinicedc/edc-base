@@ -1,8 +1,13 @@
-Django>=1.8.2
-django-extensions==1.5.5
-Unipath>=1.1
-python-dateutil>=2.4.2
-django-revision
-django-crypto-fields
+Django==1.6
+M2Crypto==0.22.3
+django-tastypie
+django_extensions
 django-simple-history
--e git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc-constants
+python-dateutil
+django_databrowse
+numpy
+Unipath
+GitPython
+factory-boy
+pytz
+git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc-constants
