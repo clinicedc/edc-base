@@ -2,7 +2,6 @@ import re
 
 from django import get_version
 from django.utils import timezone
-from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -12,16 +11,15 @@ from ...modeladmin.exceptions import NextUrlError
 
 if get_version().startswith('1.6'):
     from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
-    from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
-    from edc.subject.rule_groups.classes import site_rule_groups
 else:
     from simple_history.admin import SimpleHistoryAdmin
 
 try:
+    from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
+    from edc.subject.rule_groups.classes import site_rule_groups
+except ImportError:
     from edc_entry.helpers import ScheduledEntryMetaDataHelper
     from edc_rule_groups.classes import site_rule_groups
-except ImportError:
-    pass
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
@@ -396,7 +394,7 @@ class BaseModelAdmin (SimpleHistoryAdmin):
             visit_instance = getattr(obj, visit_attr)
             site_rule_groups.update_rules_for_source_model(obj, visit_instance)
             next_entry = ScheduledEntryMetaDataHelper(
-                visit_instance.get_appointment(),
+                visit_instance.appointment,
                 visit_instance.__class__, visit_attr
             ).get_next_entry_for(entry_order)
             if next_entry:
