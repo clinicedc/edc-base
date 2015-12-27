@@ -21,8 +21,8 @@ except ImportError:
 
 if StrictVersion(get_version()) < StrictVersion('1.8.0') and six.PY2:
     try:
-        from edc.core.crypto_fields.classes import FieldCryptor
-        from edc.core.crypto_fields.fields import (
+        from edc_crypto_fields.classes import FieldCryptor
+        from edc_crypto_fields.fields import (
             EncryptedFirstnameField as FirstnameField,
             EncryptedLastnameField as LastnameField,
             EncryptedCharField, EncryptedTextField,
