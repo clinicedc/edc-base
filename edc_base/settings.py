@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'edc_registration',
     'edc_appointment',
     'edc_visit_schedule',
+    'edc_visit_tracking',
     'edc.core.bhp_content_type_map',
     'edc.core.bhp_variables',
     'edc.subject.entry',
