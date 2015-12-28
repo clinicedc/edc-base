@@ -43,12 +43,12 @@ install:
   - pip install -q -r requirements.txt
 
 before_script:
-  - flake8 edc_sync
+  - flake8 edc_base
   - mysql -e 'create database edc;'
   # - mysql -e 'create database edc_lab;'
 
 script: 
-  - coverage run --source=edc_sync manage.py test
+  - coverage run --source=edc_base manage.py test
 
 after_success:
   - coveralls
