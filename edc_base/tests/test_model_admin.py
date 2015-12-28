@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 
 from edc_base.model.models.base_model import BaseModel
 from edc_base.modeladmin.admin.base_model_admin import BaseModelAdmin
+from django.contrib.admin.sites import AdminSite
 
 
 class MyTestModel(BaseModel):
@@ -28,9 +29,10 @@ admin.site.register(MyTestModel, MyTestModelAdmin)
 class TestModelAdmin(TransactionTestCase):
 
     def setUp(self):
+        self.site = AdminSite()
         self.factory = RequestFactory()
         self.user = User.objects.create_user(
-            username='erikvw', email='1@1.com', password='password')
+            username='travis', email='1@1.com', password='password')
 
     def test_modified(self):
         obj = MyTestModel.objects.create()
@@ -54,19 +56,22 @@ class TestModelAdmin(TransactionTestCase):
     def test_user_admin(self):
         """Asserts admin save_model updates created and modified username."""
         obj = MyTestModel.objects.create()
-        self.assertFalse(obj.user_created)
-        self.assertFalse(obj.user_modified)
-        request = self.factory.get(reverse('admin:index'))
+        self.assertEqual(obj.user_created, '')
+        self.assertEqual(obj.user_modified, '')
+
+        model_admin = MyTestModelAdmin(MyTestModel, self.site)
+        request = RequestFactory()
         request.user = self.user
-        my_model_admin = admin.site._registry[MyTestModel]
-        my_model_admin.save_model(request, obj, None, True)
+        model_form = model_admin.get_form(request)
+        form = model_form(data={'field1': 'erik'})
+        obj = model_admin.save_form(request, form, change=False)
+        self.assertEqual(obj.user_created, '')
+        self.assertEqual(obj.user_modified, '')
+
+        model_admin.save_model(request, obj, form, change=False)
         obj = MyTestModel.objects.get(pk=obj.pk)
         self.assertEqual(obj.user_created, self.user.username)
+
+        model_admin.save_model(request, obj, form, change=True)
+        obj = MyTestModel.objects.get(pk=obj.pk)
         self.assertEqual(obj.user_modified, self.user.username)
-        next_user = User.objects.create_user(
-            username='erikvw2', email='1@2.com', password='password')
-        request.user = next_user
-        my_model_admin.save_model(request, obj, None, True)
-        obj = MyTestModel.objects.get(pk=obj.pk)
-        self.assertEqual(obj.user_created, self.user.username)
-        self.assertEqual(obj.user_modified, next_user.username)
