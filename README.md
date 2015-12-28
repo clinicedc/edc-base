@@ -76,6 +76,8 @@ Or you can use the special validators `MinConsentAgeValidator`, `MaxConsentAgeVa
 
 ### Audit trail (HistoricalRecord):
 
+(in development PY3/DJ1.8+)
+
 HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
 with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
 `get_extra_fields()` method is overridden to change the *history_id* primary key from an 
