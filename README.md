@@ -21,10 +21,41 @@ Optional __settings__ attributes:
 	TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
 	CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$',
 	
+### Audit Trail (edc-audit)
+All Edc models that need an active audit trail import `edc_audit.AuditTrail` via `edc_base`. See `edc_audit`.
 
-Audit trail (HistoricalRecord):
--------------------------------
+    from edc_base.audit_trail import AuditTrail
+    from edc_sync.models import SyncModelMixin
 
+    class MyModel(SyncModelMixin, BaseUuidModel):
+
+        history = AuditTrail()
+
+        class Meta:
+            app_label = 'my_app'
+
+### Encryption
+All Edc models that use encrypted fields import classes from `edc_crypto_fields` via `edc_base.encrypted_fields`.
+
+    from edc_base.audit_trail import AuditTrail
+    from edc_base.encrypted_fields import (
+        IdentityField, EncryptedCharField, FirstnameField, LastnameField, mask_encrypted)
+    from edc_sync.models import SyncModelMixin
+
+    class MyModel(SyncModelMixin, BaseUuidModel):
+
+	first_name = FirstnameField(null=True)
+	last_name = LastnameField(verbose_name="Last name", null=True)
+	initials = EncryptedCharField(null=True)
+
+        history = AuditTrail()
+
+        class Meta:
+            app_label = 'my_app'
+
+
+### Audit trail (HistoricalRecord):
+(in development for PY3)
 HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
 with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
 `get_extra_fields()` method is overridden to change the *history_id* primary key from an 
@@ -34,9 +65,9 @@ in INSTALLED_APP.
 
 
 	from edc_base.model.models import HistoricalRecord
-	from edc_sync.mixins import SyncMixin
+	from edc_sync.models import SyncModelMixin
 	
-	class MyModel(SyncMixin, BaseUuidModel):
+	class MyModel(SyncModelMixin, BaseUuidModel):
 		
 		...
 		history = HistoricalRecord()
