@@ -28,8 +28,8 @@ if StrictVersion(get_version()) < StrictVersion('1.8.0') and six.PY2:
             EncryptedCharField, EncryptedTextField,
             EncryptedIdentityField as IdentityField,
             EncryptedDecimalField, BaseEncryptedField)
+        # from edc_crypto_fields.models import Crypt  # causes import error
     except ImportError as e:
-        print(e)
         from django_crypto_fields.classes import FieldCryptor
         from django_crypto_fields.fields import (
             FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField)
