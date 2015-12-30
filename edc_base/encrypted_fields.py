@@ -16,6 +16,9 @@ except ImportError:
     pass
 
 
+if 'edc_crypto_fields' in settings.INSTALLED_APPS:
+        import M2Crypto
+
 try:
     from edc_crypto_fields.classes import FieldCryptor
     from edc_crypto_fields.fields import (
@@ -26,7 +29,6 @@ try:
         EncryptedDecimalField, BaseEncryptedField)
     # from edc_crypto_fields.models import Crypt  # causes import error
 except ImportError as e:
-    print(str(e))
     from django_crypto_fields.classes import FieldCryptor
     from django_crypto_fields.fields import (
         FirstnameField, LastnameField, EncryptedCharField, EncryptedTextField, IdentityField,
