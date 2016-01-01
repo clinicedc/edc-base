@@ -42,16 +42,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'edc_audit',
-    'edc_registration',
+    'edc.core.bhp_content_type_map',
     'edc_appointment',
+    'edc_audit',
+    'edc_base',
+    'edc_meta_data',
+    'edc_registration',
+    'edc_rule_groups',
     'edc_visit_schedule',
     'edc_visit_tracking',
-    'edc.core.bhp_content_type_map',
-    'edc.subject.entry',
-    'edc.entry_meta_data',
-    'edc.subject.rule_groups',
-    'edc_base')
+)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

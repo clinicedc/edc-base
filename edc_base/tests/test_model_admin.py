@@ -1,13 +1,13 @@
 from django.contrib import admin
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.test import TransactionTestCase
 from django.test.client import RequestFactory
-from django.core.urlresolvers import reverse
 
 from edc_base.model.models.base_model import BaseModel
 from edc_base.modeladmin.admin.base_model_admin import BaseModelAdmin
-from django.contrib.admin.sites import AdminSite
 
 
 class MyTestModel(BaseModel):
