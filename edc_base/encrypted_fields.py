@@ -15,7 +15,6 @@ try:
 except ImportError:
     pass
 
-
 if 'edc_crypto_fields' in settings.INSTALLED_APPS:
         import M2Crypto
 
