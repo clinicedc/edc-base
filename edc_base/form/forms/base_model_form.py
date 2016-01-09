@@ -1,12 +1,12 @@
 import re
 
 from django import forms
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models import OneToOneField, ForeignKey
 from django.db.models.query import QuerySet
 
 from edc_base.form.classes import LogicCheck
 from edc_constants.constants import YES, NO, OTHER, NOT_APPLICABLE
-from django.core.exceptions import ImproperlyConfigured
 
 
 class BaseModelForm(forms.ModelForm):
