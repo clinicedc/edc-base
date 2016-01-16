@@ -23,6 +23,7 @@ def _get_model_if_tuple(model):
 
 
 def _discover_visit_model_if_exists(model):
+    """Set model class attributes `visit_model`, `visit_model_attr` and `natural_key.dependencies`."""
     try:
         model.visit_model, model.visit_model_attr = _configure_visit_model_attrs(model)
         try:
