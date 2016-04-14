@@ -1,6 +1,6 @@
 from django.conf import settings
 try:
-    from django.db.models import loading as apps #import get_apps, get_models, get_model
+    from django.db.models import loading as apps
 except:
     from django.apps import apps
 
