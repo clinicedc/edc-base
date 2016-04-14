@@ -2,26 +2,19 @@ import re
 
 from django import get_version
 from django.utils import timezone
-from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from edc_meta_data.models import CrfMetaDataHelper
+from edc_rule_groups.classes import site_rule_groups
 
 from ...modeladmin.exceptions import NextUrlError
 
 if get_version().startswith('1.6'):
     from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
-    from edc.entry_meta_data.helpers import ScheduledEntryMetaDataHelper
-    from edc.subject.rule_groups.classes import site_rule_groups
 else:
     from simple_history.admin import SimpleHistoryAdmin
-
-try:
-    from edc_entry.helpers import ScheduledEntryMetaDataHelper
-    from edc_rule_groups.classes import site_rule_groups
-except ImportError:
-    pass
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
@@ -209,11 +202,11 @@ class BaseModelAdmin (SimpleHistoryAdmin):
                     pass
                 elif post_save_next:
                     # post_save_next is only available to subject forms
-                    # try to reverse using method next_url_in_scheduled_entry_meta_data()
+                    # try to reverse using method next_url_from_crf_meta_data()
                     # which jumps to the next form on the subject dashboard instead of going
                     # back to the subject dashboard
                     try:
-                        next_url, visit_model_instance, entry_order = self.next_url_in_scheduled_entry_meta_data(
+                        next_url, visit_model_instance, entry_order = self.next_url_from_crf_meta_data(
                             obj, visit_attr, entry_order)
                         if next_url:
                             url = ('{next_url}?next={next}&dashboard_type={dashboard_type}&dashboard_id={dashboard_id}'
@@ -384,9 +377,9 @@ class BaseModelAdmin (SimpleHistoryAdmin):
             del kwargs['csrfmiddlewaretoken']
         return kwargs
 
-    def next_url_in_scheduled_entry_meta_data(self, obj, visit_attr, entry_order):
+    def next_url_from_crf_meta_data(self, obj, visit_attr, entry_order):
         """Returns a tuple with the reverse of the admin url for the next
-        model listed in scheduled_entry_meta_data.
+        model listed in crf_meta_data.
 
         If there is not a "next" model, returns an empty tuple (None, None, None).
 
@@ -395,16 +388,16 @@ class BaseModelAdmin (SimpleHistoryAdmin):
         if visit_attr and entry_order:
             visit_instance = getattr(obj, visit_attr)
             site_rule_groups.update_rules_for_source_model(obj, visit_instance)
-            next_entry = ScheduledEntryMetaDataHelper(
-                visit_instance.get_appointment(),
+            crf_meta_data = CrfMetaDataHelper(
+                visit_instance.appointment,
                 visit_instance.__class__, visit_attr
             ).get_next_entry_for(entry_order)
-            if next_entry:
+            if crf_meta_data:
                 next_url_tuple = (
                     reverse('admin:{0}_{1}_add'.format(
-                        next_entry.entry.content_type_map.app_label,
-                        next_entry.entry.content_type_map.module_name)),
+                        crf_meta_data.crf_entry.content_type_map.app_label,
+                        crf_meta_data.crf_entry.content_type_map.module_name)),
                     visit_instance,
-                    next_entry.entry.entry_order
+                    crf_meta_data.crf_entry.entry_order
                 )
         return next_url_tuple

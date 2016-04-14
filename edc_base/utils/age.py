@@ -1,4 +1,5 @@
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, time
 
 
 def age(born, reference_date):
@@ -30,3 +31,9 @@ def formatted_age(born, reference_date):
             raise TypeError(
                 'Age template tag missed a case... today - born. '
                 'rdelta = {} and {}'.format(rdelta, born))
+
+
+def get_age_in_days(reference_date, dob):
+    dob = datetime.combine(dob, time())
+    tdelta = reference_date - dob
+    return tdelta.days

@@ -34,19 +34,24 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles']
-if get_version().startswith('1.6'):
-    INSTALLED_APPS.append('django_extensions')
-    INSTALLED_APPS.append('edc_audit')
-else:
-    INSTALLED_APPS.append('simple_history')
-INSTALLED_APPS.append('edc_base')
+    'django.contrib.staticfiles',
+    'django_extensions',
+    'edc_appointment',
+    'edc_audit',
+    'edc_base',
+    'edc_content_type_map',
+    'edc_meta_data',
+    'edc_registration',
+    'edc_rule_groups',
+    'edc_visit_schedule',
+    'edc_visit_tracking',
+)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

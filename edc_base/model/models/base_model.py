@@ -45,6 +45,8 @@ class BaseModel(TimeStampedModel):
         help_text="System field. Git repository tag:branch:commit."
     )
 
+    objects = models.Manager()
+
     def save(self, *args, **kwargs):
         try:
             # don't allow update_fields to bypass these audit fields
