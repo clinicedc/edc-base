@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import django
 from distutils.version import StrictVersion
 from django import get_version
 from datetime import datetime
@@ -34,7 +35,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +52,12 @@ INSTALLED_APPS = (
     'edc_rule_groups',
     'edc_visit_schedule',
     'edc_visit_tracking',
-)
+]
+
+if float(django.get_version()) > 1.6:
+    INSTALLED_APPS.pop(INSTALLED_APPS.index('edc_audit'))
+    INSTALLED_APPS.append('simple_history')
+    INSTALLED_APPS.append('django_crypto_fields')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -1,22 +1,28 @@
-from django.db.models.loading import get_apps, get_models, get_model
-
+from django.conf import settings
+try:
+    from django.db.models import loading as apps #import get_apps, get_models, get_model
+except:
+    from django.apps import apps
 
 def edc_base_startup(verbose=None):
     """Inspect all models to set edc specific attributes."""
-    for app in get_apps():
-        for model in get_models(app):
-            try:
-                _get_model_if_tuple(model)
-                _discover_visit_model_if_exists(model)
-            except AttributeError:
-                pass
+    for app_str in settings.INSTALLED_APPS:
+        if 'contrib' not in app_str:
+            if '.' in app_str:
+                app_str = app_str.split('.')[-1:][0]
+            for model in apps.get_models(apps.get_app_config(app_str)):
+                try:
+                    _get_model_if_tuple(model)
+                    _discover_visit_model_if_exists(model)
+                except AttributeError:
+                    pass
 
 
 def _get_model_if_tuple(model):
     for attr in ['off_study_model', 'death_report_model']:
         try:
             app_label, model_name = getattr(model, attr)
-            model_class = get_model(app_label, model_name)
+            model_class = apps.get_model(app_label, model_name)
             setattr(model, attr, model_class or getattr(model, attr))
         except (TypeError, AttributeError, ValueError):
             pass

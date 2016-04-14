@@ -3,7 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 try:
     from simple_history.models import HistoricalRecords as AuditTrail
-    if 'django_simple_history' not in settings.INSTALLED_APPS:
+    if 'simple_history' not in settings.INSTALLED_APPS:
         raise ImproperlyConfigured(
             'Why is the package \'django_simple_history\' installed? '
             'If you mean to use it, add it to INSTALLED_APPS, otherwise uninstall it '
