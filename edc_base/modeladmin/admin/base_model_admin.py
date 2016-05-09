@@ -40,8 +40,8 @@ class BaseModelAdmin (SimpleHistoryAdmin):
             pass
         self.search_fields = tuple(set(self.search_fields))
         self.list_filter = list(self.list_filter)
-        self.list_filter.extend(['created', 'modified', 'user_created', 'user_modified', 'hostname_created'])
-        self.list_filter = tuple(set(self.list_filter))
+        columns = ['created', 'modified', 'user_created', 'user_modified', 'hostname_created']
+        self.list_filter = self.list_filter + [item for item in columns if item not in self.list_filter]
 
     def save_model(self, request, obj, form, change):
         if not change:
