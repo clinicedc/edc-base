@@ -49,7 +49,7 @@ class BaseModelForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
         # check for OTHER in choices tuples, if selected, should have a value on Other specify.
         other = []
-        for fld in cleaned_data.iterkeys():
+        for fld in cleaned_data.keys():
             if cleaned_data.get(fld, None) in ['other', 'Other', OTHER]:
                 other.append(fld)
         for fld in other:
@@ -77,7 +77,7 @@ class BaseModelForm(forms.ModelForm):
         """Raises ValidtionError for an m2m if it cannot confirm \'Other Specify\'
         is paired with a value in a following \'other\' field."""
         cleaned_data = self.cleaned_data
-        for field_name, field_value in cleaned_data.iteritems():
+        for field_name, field_value in cleaned_data.items():
             self.check_for_value_in_m2m(
                 cleaned_data, field_name, field_value,
                 '{0}_other'.format(field_name),
@@ -215,7 +215,7 @@ class BaseModelForm(forms.ModelForm):
 
         self.validate_cleaned_data(cleaned_data)
         if self.get_validation_error() and not supress_exception:
-            for message in self.get_validation_error().itervalues():
+            for message in self.get_validation_error().values():
                 raise forms.ValidationError(message)
         return self.get_validation_error()
 
