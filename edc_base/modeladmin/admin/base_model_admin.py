@@ -11,10 +11,7 @@ from edc_rule_groups.classes import site_rule_groups
 
 from ...modeladmin.exceptions import NextUrlError
 
-if get_version().startswith('1.6'):
-    from django.contrib.admin import ModelAdmin as SimpleHistoryAdmin
-else:
-    from simple_history.admin import SimpleHistoryAdmin
+from simple_history.admin import SimpleHistoryAdmin
 
 
 class BaseModelAdmin (SimpleHistoryAdmin):
