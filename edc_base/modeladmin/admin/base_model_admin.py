@@ -260,6 +260,7 @@ class BaseModelAdmin (SimpleHistoryAdmin):
             change_list_q = ''
             kwargs = {}
             [kwargs.update({key: value}) for key, value in list(request.GET.items()) if key != 'next']
+            print(next_url_name)
             try:
                 if '_add' in next_url_name:
                     url = reverse(next_url_name)
