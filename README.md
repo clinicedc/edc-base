@@ -22,39 +22,6 @@ Optional __settings__ attributes:
 	CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$',
 	
 
-### Audit Trail (edc-audit)
-All Edc models that need an active audit trail import `edc_audit.AuditTrail` via `edc_base`. See `edc_audit`.
-
-    from edc_base.audit_trail import AuditTrail
-    from edc_sync.models import SyncModelMixin
-
-    class MyModel(SyncModelMixin, BaseUuidModel):
-
-        history = AuditTrail()
-
-        class Meta:
-            app_label = 'my_app'
-
-### Encryption
-All Edc models that use encrypted fields import classes from `edc_crypto_fields` via `edc_base.encrypted_fields`.
-
-    from edc_base.audit_trail import AuditTrail
-    from edc_base.encrypted_fields import (
-        IdentityField, EncryptedCharField, FirstnameField, LastnameField, mask_encrypted)
-    from edc_sync.models import SyncModelMixin
-
-    class MyModel(SyncModelMixin, BaseUuidModel):
-
-    first_name = FirstnameField(null=True)
-    last_name = LastnameField(verbose_name="Last name", null=True)
-    initials = EncryptedCharField(null=True)
-
-        history = AuditTrail()
-
-        class Meta:
-            app_label = 'my_app'
-
-
 ### Field Validators
 
 __CompareNumbersValidator:__ Compare the field value to a static value. For example, validate that the

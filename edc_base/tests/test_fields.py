@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.db import models
 
 from edc_base.model.models import BaseUuidModel
-from edc_base.audit_trail import AuditTrail
+from simple_history.models import HistoricalRecords as AuditTrail
 
 
 class TestModel(BaseUuidModel):
