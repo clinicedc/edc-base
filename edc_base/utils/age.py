@@ -1,5 +1,5 @@
 from dateutil.relativedelta import relativedelta
-from datetime import datetime, time
+from datetime import datetime, time, date
 
 
 def age(born, reference_date):
@@ -10,8 +10,8 @@ def age(born, reference_date):
     return relativedelta(reference_date, born)
 
 
-def formatted_age(born, reference_date):
-
+def formatted_age(born, reference_date=None):
+    reference_date = reference_date or date.today()
     if born:
         rdelta = relativedelta(reference_date, born)
         if born > reference_date:
