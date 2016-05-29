@@ -174,13 +174,17 @@ class ModelAdminChangelistButtonMixin(object):
 
     changelist_model_button_template = '<a href="{{url}}" class="button" title="{{title}}" {{disabled}}>{label}</a>'
 
-    def change_button(self, url_name, reverse_args, disabled=None, label=None, title=None):
+    def change_button(self, url_name, reverse_args, disabled=None, label=None, title=None, namespace=None):
         label = label or 'change'
+        if namespace:
+            url_name = '{}:{}'.format(namespace, url_name)
         url = reverse(url_name, args=reverse_args)
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
     def add_button(self, url_name, disabled=None, label=None, querystring=None, namespace=None, title=None):
         label = label or 'add'
+        if namespace:
+            url_name = '{}:{}'.format(namespace, url_name)
         url = reverse(url_name) + '' if querystring is None else querystring
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
