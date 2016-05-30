@@ -1,6 +1,5 @@
 # import re
 # 
-# from django import get_version
 # from django.utils import timezone
 # from django.core.urlresolvers import NoReverseMatch
 # from django.core.urlresolvers import reverse
