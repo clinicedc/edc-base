@@ -20,21 +20,45 @@ class ModelAdminBasicMixin(object):
     mixin_radio_fields = {}
 
     mixin_list_display = []
+    list_display_pos = []
 
     mixin_list_filter = []
+    list_filter_pos = []
 
     mixin_search_fields = []
 
     mixin_exclude_fields = []
 
+    def reorder(self, original_list):
+        """Return an ordered list after inserting list items from the original
+        that were passed tuples of (index, item)"""
+        new_list = []
+        items_with_pos = []
+        for index, item in enumerate(original_list):
+            try:
+                _, _ = item
+                items_with_pos.append(item)
+            except ValueError:
+                new_list.append(item)
+        for index, item in items_with_pos:
+            try:
+                new_list.pop(new_list.index(item))
+            except ValueError:
+                pass
+            new_list.insert(index, item)
+        return new_list
+
     def get_list_display(self, request):
         self.list_display = list(super(ModelAdminBasicMixin, self).get_list_display(request) or [])
+        self.list_display = self.reorder(list(self.list_display) + list(self.list_display_pos or []))
         self.list_display = self.extend_from(self.list_display, self.mixin_list_display or [])
         self.list_display = self.remove_from(self.list_display)
+        print(self.list_display)
         return tuple(self.list_display)
 
     def get_list_filter(self, request):
         self.list_filter = list(super(ModelAdminBasicMixin, self).get_list_filter(request) or [])
+        self.list_filter = self.reorder(list(self.list_filter) + list(self.list_filter_pos or []))
         self.list_filter = self.update_from_mixin(self.list_filter, self.mixin_list_filter or [])
         return tuple(self.list_filter)
 
@@ -174,6 +198,13 @@ class ModelAdminChangelistButtonMixin(object):
 
     changelist_model_button_template = '<a href="{{url}}" class="button" title="{{title}}" {{disabled}}>{label}</a>'
 
+    def button(self, url_name, reverse_args, disabled=None, label=None, title=None, namespace=None):
+        label = label or 'change'
+        if namespace:
+            url_name = '{}:{}'.format(namespace, url_name)
+        url = reverse(url_name, args=reverse_args)
+        return self.button_template(label, url=url, disabled=disabled, title=title)
+
     def change_button(self, url_name, reverse_args, disabled=None, label=None, title=None, namespace=None):
         label = label or 'change'
         if namespace:
@@ -211,15 +242,15 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
             app_label = app_label
             model_name = model_name
             if reverse_args:
-                changelist_model_button = self.change_button(
+                changelist_model_button = self.change_model_button(
                     app_label, model_name, reverse_args, namespace=namespace, label=change_label, title=title)
             else:
-                changelist_model_button = self.add_button(
+                changelist_model_button = self.add_model_button(
                     app_label, model_name, label=add_label, querystring=add_querystring,
                     namespace=namespace, title=title)
         return changelist_model_button
 
-    def change_button(self, app_label, model_name, reverse_args, label=None, namespace=None, title=None):
+    def change_model_button(self, app_label, model_name, reverse_args, label=None, namespace=None, title=None):
         label = label or 'change'
         namespace = namespace or 'admin'
         url = reverse(
@@ -227,7 +258,7 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
                 namespace=namespace, app_label=app_label, model_name=model_name), args=reverse_args)
         return self.button_template(label, url=url, title=title)
 
-    def add_button(self, app_label, model_name, label=None, querystring=None, namespace=None, title=None):
+    def add_model_button(self, app_label, model_name, label=None, querystring=None, namespace=None, title=None):
         label = label or 'add'
         namespace = namespace or 'admin'
         url = reverse(
