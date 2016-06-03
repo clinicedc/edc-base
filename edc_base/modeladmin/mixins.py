@@ -53,7 +53,6 @@ class ModelAdminBasicMixin(object):
         self.list_display = self.reorder(list(self.list_display) + list(self.list_display_pos or []))
         self.list_display = self.extend_from(self.list_display, self.mixin_list_display or [])
         self.list_display = self.remove_from(self.list_display)
-        print(self.list_display)
         return tuple(self.list_display)
 
     def get_list_filter(self, request):
