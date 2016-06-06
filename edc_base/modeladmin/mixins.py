@@ -147,6 +147,7 @@ class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
     """Redirect to a named url in the querystring for a model add, change, delete."""
 
     redirect_url_get_attr = 'next_url'
+    querystring_name = 'next'
 
     def redirect_url(self, request, obj, post_url_continue=None):
         redirect_url = super(ModelAdminNextUrlRedirectMixin, self).redirect_url(
