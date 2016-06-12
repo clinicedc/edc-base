@@ -1,13 +1,11 @@
 from django.db import models
 
-from .base_model import BaseModel
-
 from ..managers import BaseListManager
 
 
-class BaseListModel(BaseModel):
+class ListModelMixin(models.Model):
 
-    """Basic model for list data used in dropdown and radio widgets having display value and store value pairs."""
+    """Mixin for list data used in dropdown and radio widgets having display value and store value pairs."""
 
     name = models.CharField(
         verbose_name='Name',
@@ -55,7 +53,7 @@ class BaseListModel(BaseModel):
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.name
-        super(BaseListModel, self).save(*args, **kwargs)
+        super(ListModelMixin, self).save(*args, **kwargs)
 
     def natural_key(self):
         return (self.name, )
