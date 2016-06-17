@@ -22,6 +22,13 @@ setup(
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',
+    install_requires=[
+        'django-braces',
+        'django-crispy-forms',
+        'django-extensions==1.6.7'
+        'python-dateutil',
+        'unipath',
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
