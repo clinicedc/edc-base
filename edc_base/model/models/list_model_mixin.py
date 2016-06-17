@@ -61,4 +61,3 @@ class ListModelMixin(models.Model):
     class Meta:
         abstract = True
         ordering = ['display_index', 'name']
-        unique_together = (('name', ))

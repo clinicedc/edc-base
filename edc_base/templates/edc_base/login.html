@@ -1,24 +1,32 @@
-{% extends "base.html" %}
+{% extends "edc_base/base.html" %}
 {% load crispy_forms_tags %}
 
+{% block extra-css %}
+{{ block.super }}
+<style>
+.asteriskField {
+    display: none;
+}
+</style>
+{% endblock extra-css %}
+
 {% block body %}
-<div class = "container">
-  <div class="row">
+    <div class="col-md-3"></div>
     <div class="col-md-6">
-      <h1>{{ project_title }} Login</h1>
-      <hr/>
-      <div class="well">
+      <div class="panel panel-default">
+      <div class="panel-heading"><h4 class="text-muted text-center">{{ project_name }} Login</h4></div>
 		{% if messages %}
-		<ul class="messages">
 		    {% for message in messages %}
-		    	<li class="list-group-item-danger"><strong>{{ message }}</strong></li>
+		      <div class="alert alert-danger text-center">
+		    	{{ message }}
+		      </div>
 		    {% endfor %}
-		</ul>
 		{% endif %}
 		{% csrf_token %}
+		<div class="panel-body text-center">
         {% crispy form %}
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+      </div>
+    <div class="col-md-3"></div>
 {% endblock body %}

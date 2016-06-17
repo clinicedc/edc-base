@@ -2,6 +2,7 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from edc_base.modelform.mixins import CrispyFormMixin
 
 
 class LoginForm(forms.Form):
@@ -13,4 +14,5 @@ class LoginForm(forms.Form):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
+        self.helper.html5_required = True
         self.helper.add_input(Submit('submit', 'Submit'))

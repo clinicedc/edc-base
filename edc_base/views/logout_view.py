@@ -5,6 +5,7 @@ from django.views.generic import RedirectView
 class LogoutView(RedirectView):
 
     permanent = True
+    pattern_name = 'login_url'
 
     def get(self, request, *args, **kwargs):
         logout(request)
