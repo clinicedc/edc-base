@@ -63,9 +63,10 @@
 {% block topbar %}
 <!-- topbar -->
     <div class="container" id="header">
-        <div id="branding">
     <nav class="navbar navbar-inverse navbar-fixed-top">
+
       <div class="container-fluid">
+
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -75,6 +76,7 @@
           </button>
           <span class="navbar-brand">{{ project_name }}</span>
         </div>
+
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li id="li-topbar-home"><a class="glyphicon glyphicon-home" title="home" href="{% url 'home_url' %}"></a></li>
@@ -83,15 +85,14 @@
             <li id="li-topbar-logout"><a class="glyphicon glyphicon-log-out" title="logout" href="{% url 'logout_url' %}"></a></li>
           </ul>
         </div>
+
       </div>
     </nav>
-        </div>
-      </div>
     </div> <!-- div container (topbar) -->
     <!-- end topbar -->
 {% endblock topbar %}
 
-{% block main %}{% endblock main %}
+{% block main %}sdsd{% endblock main %}
 
 {% block bottombar %}{% endblock bottombar %}
 
