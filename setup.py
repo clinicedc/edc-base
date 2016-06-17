@@ -25,7 +25,7 @@ setup(
     install_requires=[
         'django-braces',
         'django-crispy-forms',
-        'django-extensions==1.6.7'
+        'django-extensions ==1.6.7'
         'python-dateutil',
         'unipath',
     ],
