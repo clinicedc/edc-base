@@ -1,13 +1,13 @@
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import authenticate, login
-from django.views.generic.edit import FormView
-from django.utils.decorators import method_decorator
 from braces.views import FormInvalidMessageMixin
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import logout
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import FormView
 
 from edc_base.form.forms import LoginForm
 
 from .edc_base_view_mixin import EdcBaseViewMixin
-from django.contrib.auth.views import logout
 
 
 class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):

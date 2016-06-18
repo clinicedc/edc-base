@@ -1,4 +1,3 @@
 
-
 class NextUrlError(Exception):
     pass

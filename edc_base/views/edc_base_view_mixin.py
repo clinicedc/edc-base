@@ -1,12 +1,14 @@
-from django.conf import settings
-from django.apps import apps as django_apps
 from datetime import date
+
+from django.apps import apps as django_apps
+from django.conf import settings
 from django_revision.revision import Revision
 
 
 class EdcBaseViewMixin:
+    """Mixes in common template variables for the footer, etc."""
 
-    app_label = None
+    app_label = None  # this is the main app (e.g. where settings resides)
 
     @property
     def app(self):
