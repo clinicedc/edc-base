@@ -3,6 +3,7 @@ from datetime import date
 from django.apps import apps as django_apps
 from django.conf import settings
 from django_revision.revision import Revision
+from django.core.exceptions import ImproperlyConfigured
 
 
 class EdcBaseViewMixin:
@@ -16,6 +17,8 @@ class EdcBaseViewMixin:
             app_label = settings.APP_LABEL
         except AttributeError:
             app_label = self.app_label
+        if not app_label:
+            raise ImproperlyConfigured('Main APP_LABEL not set. Either set on view or in settings.APP_LABEL.')
         return django_apps.get_app_config(app_label)
 
     def get_context_data(self, **kwargs):
