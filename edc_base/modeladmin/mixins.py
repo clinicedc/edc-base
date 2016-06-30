@@ -356,7 +356,7 @@ class ModelAdminAuditFieldsMixin(object):
         super(ModelAdminAuditFieldsMixin, self).save_model(request, obj, form, change)
 
     def get_list_filter(self, request):
-        columns = ['created', 'modified', 'user_created', 'user_modified', 'hostname_created']
+        columns = ['created', 'modified', 'user_created', 'user_modified', 'hostname_created', 'hostname_modified']
         self.list_filter = list(self.list_filter or [])
         self.list_filter = self.list_filter + [item for item in columns if item not in self.list_filter]
         return tuple(self.list_filter)
