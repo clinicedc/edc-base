@@ -34,11 +34,11 @@ class CrispyFormMixin:
     Template should have the bootstrap datepicker plugin (Stefan Petre)
 
     {% block extra-css %}
-        <link href="{% static "css/datetimepicker/datetimepicker.css" %}" rel="stylesheet" type="text/css" >
+        <link href="{% static "edc_base/datetimepicker/css/datetimepicker.css" %}" rel="stylesheet" type="text/css" >
     {% endblock extra-css %}
 
     {% block extra-scripts %}
-        <script type="text/javascript" charset="utf8" src="{% static "js/bootstrap-datetimepicker.min.js" %}"></script>
+        <script type="text/javascript" charset="utf8" src="{% static "edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
     {% endblock extra-scripts %}
     """
 
