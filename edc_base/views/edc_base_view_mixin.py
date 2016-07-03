@@ -2,11 +2,11 @@ from datetime import date
 
 from django.apps import apps as django_apps
 from django.conf import settings
-from django_revision.revision import Revision
+from django_revision.views import RevisionMixin
 from django.core.exceptions import ImproperlyConfigured
 
 
-class EdcBaseViewMixin:
+class EdcBaseViewMixin(RevisionMixin):
     """Mixes in common template variables for the footer, etc."""
 
     app_label = None  # this is the main app (e.g. where settings resides)
@@ -27,6 +27,5 @@ class EdcBaseViewMixin:
             'project_name': self.app.verbose_name,
             'institution': self.app.institution,
             'year': date.today().year,
-            'revision': Revision().tag,
         })
         return context
