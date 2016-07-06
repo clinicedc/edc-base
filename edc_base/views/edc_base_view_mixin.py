@@ -23,9 +23,9 @@ class EdcBaseViewMixin(RevisionMixin):
             raise ImproperlyConfigured('Main APP_LABEL not set. Either set on view or in settings.APP_LABEL.')
         return django_apps.get_app_config(app_label)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(EdcBaseViewMixin, self).dispatch(*args, **kwargs)
+#     @method_decorator(login_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super(EdcBaseViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
