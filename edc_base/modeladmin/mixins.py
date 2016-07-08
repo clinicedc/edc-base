@@ -150,11 +150,13 @@ class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
     querystring_name = 'next'
 
     def redirect_url(self, request, obj, post_url_continue=None):
+        args = request.GET.dict()
+        args.pop(self.querystring_name)
         redirect_url = super(ModelAdminNextUrlRedirectMixin, self).redirect_url(
             request, obj, post_url_continue)
         if request.GET.get(self.querystring_name):
             url_name = request.GET.get(self.querystring_name)
-            return reverse(url_name)
+            return reverse(url_name, args=[element for element in args.values()])
         return redirect_url
 
 

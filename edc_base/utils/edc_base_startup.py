@@ -10,13 +10,15 @@ def edc_base_startup(verbose=None):
         if 'contrib' not in app_str:
             if '.' in app_str:
                 app_str = app_str.split('.')[-1:][0]
-            for model in apps.get_models(apps.get_app_config(app_str)):
-                try:
-                    _get_model_if_tuple(model)
-                    _discover_visit_model_if_exists(model)
-                except AttributeError:
-                    pass
-
+            try:
+                for model in apps.get_models(apps.get_app_config(app_str)):
+                    try:
+                        _get_model_if_tuple(model)
+                        _discover_visit_model_if_exists(model)
+                    except AttributeError:
+                        pass
+            except LookupError:
+                pass
 
 def _get_model_if_tuple(model):
     for attr in ['off_study_model', 'death_report_model']:
