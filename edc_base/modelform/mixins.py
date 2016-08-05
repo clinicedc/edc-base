@@ -64,7 +64,9 @@ class CrispyFormMixin:
         """Returns a list of field_names/classes for the helper.
 
         Field list is any of modeladmin.fields, form._meta.fields or model._meta.fields."""
-        fields = self.get_modeladmin_fields() or self._meta.fields or [fld.name for fld in self._meta.model._meta.fields]
+        fields = (self.get_modeladmin_fields() or
+                  self._meta.fields or
+                  [fld.name for fld in self._meta.model._meta.fields if fld.editable])
         fields = self.replace_hidden_fields(fields)
         fields = self.replace_date_fields(fields)
         return fields
