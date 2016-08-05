@@ -17,7 +17,7 @@ class EdcBaseViewMixin(RevisionMixin):
         context = super().get_context_data(**kwargs)
         app_config = django_apps.get_app_config('edc_base')
         context.update({
-            'project_name': app_config.verbose_name,
+            'project_name': app_config.project_name,
             'institution': app_config.institution,
             'year': date.today().year,
         })
