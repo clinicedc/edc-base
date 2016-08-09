@@ -11,6 +11,7 @@ style = color_style()
 
 
 class ConfigParserMixin:
+    """Set AppConfig attributes via a text/ini configuration file."""
 
     config_filename = 'config.ini'
     config_items = {}
