@@ -13,8 +13,15 @@ style = color_style()
 class ConfigParserMixin:
 
     config_filename = 'config.ini'
-    config_folder = os.path.join(settings.BASE_DIR.ancestor(1), 'etc')
     config_items = {}
+
+    @property
+    def config_folder(self):
+        try:
+            config_folder = settings.ETC_DIR
+        except AttributeError:
+            config_folder = os.path.join(settings.BASE_DIR.ancestor(1), 'etc')
+        return config_folder
 
     @property
     def config_path(self):
