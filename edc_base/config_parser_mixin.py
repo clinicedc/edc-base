@@ -53,7 +53,7 @@ class ConfigParserMixin:
         self.create_config_file()
         config = configparser.ConfigParser()
         sys.stdout.write(
-            ' Reading configuration file \'{}\'.\n'.format(self.config_filename))
+            ' * reading configuration file \'{}\'.\n'.format(self.config_filename))
         config.read(os.path.join(self.config_folder, self.config_filename))
         return config[name]
 
