@@ -14,14 +14,19 @@ class ConfigParserMixin:
 
     config_filename = 'config.ini'
     config_items = {}
+    _config_folder = None
 
     @property
     def config_folder(self):
-        try:
-            config_folder = settings.ETC_DIR
-        except AttributeError:
-            config_folder = os.path.join(settings.BASE_DIR.ancestor(1), 'etc')
-        return config_folder
+        if not self._config_folder:
+            try:
+                self._config_folder = settings.ETC_DIR
+            except AttributeError:
+                self._config_folder = os.path.join(settings.BASE_DIR, 'etc')
+                sys.stdout.write(style.NOTICE(
+                    ' Warning: missing settings.ETC_DIR, using default configuration folder '
+                    '\'{}\'\n'.format(self._config_folder)))
+        return self._config_folder
 
     @property
     def config_path(self):
@@ -30,14 +35,14 @@ class ConfigParserMixin:
     @property
     def config_section(self):
         """Return the config section name."""
-        return self.name  # from AppConfig
+        return self.name  # expected from AppConfig
 
     def create_config_file(self, name=None):
         """Create a default ini file if one does not already exist."""
         name = name or self.config_section
         if not os.path.exists(os.path.join(self.config_path)):
             sys.stdout.write(style.NOTICE(
-                'Warning: Creating default configuration file \'{}\'. '
+                ' Note: Creating default configuration file \'{}\'. '
                 'See {}.AppConfig\n'.format(self.config_path, name)))
         self.update_config_attrs(name)
 
