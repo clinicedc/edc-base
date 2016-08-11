@@ -14,51 +14,76 @@ class ConfigParserMixin:
     """Set AppConfig attributes via a text/ini configuration file."""
 
     config_filename = 'config.ini'
-    config_attrs = []
+    config_attrs = {}
     _config_folder = None
 
-    def overwrite_config_attrs_on_class(self, config_section):
+    def overwrite_config_attrs_on_class(self, section=None):
         """Read config file and overwrite attributes on the class."""
-        config = self.read_config_file(config_section)
-        sys.stdout.write(
-            ' * overwriting config for {}.\n'.format(', '.join(self.config_attrs)))
-        for k in self.config_attrs:
-            setattr(self, k, config[config_section][k])
-
-    def read_config_file(self, config_section):
-        """Read the config file and return the config instance."""
         config = configparser.ConfigParser()
+        config_attrs = {section: self.config_attrs[section]} if section else self.config_attrs
         sys.stdout.write(
             ' * reading configuration file \'{}\'.\n'.format(self.config_filename))
         config.read(os.path.join(self.config_folder, self.config_filename))
-        try:
-            config[config_section]
-        except KeyError:
-            config = self.write_config_file(config_section)
-        return config
+        for section, attrs in config_attrs.items():
+            if section not in config.sections():
+                self.write_default_config(section)
+                config.read(os.path.join(self.config_folder, self.config_filename))
+            sys.stdout.write(
+                ' * overwriting {} config for {}.\n'.format(section, ', '.join([self.convert_attr(attr)[0] for attr in attrs])))
+            for attr in attrs:
+                attr, value = self.to_python(attr, section, config)
+                setattr(self, attr, value or None)
 
-    def write_config_file(self, config_section):
+    def convert_attr(self, attr):
+        try:
+            attr, datatype = attr
+        except ValueError:
+            attr, datatype = attr, None
+        return attr, datatype
+
+    def to_python(self, attr, section, config):
+        """Return attr, value where value is converted back to a python object."""
+        attr, datatype = self.convert_attr(attr)
+        if datatype in (list, tuple):
+            value = config[section][attr]
+            if value:
+                value = tuple(''.join(value.split()).split(','))
+        elif datatype == bool:
+            value = config[section].getboolean(attr)
+        else:
+            value = config[section].get(attr)
+        return attr, value
+
+    def get_prep_value(self, attr, section, config):
+        """Return attr, value where value is prepared for the write to file."""
+        attr, datatype = self.convert_attr(attr)
+        try:
+            value = getattr(self, attr)
+            if not value:
+                value = ''
+            elif datatype in (list, tuple):
+                value = ','.join(value)
+        except AttributeError:
+            value = ''
+        return attr, value
+
+    def write_default_config(self, section):
         """Write the config file with default values and return the config instance."""
         config = configparser.ConfigParser()
-        items = {}
-        for k in self.config_attrs:
-            try:
-                value = getattr(self, k)
-            except AttributeError:
-                value = ''
-            items[k] = value
-        config[config_section] = items
+        values = {}
+        for attr in self.config_attrs[section]:
+            attr, value = self.get_prep_value(attr, section, config)
+            values[attr] = value
+        config[section] = values
         try:
             sys.stdout.write(style.NOTICE(
-                ' Note: Creating default configuration file \'{}\'. '
-                'See {}.AppConfig\n'.format(self.config_path, config_section)))
+                ' * writing default configuration for \'{}\'.\n'.format(section)))
             with open(self.config_path, 'a') as f:
                 config.write(f)
         except FileNotFoundError:
             raise ImproperlyConfigured(
                 'Unable to create config file {}. Does config folder exist?. '
-                'See {}.AppConfig and edc_base.AppConfig'.format(self.config_path, config_section))
-        return config
+                'See {}.AppConfig and edc_base.AppConfig'.format(self.config_path, section))
 
     @property
     def config_folder(self):
