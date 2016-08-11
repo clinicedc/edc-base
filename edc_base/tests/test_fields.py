@@ -5,24 +5,7 @@ import socket
 
 from django.test import TestCase
 
-from django.db import models
-
-from edc_base.model.models import BaseUuidModel
-from simple_history.models import HistoricalRecords as AuditTrail
-
-
-class TestModel(BaseUuidModel):
-
-    f1 = models.CharField(max_length=10)
-    f2 = models.CharField(max_length=10)
-    f3 = models.CharField(max_length=10, null=True, blank=False)
-    f4 = models.CharField(max_length=10, null=True, blank=False)
-    f5 = models.CharField(max_length=10)
-
-    history = AuditTrail()
-
-    class Meta:
-        app_label = 'edc_base'
+from edc_base_example.models import TestModel
 
 
 class TestFields(TestCase):

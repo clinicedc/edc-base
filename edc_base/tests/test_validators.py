@@ -1,24 +1,13 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
+
 from django import forms
-from django.db import models
 from django.test import TestCase
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 
 from edc_base.model.validators import (
     MaxConsentAgeValidator, GenderOfConsent, CompareNumbersValidator, MinConsentAgeValidator)
-
-
-class TestValidatorModel(models.Model):
-
-    consent_age = models.IntegerField(
-        validators=[
-            CompareNumbersValidator(18, '>=', message='Age of consent must be {}. Got {}'),
-            CompareNumbersValidator(64, '<=', message='Age of consent must be {}. Got {}')
-        ])
-
-    class Meta:
-        app_label = 'edc_base'
+from edc_base_example.models import TestValidatorModel
 
 
 class TestValidationForm(forms.ModelForm):
