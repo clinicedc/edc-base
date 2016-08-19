@@ -8,7 +8,7 @@ Add to your app as
 [
    ...
     url(r'home/', HomeView.as_view(), name='home_url'),  # your home view, needed by base.html
-    url(r'', include('edc_base.urls')),  # login, logout
+    url(r'', include('edc_base.urls', 'edc-base')),  # login, logout
 ]
 
 """
