@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 
 
-class ModelAdminBasicMixin(object):
+class ModelAdminBasicMixin:
 
     """Merge ModelAdmin attributes with the concrete class attributes fields, radio_fields, list_display,
     list_filter and search_fields.
@@ -103,7 +103,7 @@ class ModelAdminBasicMixin(object):
         return self.radio_fields
 
 
-class ModelAdminRedirectMixin(object):
+class ModelAdminRedirectMixin:
 
     """Redirect on add, change, or delete."""
 
@@ -196,7 +196,7 @@ class ModelAdminModelRedirectMixin(ModelAdminRedirectMixin):
                 namespace=namespace, app_label=self.redirect_app_label, model_name=self.redirect_model_name))
 
 
-class ModelAdminChangelistButtonMixin(object):
+class ModelAdminChangelistButtonMixin:
 
     changelist_model_button_template = '<a href="{{url}}" class="button" title="{{title}}" {{disabled}}>{label}</a>'
 
@@ -285,7 +285,7 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
         return self.button_template(label, disabled='disabled', url='#')
 
 
-class ModelAdminFormInstructionsMixin(object):
+class ModelAdminFormInstructionsMixin:
     """Add instructions to the add view context.
 
     Override the change_form.html to add {{ instructions }}
@@ -346,7 +346,7 @@ class ModelAdminFormInstructionsMixin(object):
             request, object_id, form_url=form_url, extra_context=extra_context)
 
 
-class ModelAdminAuditFieldsMixin(object):
+class ModelAdminAuditFieldsMixin:
 
     def save_model(self, request, obj, form, change):
         if not change:
@@ -364,7 +364,7 @@ class ModelAdminAuditFieldsMixin(object):
         return tuple(self.list_filter)
 
 
-class ModelAdminFormAutoNumberMixin(object):
+class ModelAdminFormAutoNumberMixin:
 
     def auto_number(self, form):
         WIDGET = 1
@@ -381,3 +381,16 @@ class ModelAdminFormAutoNumberMixin(object):
         form = super(ModelAdminFormAutoNumberMixin, self).get_form(request, obj, **kwargs)
         form = self.auto_number(form)
         return form
+
+
+class TabularInlineMixin:
+
+    """Forces username to be saved on add and change"""
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.user_created = request.user.username
+        if change:
+            obj.user_modified = request.user.username
+            obj.modified = timezone.now()
+        super(TabularInlineMixin, self).save_model(request, obj, form, change)
