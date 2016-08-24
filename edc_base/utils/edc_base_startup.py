@@ -1,36 +1,37 @@
 from django.conf import settings
-try:
-    from django.db.models import loading as apps
-except:
-    from django.apps import apps
+from django.apps import apps as django_apps
+
 
 def edc_base_startup(verbose=None):
     """Inspect all models to set edc specific attributes."""
-    for app_str in settings.INSTALLED_APPS:
-        if 'contrib' not in app_str:
-            if '.' in app_str:
-                app_str = app_str.split('.')[-1:][0]
+    for app in settings.INSTALLED_APPS:
+        if 'contrib' not in app:
+            if '.' in app:
+                app_label = app.split('.')[-1:][0]
+            else:
+                app_label = app
             try:
-                for model in apps.get_models(apps.get_app_config(app_str)):
+                for model in django_apps.get_models(django_apps.get_app_config(app_label)):
                     try:
-                        _get_model_if_tuple(model)
-                        _discover_visit_model_if_exists(model)
+                        get_model_if_tuple(model)
+                        discover_visit_model_if_exists(model)
                     except AttributeError:
                         pass
             except LookupError:
                 pass
 
-def _get_model_if_tuple(model):
+
+def get_model_if_tuple(model):
     for attr in ['off_study_model', 'death_report_model']:
         try:
             app_label, model_name = getattr(model, attr)
-            model_class = apps.get_model(app_label, model_name)
+            model_class = django_apps.get_model(app_label, model_name)
             setattr(model, attr, model_class or getattr(model, attr))
         except (TypeError, AttributeError, ValueError):
             pass
 
 
-def _discover_visit_model_if_exists(model):
+def discover_visit_model_if_exists(model):
     """Set model class attributes `visit_model`, `visit_model_attr` and `natural_key.dependencies`."""
     try:
         model.visit_model, model.visit_model_attr = _configure_visit_model_attrs(model)
