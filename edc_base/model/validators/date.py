@@ -28,8 +28,9 @@ def my_make_aware(value, tz):
 
 def datetime_not_future(value):
     value = my_make_aware(value, tz)
+    now = my_make_aware(timezone.now(), tz)
     time_error = timedelta(minutes=10)
-    if value > timezone.now() + time_error:
+    if value > now + time_error:
         raise ValidationError(u'Datetime cannot be a future date and time. You entered {}'.format(value))
 
 
