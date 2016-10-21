@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'edc_base.apps.AppConfig',
     'edc_base_example.apps.AppConfig',
-    'edc_base.apps.AppConfig'
 ]
 
 MIDDLEWARE_CLASSES = [

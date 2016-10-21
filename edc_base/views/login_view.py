@@ -1,4 +1,5 @@
 from braces.views import FormInvalidMessageMixin
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import logout
 from django.utils.decorators import method_decorator
@@ -6,8 +7,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic.edit import FormView
 
 from edc_base.form.forms import LoginForm
-
-from .edc_base_view_mixin import EdcBaseViewMixin
+from edc_base.view_mixins import EdcBaseViewMixin
 
 
 class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):
@@ -18,7 +18,7 @@ class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return FormView.get(self, request, *args, **kwargs)
+        return super(LoginView, self).get(request, *args, **kwargs)
 
     @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
@@ -34,5 +34,5 @@ class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):
         if user:
             if user.is_active:
                 login(self.request, user)
-                return super(FormView, self).form_valid(form)
+                return super(LoginView, self).form_valid(form)
         return self.form_invalid(form)
