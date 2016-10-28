@@ -56,18 +56,5 @@ class BaseModel(TimeStampedModel):
             pass
         super(BaseModel, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        if self.id:
-            url = reverse('admin:{app_label}_{object_name}_change'.format(
-                app_label=self._meta.app_label,
-                object_name=self._meta.object_name.lower()
-            ), args=(self.id,))
-        else:
-            url = reverse('admin:{app_label}_{object_name}_add'.format(
-                app_label=self._meta.app_label,
-                object_name=self._meta.object_name.lower())
-            )
-        return url
-
     class Meta:
         abstract = True
