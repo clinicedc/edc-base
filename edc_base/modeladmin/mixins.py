@@ -436,3 +436,33 @@ class LimitedAdminInlineMixin:
 
     def get_filters(self, obj):
         return getattr(self, 'filters', ())
+
+
+class ModelAdminReadOnlyMixin:
+    """
+    A mixin that presents an admin form with the submit_row replaced with a Close button
+    effectively making the form a read-only form.
+
+        The Close button navigates to the "next" url from the GET/querystring.
+
+        Subclass the change_form.html. Add
+
+            {% block submit_buttons_bottom %}
+            {% if edc_readonly %}
+              <div class="submit_row"><input type="button" value="Close" class="default" name="_close" onclick="location.href='{{ edc_readonly_next }}';" /></div>
+            {% else %}
+              {% submit_row %}
+            {% endif %}
+            {% endblock %}
+
+        to the admin url querystring add "next" and "edc_readonly=1"
+
+    """
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        if request.GET.get('edc_readonly'):
+            extra_context.update({'edc_readonly': request.GET.get('edc_readonly')})
+            extra_context.update({'edc_readonly_next': request.GET.get('next')})
+        return super(ModelAdminReadOnlyMixin, self).change_view(
+            request, object_id, form_url=form_url, extra_context=extra_context)
