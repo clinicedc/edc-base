@@ -443,8 +443,6 @@ class ModelAdminReadOnlyMixin:
     A mixin that presents an admin form with the submit_row replaced with a Close button
     effectively making the form a read-only form.
 
-        readonly = (field1, field2, field3). This are fields that are to be set to read only.
-
         The Close button navigates to the "next" url from the GET/querystring.
 
         Subclass the change_form.html. Add
@@ -461,12 +459,10 @@ class ModelAdminReadOnlyMixin:
 
     """
 
-    readonly = ()
-
     def get_form(self, request, obj=None, **kwargs):
         form = super(ModelAdminReadOnlyMixin, self).get_form(request, obj, **kwargs)
         for _, fld in enumerate(form.base_fields.items()):
-            if fld[0] in self.readonly and request.GET.get('edc_readonly'):
+            if request.GET.get('edc_readonly'):
                 fld[1].disabled = True
                 fld[1].required = False
         return form
