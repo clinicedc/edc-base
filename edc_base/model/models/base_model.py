@@ -1,6 +1,5 @@
 import socket
 
-from django.core.urlresolvers import reverse
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from django_revision import RevisionField

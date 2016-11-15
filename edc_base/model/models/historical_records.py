@@ -1,35 +1,37 @@
 from simple_history.models import HistoricalRecords as SimpleHistoricalRecords
 
+from django.db import models
 from django.db.models.fields import AutoField
 from django.utils.timezone import now
 
-# try:
-#     from edc_sync.mixins import SyncMixin
-# except ImportError:
-#     pass
-#
-#
-# class HistoricalRecords(SimpleHistoricalRecords):
-#
-#     def get_extra_fields(self, model, fields):
-#         fields = super(HistoricalRecords, self).get_extra_fields(model, fields)
-#         fields['history_id'] = UUIDField(primary_key=True, default=uuid4)
-#         return fields
-#
-#     def add_extra_methods(self, cls):
-#         super(HistoricalRecords, self).add_extra_methods(cls)
-#         try:
-#             apps.get_app_config('edc_sync')
-#             for key, func in SyncMixin.__dict__.items():
-#                 if not key.startswith('__'):
-#                     setattr(cls, key, func)
-#         except (LookupError, NameError):
-#             pass
+
+class SerializableManager(models.Manager):
+
+    def get_by_natural_key(self, history_id):
+        return self.get(history_id=history_id)
+
+
+class SerializableModel(models.Model):
+
+    objects = SerializableManager()
+
+    def natural_key(self):
+        return self.history_id
+
+    class Meta:
+        abstract = True
 
 
 class HistoricalRecords(SimpleHistoricalRecords):
 
     """HistoricalRecords that uses a UUID primary key and has a natural key method."""
+
+    def __init__(self, verbose_name=None, bases=(models.Model,),
+                 user_related_name='+', table_name=None, inherit=False):
+        bases = (SerializableModel, )
+        super(HistoricalRecords, self).__init__(
+            verbose_name=verbose_name, bases=bases, user_related_name=user_related_name,
+            table_name=table_name, inherit=inherit)
 
     def get_history_id_field(self, model):
         """Return a field instance without initially assuming
@@ -44,10 +46,10 @@ class HistoricalRecords(SimpleHistoricalRecords):
         return field
 
     def get_extra_fields(self, model, fields):
-        """Override to set history_id (to UUIDField) and add the
-        SyncModelMixin methods."""
+        """Override to set history_id (to UUIDField)."""
         extra_fields = super(HistoricalRecords, self).get_extra_fields(model, fields)
         extra_fields.update({'history_id': self.get_history_id_field(model)})
+        extra_fields.update({'natural_key': lambda x: x.history_id})
         return extra_fields
 
     def post_save(self, instance, created, **kwargs):
