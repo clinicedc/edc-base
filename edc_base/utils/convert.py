@@ -13,17 +13,6 @@ class ConvertError(Exception):
     pass
 
 
-def localize(datetime_obj):
-    try:
-        default_timezone = timezone.get_default_timezone_name()
-        aware_datetime = pytz.timezone(default_timezone).localize(datetime_obj)
-    except ValueError as e:
-        if 'Not naive datetime' not in str(e):
-            raise ValueError(e)
-        aware_datetime = datetime_obj
-    return aware_datetime
-
-
 class Convert(object):
 
     def __init__(self, value, convert=None, time_format=None):
@@ -112,7 +101,7 @@ class Convert(object):
         If you want a naive date, then you will need to convert it to naive yourself."""
         try:
             value = parser.parse(string_value)
-            value = localize(value)
+            value = timezone.make_aware(value, timezone=pytz.timezone('UTC'))
             return value
         except ValueError:
             pass

@@ -1,17 +1,25 @@
+import pytz
+
 from dateutil.relativedelta import relativedelta
-from datetime import datetime, time, date
+
+from django.utils import timezone
+
+tz = pytz.timezone('UTC')
 
 
-def age(born, reference_date):
+def age(born, reference_datetime):
+    """Age is local."""
     if not born:
         raise ValueError('DOB cannot be None.')
-    elif born > reference_date:
+    reference_date = timezone.localtime(reference_datetime).date()
+    if relativedelta(born, reference_date) > 0:
         raise ValueError('Reference date precedes DOB.')
-    return relativedelta(reference_date, born)
+    return relativedelta(born, reference_date)
 
 
-def formatted_age(born, reference_date=None):
-    reference_date = reference_date or date.today()
+def formatted_age(born, reference_datetime=None):
+    reference_datetime = reference_datetime or timezone.now()
+    reference_date = timezone.localtime(reference_datetime).date()
     if born:
         rdelta = relativedelta(reference_date, born)
         if born > reference_date:
@@ -33,7 +41,7 @@ def formatted_age(born, reference_date=None):
                 'rdelta = {} and {}'.format(rdelta, born))
 
 
-def get_age_in_days(reference_date, dob):
-    dob = datetime.combine(dob, time())
-    tdelta = reference_date - dob
-    return tdelta.days
+def get_age_in_days(reference_datetime, dob):
+    reference_date = timezone.localtime(reference_datetime).date()
+    rdelta = relativedelta(reference_date, dob)
+    return rdelta.days
