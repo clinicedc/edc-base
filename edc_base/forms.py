@@ -2,7 +2,6 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from edc_base.modelform.mixins import CrispyFormMixin
 
 
 class LoginForm(forms.Form):

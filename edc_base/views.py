@@ -4,9 +4,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic import RedirectView
 from django.views.generic.edit import FormView
 
-from edc_base.form.forms import LoginForm
+from edc_base.forms import LoginForm
 from edc_base.view_mixins import EdcBaseViewMixin
 
 
@@ -36,3 +37,13 @@ class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):
                 login(self.request, user)
                 return super(LoginView, self).form_valid(form)
         return self.form_invalid(form)
+
+
+class LogoutView(RedirectView):
+
+    permanent = True
+    pattern_name = 'login_url'
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super(LogoutView, self).get(request, *args, **kwargs)

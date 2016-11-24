@@ -1,16 +1,83 @@
+import random
 import pytz
 import re
 
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
+from math import ceil
 
-from django.utils.encoding import force_text
 from django.utils import timezone
+from django.utils.encoding import force_text
 from django.test.utils import override_settings
 
 
 class ConvertError(Exception):
     pass
+
+
+tz = pytz.timezone('UTC')
+
+safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
+
+
+def round_up(value, digits):
+    ceil(value * (10 ** digits)) / (10 ** digits)
+
+
+def get_safe_random_string(self, length=12, safe=None, allowed_chars=None):
+    safe = True if safe is None else safe
+    allowed_chars = (allowed_chars or
+                     'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ012346789!@#%^&*()?<>.,[]{}')
+    if safe:
+        allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
+    return ''.join([random.choice(allowed_chars) for _ in range(length)])
+
+
+def age(born, reference_datetime):
+    """Age is local."""
+    if not born:
+        raise ValueError('DOB cannot be None.')
+    reference_date = timezone.localtime(reference_datetime).date()
+    if relativedelta(born, reference_date) > 0:
+        raise ValueError('Reference date precedes DOB.')
+    return relativedelta(born, reference_date)
+
+
+def formatted_age(born, reference_datetime=None):
+    reference_datetime = reference_datetime or timezone.now()
+    reference_date = timezone.localtime(reference_datetime).date()
+    if born:
+        rdelta = relativedelta(reference_date, born)
+        if born > reference_date:
+            return '?'
+        elif rdelta.years == 0 and rdelta.months <= 0:
+            return '%sd' % (rdelta.days)
+        elif rdelta.years == 0 and rdelta.months > 0 and rdelta.months <= 2:
+            return '%sm%sd' % (rdelta.months, rdelta.days)
+        elif rdelta.years == 0 and rdelta.months > 2:
+            return '%sm' % (rdelta.months)
+        elif rdelta.years == 1:
+            m = rdelta.months + 12
+            return '%sm' % (m)
+        elif rdelta.years > 1:
+            return '%sy' % (rdelta.years)
+        else:
+            raise TypeError(
+                'Age template tag missed a case... today - born. '
+                'rdelta = {} and {}'.format(rdelta, born))
+
+
+def get_age_in_days(reference_datetime, dob):
+    reference_date = timezone.localtime(reference_datetime).date()
+    rdelta = relativedelta(reference_date, dob)
+    return rdelta.days
+
+
+def convert_from_camel(name):
+    """Converts from camel case to lowercase divided by underscores."""
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 class Convert(object):
