@@ -258,16 +258,6 @@ class IdentityTypeField(CharField):
         # kwargs.setdefault('help_text', _('Format is 9999[12]9999'))
         CharField.__init__(self, *args, **kwargs)
 
-    def get_internal_type(self):
-        return "CharField"
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
 
 class CellPhoneField(CharField):
     """
