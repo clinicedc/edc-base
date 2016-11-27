@@ -2,7 +2,8 @@ from simple_history.models import HistoricalRecords as SimpleHistoricalRecords
 
 from django.db import models
 from django.db.models.fields import AutoField
-from django.utils.timezone import now
+
+from ...utils import get_utcnow
 
 
 class SerializableManager(models.Manager):
@@ -65,7 +66,7 @@ class HistoricalRecords(SimpleHistoricalRecords):
 
     def create_historical_record(self, instance, history_type, **kwargs):
         """Override to include \'using\'."""
-        history_date = getattr(instance, '_history_date', now())
+        history_date = getattr(instance, '_history_date', get_utcnow())
         history_user = self.get_history_user(instance)
         manager = getattr(instance, self.manager_name)
         attrs = {}

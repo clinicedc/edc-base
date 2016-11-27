@@ -24,13 +24,6 @@ class OtherCharField(CharField):
     def get_internal_type(self):
         return "CharField"
 
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
     def deconstruct(self):
         name, path, args, kwargs = super(OtherCharField, self).deconstruct()
         if kwargs.get('max_length', None) == self.DEFAULT_MAX_LENGTH:
@@ -60,13 +53,6 @@ class DobField(DateTimeField):
     def get_internal_type(self):
         return "DateTimeField"
 
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.DateTimeField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
 
 class IsDateEstimatedField(CharField):
 
@@ -85,13 +71,6 @@ class IsDateEstimatedField(CharField):
 
     def get_internal_type(self):
         return "CharField"
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
 
 
 class NameField(CharField):
@@ -120,13 +99,6 @@ class NameField(CharField):
         defaults.update(kwargs)
         return super(NameField, self).formfield(**defaults)
 
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
 
 class InitialsField(CharField):
 
@@ -154,13 +126,6 @@ class InitialsField(CharField):
         defaults.update(kwargs)
         return super(InitialsField, self).formfield(**defaults)
 
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
 
 class WeightField(DecimalField):
     """field for weight"""
@@ -176,13 +141,6 @@ class WeightField(DecimalField):
 
     def get_internal_type(self):
         return "DecimalField"
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.DecimalField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
 
 
 class OmangField(CharField):
@@ -215,13 +173,6 @@ class OmangField(CharField):
         }
         defaults.update(kwargs)
         return super(OmangField, self).formfield(**defaults)
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
 
 
 class IdentityTypeField(CharField):
@@ -286,13 +237,6 @@ class CellPhoneField(CharField):
         defaults.update(kwargs)
         return super(CellPhoneField, self).formfield(**defaults)
 
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
 
 class BloodPressureField(CharField):
 
@@ -324,11 +268,3 @@ class BloodPressureField(CharField):
         }
         defaults.update(kwargs)
         return super(BloodPressureField, self).formfield(**defaults)
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.CharField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)

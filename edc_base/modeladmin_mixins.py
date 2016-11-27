@@ -2,10 +2,11 @@ import re
 
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
-from django.utils import timezone
 from django.utils.html import format_html
 from django.contrib.admin.widgets import AdminDateWidget
 from django.forms.widgets import DateInput
+
+from .utils import get_utcnow
 
 
 class ModelAdminBasicMixin:
@@ -353,10 +354,10 @@ class ModelAdminAuditFieldsMixin:
     def save_model(self, request, obj, form, change):
         if not change:
             obj.user_created = request.user.username
-            obj.created = timezone.now()
+            obj.created = get_utcnow()
         else:
             obj.user_modified = request.user.username
-            obj.modified = timezone.now()
+            obj.modified = get_utcnow()
         super(ModelAdminAuditFieldsMixin, self).save_model(request, obj, form, change)
 
     def get_list_filter(self, request):

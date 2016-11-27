@@ -1,24 +1,29 @@
-import random
 import pytz
+import random
 import re
+from uuid import uuid4
 
-from dateutil import parser
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
 from math import ceil
 
-from django.utils import timezone
 from django.utils.encoding import force_text
-from django.test.utils import override_settings
+from django.utils.timezone import localtime
+
+safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
 
 
 class ConvertError(Exception):
     pass
 
 
-tz = pytz.timezone('UTC')
+def get_uuid():
+    return str(uuid4())
 
-safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
+
+def get_utcnow():
+    return datetime.now(tz=pytz.utc)
 
 
 def round_up(value, digits):
@@ -38,15 +43,15 @@ def age(born, reference_datetime):
     """Age is local."""
     if not born:
         raise ValueError('DOB cannot be None.')
-    reference_date = timezone.localtime(reference_datetime).date()
+    reference_date = localtime(reference_datetime).date()
     if relativedelta(born, reference_date) > 0:
         raise ValueError('Reference date precedes DOB.')
     return relativedelta(born, reference_date)
 
 
 def formatted_age(born, reference_datetime=None):
-    reference_datetime = reference_datetime or timezone.now()
-    reference_date = timezone.localtime(reference_datetime).date()
+    reference_datetime = reference_datetime or datetime.now(tz=pytz.utc)
+    reference_date = localtime(reference_datetime).date()
     if born:
         rdelta = relativedelta(reference_date, born)
         if born > reference_date:
@@ -69,7 +74,7 @@ def formatted_age(born, reference_datetime=None):
 
 
 def get_age_in_days(reference_datetime, dob):
-    reference_date = timezone.localtime(reference_datetime).date()
+    reference_date = localtime(reference_datetime).date()
     rdelta = relativedelta(reference_date, dob)
     return rdelta.days
 
@@ -158,20 +163,5 @@ class Convert(object):
             if str(value) == string_value:
                 return value
         except ValueError:
-            pass
-        raise ConvertError()
-
-    @override_settings(USE_TZ=True)
-    def to_datetime(self, string_value):
-        """Returns a timezone aware date.
-
-        If you want a naive date, then you will need to convert it to naive yourself."""
-        try:
-            value = parser.parse(string_value)
-            value = timezone.make_aware(value, timezone=pytz.timezone('UTC'))
-            return value
-        except ValueError:
-            pass
-        except TypeError:
             pass
         raise ConvertError()

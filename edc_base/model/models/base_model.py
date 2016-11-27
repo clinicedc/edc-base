@@ -1,19 +1,28 @@
 import socket
 
 from django.db import models
-from django_extensions.db.models import TimeStampedModel
 from django_revision import RevisionField
+
+from ...utils import get_utcnow
 
 from ..constants import BASE_MODEL_UPDATE_FIELDS
 from ..fields import HostnameModificationField, UserField
 
 
-class BaseModel(TimeStampedModel):
+class BaseModel(models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer)."""
 
     get_latest_by = 'modified'
+
+    created = models.DateTimeField(
+        default=get_utcnow,
+        editable=False)
+
+    modified = models.DateTimeField(
+        default=get_utcnow,
+        editable=False)
 
     user_created = UserField(
         max_length=50,
@@ -56,4 +65,6 @@ class BaseModel(TimeStampedModel):
         super(BaseModel, self).save(*args, **kwargs)
 
     class Meta:
+        get_latest_by = 'modified'
+        ordering = ('-modified', '-created',)
         abstract = True

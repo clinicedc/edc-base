@@ -3,12 +3,14 @@ from dateutil.relativedelta import relativedelta
 from django import forms
 from django.db import models
 from django.contrib import admin
-from django.utils import timezone
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Field, Layout, ButtonHolder, Button
 
 from edc_constants.constants import YES, NO, UNKNOWN, OTHER, NOT_APPLICABLE
+
+from .utils import get_utcnow
+
 
 comparison_phrase = {
     'gt': 'must be greater than',
@@ -24,9 +26,9 @@ class AuditFieldsMixin:
     def update_system_fields(self, request, instance, change):
         if not change:
             instance.user_created = request.user.username
-            instance.created = timezone.now()
+            instance.created = get_utcnow()
         instance.user_modified = request.user.username
-        instance.date_modified = timezone.now()
+        instance.date_modified = get_utcnow()
         return instance
 
     def form_valid(self, form):
