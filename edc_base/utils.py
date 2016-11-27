@@ -50,7 +50,7 @@ def age(born, reference_datetime):
 
 
 def formatted_age(born, reference_datetime=None):
-    reference_datetime = reference_datetime or datetime.now(tz=pytz.utc)
+    reference_datetime = reference_datetime or get_utcnow()
     reference_date = localtime(reference_datetime).date()
     if born:
         rdelta = relativedelta(reference_date, born)
