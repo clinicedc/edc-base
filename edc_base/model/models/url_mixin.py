@@ -1,7 +1,8 @@
 from django.core.urlresolvers import reverse
+from django.db import models
 
 
-class UrlMixin:
+class UrlMixin(models.Model):
 
     ADMIN_SITE_NAME = 'admin'
 
@@ -19,3 +20,6 @@ class UrlMixin:
                 object_name=self._meta.object_name.lower())
             )
         return url
+
+    class Meta:
+        abstract = True
