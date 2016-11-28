@@ -20,13 +20,13 @@ class EdcBaseProvider(BaseProvider):
         consent_config = django_apps.get_app_config(
             'edc_consent').get_consent_config(self.consent_model)
         years = choice(range(consent_config.age_is_adult, consent_config.age_max + 1))
-        return get_utcnow() - relativedelta(years=years)
+        return (get_utcnow() - relativedelta(years=years)).date()
 
     def dob_for_consenting_minor(self):
         consent_config = django_apps.get_app_config(
             'edc_consent').get_consent_config(self.consent_model)
         years = choice(range(consent_config.age_min, consent_config.age_is_adult + 1) - 1)
-        return get_utcnow() - relativedelta(years=years)
+        return (get_utcnow() - relativedelta(years=years)).date()
 
     def age_for_consenting_adult(self):
         consent_config = django_apps.get_app_config(
