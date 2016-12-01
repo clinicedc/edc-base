@@ -1,8 +1,7 @@
-from datetime import date
-
 from django.apps import apps as django_apps
 from django.conf import settings
 from django_revision.views import RevisionMixin
+from edc_base.utils import get_utcnow
 
 
 class EdcBaseViewMixin(RevisionMixin):
@@ -14,7 +13,7 @@ class EdcBaseViewMixin(RevisionMixin):
         context.update({
             'project_name': app_config.project_name,
             'institution': app_config.institution,
-            'year': date.today().year,
+            'year': get_utcnow().year,
             'DEBUG': settings.DEBUG,
         })
         return context
