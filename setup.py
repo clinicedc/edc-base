@@ -33,6 +33,7 @@ setup(
         'Faker',
         'unipath',
         'pytz',
+        'django-tz-detect',
     ],
     classifiers=[
         'Environment :: Web Environment',

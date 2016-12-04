@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 # from django_js_reverse.views import urls_js
 from edc_base.views import LoginView, LogoutView
 
@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'login', LoginView.as_view(), name='login_url'),
     url(r'logout', LogoutView.as_view(), name='logout_url'),
     url(r'settings/', RedirectView.as_view(url='/home/'), name='settings_url'),
+    url(r'^tz_detect/', include('tz_detect.urls')),
 ]
