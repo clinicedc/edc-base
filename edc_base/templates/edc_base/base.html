@@ -1,5 +1,4 @@
 {% load staticfiles %}
-{% load tz_detect %}
 <!DOCTYPE html>
 <html lang="en">
 {% block header %}
@@ -77,7 +76,6 @@
 <!-- end extra-scripts by app ================================================== -->
 {% endblock header %}
   </head>
-{% tz_detect %}
 <body class="edc-body" >
 {% block topbar %}
 <!-- topbar -->
@@ -128,6 +126,8 @@
   </div>
 </footer>
 {% endblock footer %}
+{% load tz_detect %}
+{% tz_detect %}
 </body>
 
 {% block extra-scripts-bottom %}{% endblock %}
