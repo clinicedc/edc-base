@@ -64,6 +64,10 @@ class BaseModel(models.Model):
             pass
         super(BaseModel, self).save(*args, **kwargs)
 
+    @property
+    def verbose_name(self):
+        return self._meta.verbose_name
+
     class Meta:
         get_latest_by = 'modified'
         ordering = ('-modified', '-created',)
