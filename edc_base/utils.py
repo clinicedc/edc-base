@@ -44,9 +44,9 @@ def age(born, reference_datetime):
     if not born:
         raise ValueError('DOB cannot be None.')
     reference_date = localtime(reference_datetime).date()
-    if relativedelta(born, reference_date) > 0:
+    if (born - reference_date).days > 0:
         raise ValueError('Reference date precedes DOB.')
-    return relativedelta(born, reference_date)
+    return relativedelta(reference_date, born)
 
 
 def formatted_age(born, reference_datetime=None):
