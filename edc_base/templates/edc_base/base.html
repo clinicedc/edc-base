@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load tz %}
 <!DOCTYPE html>
 <html lang="en">
 {% block header %}
@@ -120,9 +121,10 @@
     {% endif %}
 <footer class="footer">
   <div class="container">
-    <div class="col-md-4"><p class="text-muted text-center"><small>{{ year }}&nbsp;{{ institution }}</small></p></div>
-    <div class="col-md-4"><p class="text-muted text-center"><small>Revision: {{ revision }}</small></p></div>
-    <div class="col-md-4"><p class="text-muted text-center"><small>For Research Purposes Only</small></p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-copyright-mark"></span> {{ year }}&nbsp;{{ institution }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-grain"></span> Revision: {{ revision }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-time"></span> {% get_current_timezone as TIME_ZONE%}{{TIME_ZONE}}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-exclamation-sign"></span> For Research Purposes Only</p></div>
   </div>
 </footer>
 {% endblock footer %}

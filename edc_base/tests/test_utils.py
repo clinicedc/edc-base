@@ -6,7 +6,7 @@ import pytz
 from builtins import ValueError
 
 
-class TestEdcBase(TestCase):
+class TestUtils(TestCase):
 
     def test_age(self):
         born = date(1990, 5, 1)
