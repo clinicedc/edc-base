@@ -3,7 +3,7 @@ import random
 import re
 from uuid import uuid4
 
-from datetime import datetime
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
 from math import ceil
@@ -39,14 +39,37 @@ def get_safe_random_string(self, length=12, safe=None, allowed_chars=None):
     return ''.join([random.choice(allowed_chars) for _ in range(length)])
 
 
-def age(born, reference_datetime):
-    """Age is local."""
+def age(born, reference_dt):
+    """Returns a relative delta"""
     if not born:
         raise ValueError('DOB cannot be None.')
-    reference_date = localtime(reference_datetime).date()
-    if (born - reference_date).seconds > 0:
-        raise ValueError('Reference date precedes DOB.')
-    return relativedelta(reference_date, born)
+    try:
+        born.date()
+    except AttributeError as e:
+        born = datetime.combine(born, time())
+    try:
+        born = pytz.utc.localize(born)
+    except ValueError as e:
+        if 'tzinfo is already set' in str(e):
+            pass
+    born = localtime(born)
+    if not reference_dt:
+        reference_dt = localtime(get_utcnow())
+    else:
+        try:
+            reference_dt.date()
+        except AttributeError:
+            reference_dt = datetime.combine(reference_dt, time())
+        try:
+            reference_dt = pytz.utc.localize(reference_dt)
+        except ValueError as e:
+            if 'tzinfo is already set' in str(e):
+                pass
+    reference_dt = localtime(reference_dt)
+    if born > reference_dt:
+        rdelta = relativedelta(reference_dt, born)
+        raise ValueError('Reference date {} precedes DOB {}. Got {}'.format(reference_dt, born, rdelta))
+    return relativedelta(reference_dt, born)
 
 
 def formatted_age(born, reference_datetime=None):
