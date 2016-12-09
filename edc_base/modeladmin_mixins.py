@@ -147,19 +147,21 @@ class ModelAdminRedirectMixin:
 
 class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
 
-    """Redirect to a named url in the querystring for a model add, change, delete."""
+    """Redirect on add, change, delete by reversing a url_name in the querystring.
 
-    redirect_url_get_attr = 'next_url'
+    In your url &next=my_url_name,arg1,arg2&agr1=value1&arg2=value2&arg3=value3&arg4=value4...etc"""
+
     querystring_name = 'next'
 
     def redirect_url(self, request, obj, post_url_continue=None):
-        args = request.GET.dict()
-        args.pop(self.querystring_name)
+        kwargs = request.GET.dict()
         redirect_url = super(ModelAdminNextUrlRedirectMixin, self).redirect_url(
             request, obj, post_url_continue)
-        if request.GET.get(self.querystring_name):
-            url_name = request.GET.get(self.querystring_name)
-            return reverse(url_name, args=[element for element in args.values()])
+        if kwargs.get(self.querystring_name):
+            url_name = kwargs.get(self.querystring_name).split(',')[0]
+            attrs = kwargs.get(self.querystring_name).split(',')[1:]
+            kwargs = {k: kwargs.get(k) for k in attrs if kwargs.get(k)}
+            redirect_url = reverse(url_name, kwargs=kwargs)
         return redirect_url
 
 
@@ -462,6 +464,8 @@ class ModelAdminReadOnlyMixin:
 
     """
 
+    querystring_name = 'next'
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(ModelAdminReadOnlyMixin, self).get_form(request, obj, **kwargs)
         if request.GET.get('edc_readonly'):
@@ -481,6 +485,6 @@ class ModelAdminReadOnlyMixin:
         extra_context = extra_context or {}
         if request.GET.get('edc_readonly'):
             extra_context.update({'edc_readonly': request.GET.get('edc_readonly')})
-            extra_context.update({'edc_readonly_next': request.GET.get('next')})
+            extra_context.update({'edc_readonly_next': request.GET.get(self.querystring_name)})
         return super(ModelAdminReadOnlyMixin, self).change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)
