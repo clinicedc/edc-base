@@ -1,12 +1,17 @@
 from datetime import datetime, date
 
 from django.test.testcases import TestCase
-from edc_base.utils import age
+from edc_base.utils import age, get_age_in_days
 import pytz
 from builtins import ValueError
 
 
 class TestUtils(TestCase):
+
+    def test_age_in_days(self):
+        born = date(2016, 10, 20)
+        reference_date = pytz.utc.localize(datetime(2016, 10, 28))
+        self.assertEqual(get_age_in_days(reference_date, born), 8)
 
     def test_age(self):
         born = date(1990, 5, 1)
