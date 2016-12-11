@@ -17,8 +17,20 @@ class ReferenceDateMixin:
     """Sets the reference date to the earliest consent date."""
     def setUp(self):
         app_config = django_apps.get_app_config('edc_consent')
-        self.mixin_reference_datetime = app_config.testconsentstart
+        self.test_mixin_reference_datetime = app_config.testconsentstart
         super(ReferenceDateMixin, self).setUp()
+
+
+class LoadListDataMixin:
+
+    list_data = None
+
+    def load_list_data(self, label_lower):
+        objs = []
+        model = django_apps.get_model(*label_lower.split('.'))
+        for name in self.list_data.get(label_lower):
+            objs.append(model(name=name, short_name=name))
+        model.objects.bulk_create(objs)
 
 
 class AddVisitMixin:
