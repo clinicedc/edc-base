@@ -6,7 +6,7 @@ from edc_base.utils import get_utcnow
 from edc_base.exceptions import FutureDateError
 from edc_visit_tracking.constants import SCHEDULED
 from edc_metadata.models import CrfMetadata
-from edc_metadata.constants import REQUIRED
+from edc_metadata.constants import REQUIRED, NOT_REQUIRED
 
 
 class TestMixinError(Exception):
@@ -95,23 +95,29 @@ class CompleteCrfsMixin:
             subject_identifier=self.subject_identifier,
             visit_code=visit_code).order_by('show_order')
 
-    def get_required_crfs(self, visit_code):
-        """Return a queryset of REQUIRED crf metadata for the visit."""
-        return self.get_crfs(visit_code).filter(entry_status=REQUIRED).order_by('show_order')
+    def get_crfs_by_entry_status(self, visit_code, entry_status=None):
+        """Return a queryset of crf metadata for the visit by entry_status."""
+        return self.get_crfs(visit_code).filter(entry_status__in=entry_status).order_by('show_order')
 
-    def complete_required_crfs(self, visit_code, visit, visit_attr):
+    def complete_crfs(self, visit_code, visit, visit_attr, entry_status=None):
         """Complete all CRFs in a visit by looping through metadata.
 
         Revisit the metadata on each loop as rule_groups may change the entry status of CRFs."""
+        entry_status = entry_status or [REQUIRED, NOT_REQUIRED]
+        if not isinstance(entry_status, (list, tuple)):
+            entry_status = [entry_status]
         completed_crfs = []
         while True:
-            for crf in self.get_required_crfs(visit_code):
+            for crf in self.get_crfs_by_entry_status(visit_code, entry_status=entry_status):
                 options = self.mommy_options(visit.report_datetime).get(crf.model, {})
                 options.update({
                     visit_attr: visit,
                     'report_datetime': visit.report_datetime})
                 completed_crfs.append(
                     mommy.make_recipe(crf.model, **options))
-            if not self.get_required_crfs(visit_code):
+            if not self.get_crfs_by_entry_status(visit_code, entry_status=entry_status):
                 break
         return completed_crfs
+
+    def complete_required_crfs(self, visit_code, visit, visit_attr):
+        return self.complete_crfs(visit_code, visit, visit_attr, entry_status=REQUIRED)
