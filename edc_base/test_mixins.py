@@ -67,9 +67,11 @@ class AddVisitMixin:
         """Adds a sequence of visits for the codes provided.
 
         If a infant visit already exists, it will just pass."""
+        visits = []
         for code in codes:
-            self.add_visit(model_label=model_label, visit_code=code, reason=reason,
-                           subject_identifier=subject_identifier)
+            visits.append(self.add_visit(
+                model_label=model_label, visit_code=code, reason=reason, subject_identifier=subject_identifier))
+        return visits
 
     def get_visit(self, visit_code=None, model_label=None, subject_identifier=None):
         """Returns a visit instance if it exists."""
