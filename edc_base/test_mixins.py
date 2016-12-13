@@ -35,21 +35,22 @@ class LoadListDataMixin:
 
 class AddVisitMixin:
 
-    def add_visit(self, model_label, visit_code, reason=None):
+    def add_visit(self, model_label=None, visit_code=None, reason=None, subject_identifier=None):
         """Adds (or gets) and returns a visit for give model and code."""
         Appointment = django_apps.get_app_config('edc_appointment').model
         reason = reason or SCHEDULED
         model = django_apps.get_model(*model_label.split('.'))
         try:
             appointment = Appointment.objects.get(
-                subject_identifier=self.subject_identifier, visit_code=visit_code)
+                subject_identifier=subject_identifier, visit_code=visit_code)
             if appointment.appt_datetime > get_utcnow():
                 raise FutureDateError(
                     'For testing, create visits without future dates. Got {}, {}'.format(
                         appointment.visit_code,
                         appointment.appt_datetime))
             try:
-                visit = self.get_visit(model_label, visit_code)
+                visit = self.get_visit(
+                    visit_code=visit_code, model_label=model_label, subject_identifier=subject_identifier)
             except model.DoesNotExist:
                 # create visit for the first time
                 visit = mommy.make_recipe(
@@ -62,25 +63,26 @@ class AddVisitMixin:
                 '{} {}, {}. Did you complete the enrollment form?'.format(str(e), model_label, visit_code))
         return visit
 
-    def add_visits(self, model_label, *codes):
+    def add_visits(self, *codes, model_label=None, subject_identifier=None, reason=None):
         """Adds a sequence of visits for the codes provided.
 
         If a infant visit already exists, it will just pass."""
         for code in codes:
-            self.add_visit(model_label, code)
+            self.add_visit(model_label=model_label, visit_code=code, reason=reason,
+                           subject_identifier=subject_identifier)
 
-    def get_visit(self, model_label, code):
+    def get_visit(self, visit_code=None, model_label=None, subject_identifier=None):
         """Returns a visit instance if it exists."""
         model = django_apps.get_model(*model_label.split('.'))
         visit = model.objects.get(
-            appointment__subject_identifier=self.subject_identifier, visit_code=code)
+            appointment__subject_identifier=subject_identifier, visit_code=visit_code)
         return visit
 
-    def get_last_visit(self, model_label):
+    def get_last_visit(self, model_label=None, subject_identifier=None):
         """Returns the last visit instance if it exists."""
         model = django_apps.get_model(*model_label.split('.'))
         return model.objects.filter(
-            appointment__subject_identifier=self.subject_identifier).order_by('report_datetime').last()
+            appointment__subject_identifier=subject_identifier).order_by('report_datetime').last()
 
 
 class CompleteCrfsMixin:
@@ -89,17 +91,19 @@ class CompleteCrfsMixin:
         """Override the default recipe options for your mommy recipe {label_lower: {key: value}, ...}."""
         return {}
 
-    def get_crfs(self, visit_code):
+    def get_crfs(self, visit_code=None, subject_identifier=None):
         """Return a queryset of crf metadata for the visit."""
         return CrfMetadata.objects.filter(
-            subject_identifier=self.subject_identifier,
+            subject_identifier=subject_identifier,
             visit_code=visit_code).order_by('show_order')
 
-    def get_crfs_by_entry_status(self, visit_code, entry_status=None):
+    def get_crfs_by_entry_status(self, visit_code=None, entry_status=None, subject_identifier=None):
         """Return a queryset of crf metadata for the visit by entry_status."""
-        return self.get_crfs(visit_code).filter(entry_status__in=entry_status).order_by('show_order')
+        return self.get_crfs(
+            visit_code=visit_code, subject_identifier=subject_identifier).filter(
+                entry_status__in=entry_status).order_by('show_order')
 
-    def complete_crfs(self, visit_code, visit, visit_attr, entry_status=None):
+    def complete_crfs(self, visit_code=None, visit=None, visit_attr=None, entry_status=None, subject_identifier=None):
         """Complete all CRFs in a visit by looping through metadata.
 
         Revisit the metadata on each loop as rule_groups may change the entry status of CRFs."""
@@ -108,16 +112,25 @@ class CompleteCrfsMixin:
             entry_status = [entry_status]
         completed_crfs = []
         while True:
-            for crf in self.get_crfs_by_entry_status(visit_code, entry_status=entry_status):
+            for crf in self.get_crfs_by_entry_status(
+                    visit_code=visit_code,
+                    entry_status=entry_status,
+                    subject_identifier=subject_identifier):
                 options = self.mommy_options(visit.report_datetime).get(crf.model, {})
                 options.update({
                     visit_attr: visit,
                     'report_datetime': visit.report_datetime})
                 completed_crfs.append(
                     mommy.make_recipe(crf.model, **options))
-            if not self.get_crfs_by_entry_status(visit_code, entry_status=entry_status):
+            if not self.get_crfs_by_entry_status(
+                    visit_code=visit_code, entry_status=entry_status, subject_identifier=subject_identifier):
                 break
         return completed_crfs
 
-    def complete_required_crfs(self, visit_code, visit, visit_attr):
-        return self.complete_crfs(visit_code, visit, visit_attr, entry_status=REQUIRED)
+    def complete_required_crfs(self, visit_code=None, visit=None, visit_attr=None, subject_identifier=None):
+        return self.complete_crfs(
+            visit_code=visit_code,
+            visit=visit,
+            visit_attr=visit_attr,
+            entry_status=REQUIRED,
+            subject_identifier=subject_identifier)
