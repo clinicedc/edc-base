@@ -56,6 +56,7 @@ class BaseModel(models.Model):
     objects = models.Manager()
 
     def save(self, *args, **kwargs):
+        self.common_clean()
         try:
             # don't allow update_fields to bypass these audit fields
             update_fields = kwargs.get('update_fields', None) + BASE_MODEL_UPDATE_FIELDS
@@ -63,6 +64,10 @@ class BaseModel(models.Model):
         except TypeError:
             pass
         super(BaseModel, self).save(*args, **kwargs)
+
+    def common_clean(self, cleaned_data=None):
+        """A method that can be shared between form clean and model.save."""
+        pass
 
     @property
     def verbose_name(self):

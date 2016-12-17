@@ -1,0 +1,3 @@
+
+class TestMixinError(Exception):
+    pass
