@@ -6,7 +6,7 @@ from random import choice
 
 from django.apps import apps as django_apps
 
-from .utils import get_utcnow
+from edc_base.utils import get_utcnow
 
 
 class EdcBaseProvider(BaseProvider):

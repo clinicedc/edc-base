@@ -1,9 +1,10 @@
+import pytz
+
 from datetime import datetime, date
 
 from django.test.testcases import TestCase
+
 from edc_base.utils import age, get_age_in_days, formatted_age, get_safe_random_string
-import pytz
-from builtins import ValueError
 
 
 class TestUtils(TestCase):
