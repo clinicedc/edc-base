@@ -30,7 +30,7 @@ def round_up(value, digits):
     ceil(value * (10 ** digits)) / (10 ** digits)
 
 
-def get_safe_random_string(self, length=12, safe=None, allowed_chars=None):
+def get_safe_random_string(length=12, safe=None, allowed_chars=None):
     safe = True if safe is None else safe
     allowed_chars = (allowed_chars or
                      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ012346789!@#%^&*()?<>.,[]{}')

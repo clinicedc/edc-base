@@ -1,4 +1,5 @@
 from django.apps import apps as django_apps
+from edc_base.test_mixins.exceptions import TestMixinError
 
 
 class ReferenceDateMixin:
@@ -15,6 +16,8 @@ class ReferenceDateMixin:
         test_mixin_reference_datetime = {}
         for consent_config in app_config.consent_configs:
             test_mixin_reference_datetime.update({consent_config.label_lower: consent_config.start})
+        if not test_mixin_reference_datetime:
+            raise TestMixinError('Cannot determine a reference date from get_utcnow')
         return test_mixin_reference_datetime
 
     def get_utcnow(self):
