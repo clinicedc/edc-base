@@ -11,7 +11,12 @@ from edc_base.utils import get_utcnow
 
 class EdcBaseProvider(BaseProvider):
 
-    consent_model = 'edc_example.subjectconsent'
+    @property
+    def consent_model(self):
+        return django_apps.get_app_config("edc_base_test").consent_model
+
+    def gender(self):
+        return choice(['F', 'M'])
 
     def initials(self):
         return choice(list(string.ascii_uppercase)) + choice(list(string.ascii_uppercase))
