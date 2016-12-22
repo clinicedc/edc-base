@@ -20,7 +20,61 @@ Optional __settings__ attributes:
 	# the default is '^[0-9+\(\)#\.\s\/ext-]+$'
 	TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
 	CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$',
-	
+
+
+### ModelForm Mixin
+
+#### CommonCleanModelFormMixin
+
+Works together with `common_clean` on the model. The validation logic lives on the model
+but can be called in time for the ModelForm.clean() to re-raise the exceptions and place them
+on the ModelForm page. If the exception instance has a second arg it will be considered the
+form field name and the error message will be placed by the field on the page.
+
+For example:
+
+On the model you must use `BaseModel`:
+
+    from edc_base.model.models import BaseModel
+
+
+    class MyModel(BaseModel, models.Model):
+    
+        f1 = models.CharField(...)
+
+        f2 = models.CharField(...)
+
+        def common_clean(self):
+            # note: (1) this code should be validation code. Avoid setting any field attributes here.
+            #       (2) this method will be called in the model save method as well.
+            if f1 != 'happiness': 
+                raise ExceptionOne('Expected happiness.', 'f1')
+            if f2 != 'liberty': 
+                raise ExceptionTwo('Expected liberty.', 'f2')
+            super().common_clean()
+
+        @property
+        def common_clean_exceptions(self):
+            common_clean_exceptions = super().common_clean_exceptions
+            common_clean_exceptions.extend([ExceptionOne, ExceptionTwo])
+            return common_clean_exceptions
+    
+On the ModelForm, just add the mixin. If you do override `clean()` be sure to call `super()`.
+
+    from edc_base.form_mixins import CommonCleanModelFormMixin
+
+
+    MyModelForm(CommonCleanModelFormMixin, for.ModelForm):
+
+        def clean(self):
+            cleaned_data = super().clean()
+            ...
+            ...
+            ...
+            return cleaned_data
+
+
+
 
 ### Field Validators
 

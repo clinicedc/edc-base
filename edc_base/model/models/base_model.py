@@ -70,6 +70,12 @@ class BaseModel(models.Model):
         pass
 
     @property
+    def common_clean_exceptions(self):
+        """A list of exceptions classes that are raised in the common_clean
+        method for this class."""
+        return []
+
+    @property
     def verbose_name(self):
         return self._meta.verbose_name
 
