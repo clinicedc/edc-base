@@ -34,14 +34,15 @@ class CommonCleanModelFormMixin:
         form page. """
         cleaned_data = super().clean()
         instance = self._meta.model(id=self.instance.id, **cleaned_data)
-        try:
-            instance.common_clean()
-        except tuple(instance.common_clean_exceptions) as e:
+        if instance.common_clean_exceptions:
             try:
-                e = {e.args[1]: e.args[0]}
-            except IndexError:
-                pass
-            raise forms.ValidationError(e)
+                instance.common_clean()
+            except tuple(instance.common_clean_exceptions) as e:
+                try:
+                    e = {e.args[1]: e.args[0]}
+                except IndexError:
+                    pass
+                raise forms.ValidationError(e)
         return cleaned_data
 
 

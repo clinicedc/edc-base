@@ -26,10 +26,11 @@ Optional __settings__ attributes:
 
 #### CommonCleanModelFormMixin
 
-Works together with `common_clean` on the model. The validation logic lives on the model
-but can be called in time for the ModelForm.clean() to re-raise the exceptions and place them
-on the ModelForm page. If the exception instance has a second arg it will be considered the
-form field name and the error message will be placed by the field on the page.
+Works together with `common_clean` on the model that inherits from `BaseModel`.
+
+The validation logic lives on the model but can be called in time for the ModelForm.clean() to re-raise the exceptions and place the error messages on the ModelForm page.
+
+If the exception instance has a second `arg` it will be used as the form field name and the error message will be placed by the field on the page.
 
 For example:
 

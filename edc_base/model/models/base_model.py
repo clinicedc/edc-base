@@ -8,8 +8,10 @@ from ...utils import get_utcnow
 from ..constants import BASE_MODEL_UPDATE_FIELDS
 from ..fields import HostnameModificationField, UserField
 
+from .common_clean_model_mixin import CommonCleanModelMixin
 
-class BaseModel(models.Model):
+
+class BaseModel(CommonCleanModelMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer)."""
@@ -56,7 +58,6 @@ class BaseModel(models.Model):
     objects = models.Manager()
 
     def save(self, *args, **kwargs):
-        self.common_clean()
         try:
             # don't allow update_fields to bypass these audit fields
             update_fields = kwargs.get('update_fields', None) + BASE_MODEL_UPDATE_FIELDS
@@ -64,16 +65,6 @@ class BaseModel(models.Model):
         except TypeError:
             pass
         super(BaseModel, self).save(*args, **kwargs)
-
-    def common_clean(self, cleaned_data=None):
-        """A method that can be shared between form clean and model.save."""
-        pass
-
-    @property
-    def common_clean_exceptions(self):
-        """A list of exceptions classes that are raised in the common_clean
-        method for this class."""
-        return []
 
     @property
     def verbose_name(self):
