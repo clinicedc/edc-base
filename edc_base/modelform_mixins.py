@@ -1,7 +1,10 @@
+from copy import copy
+
 from dateutil.relativedelta import relativedelta
 
 from django import forms
 from django.db import models
+from django.db.models import ManyToManyField
 from django.contrib import admin
 
 from crispy_forms.helper import FormHelper
@@ -26,6 +29,8 @@ class CommonCleanModelFormMixin:
         """Raise exceptions raised by the common_clean method on the instance and re-raise
         as forms.ValidationErrors.
 
+        M2M fields are automatically excluded.
+
         Only exception classes listed in common_clean_exceptions are re-raised
         as forms.ValidationError.
 
@@ -33,16 +38,40 @@ class CommonCleanModelFormMixin:
         place the form page error message on the field instead of at the top of the
         form page. """
         cleaned_data = super().clean()
-        instance = self._meta.model(id=self.instance.id, **cleaned_data)
+        instance = copy(self.instance)
+        m2ms = [field.name for field in self._meta.model._meta.get_fields()
+                if isinstance(field, ManyToManyField)]
+        for key, value in cleaned_data.items():
+            if key not in m2ms:
+                setattr(instance, key, value)
         if instance.common_clean_exceptions:
             try:
                 instance.common_clean()
             except tuple(instance.common_clean_exceptions) as e:
+                msg = e.args[0]
                 try:
-                    e = {e.args[1]: e.args[0]}
+                    field = e.args[1]
                 except IndexError:
-                    pass
-                raise forms.ValidationError(e)
+                    field = None
+                try:
+                    params = e.args[2]  # a dictionary
+                except IndexError:
+                    params = {}
+                try:
+                    code = e.args[3]  # a string
+                except IndexError:
+                    code = 'common_clean'
+                try:
+                    template = e.args[3]  # a string
+                except IndexError:
+                    template = None
+                if template and params:
+                    msg = template
+                if field:
+                    e = {field: msg}
+                else:
+                    e = msg
+                raise forms.ValidationError(e, code=code, params=params)
         return cleaned_data
 
 

@@ -9,7 +9,7 @@ class CommonCleanModelMixin(models.Model):
         self.common_clean()
         super().save(*args, **kwargs)
 
-    def common_clean(self, cleaned_data=None):
+    def common_clean(self):
         """A method that can be shared between form clean and model.save."""
         pass
 
