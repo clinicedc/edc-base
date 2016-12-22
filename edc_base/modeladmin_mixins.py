@@ -41,7 +41,7 @@ class ModelAdminBasicMixin:
             try:
                 _, _ = item
                 items_with_pos.append(item)
-            except ValueError:
+            except (ValueError, TypeError):
                 new_list.append(item)
         for index, item in items_with_pos:
             try:
