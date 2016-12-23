@@ -9,3 +9,7 @@ class NotFutureDateError(Exception):
 
 class NextUrlError(Exception):
     pass
+
+
+class AgeValueError(Exception):
+    pass

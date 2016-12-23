@@ -1,17 +1,34 @@
+import arrow
+from dateutil import tz
 import pytz
 import random
 import re
 from uuid import uuid4
 
-from datetime import datetime, time
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
 from math import ceil
 
+from django.conf import settings
 from django.utils.encoding import force_text
 from django.utils.timezone import localtime
+from django.core.exceptions import ImproperlyConfigured
+from git.refs import reference
+from edc_base.exceptions import AgeValueError
 
 safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
+
+
+class MyTimezone:
+    def __init__(self, timezone):
+        if timezone:
+            self.timezone = tz.gettz(timezone)
+        else:
+            try:
+                self.timezone = tz.gettz(settings.BORN_TZ_DEFAULT)
+            except AttributeError:
+                self.timezone = None
 
 
 class ConvertError(Exception):
@@ -20,10 +37,6 @@ class ConvertError(Exception):
 
 def get_uuid():
     return str(uuid4())
-
-
-def get_utcnow():
-    return datetime.now(tz=pytz.utc)
 
 
 def round_up(value, digits):
@@ -39,67 +52,71 @@ def get_safe_random_string(length=12, safe=None, allowed_chars=None):
     return ''.join([random.choice(allowed_chars) for _ in range(length)])
 
 
-def age(born, reference_dt):
-    """Returns a relative delta"""
-    if not born:
-        raise ValueError('DOB cannot be None.')
+def get_utcnow():
+    return arrow.utcnow().datetime
+
+
+def to_utc(dt, birth_tz=None):
+    """Returns a datetime after converting date or datetime from given timezone to UTC."""
     try:
-        born.date()
-    except AttributeError as e:
-        born = datetime.combine(born, time())
-    try:
-        born = pytz.utc.localize(born)
-    except ValueError as e:
-        if 'tzinfo is already set' in str(e):
-            pass
-    born = localtime(born)
-    if not reference_dt:
-        reference_dt = localtime(get_utcnow())
+        dt.date()
+    except AttributeError:
+        # handle born as date
+        utc = arrow.Arrow.fromdate(dt, tzinfo=birth_tz).to('UTC')
     else:
-        try:
-            reference_dt.date()
-        except AttributeError:
-            reference_dt = datetime.combine(reference_dt, time())
-        try:
-            reference_dt = pytz.utc.localize(reference_dt)
-        except ValueError as e:
-            if 'tzinfo is already set' in str(e):
-                pass
-    reference_dt = localtime(reference_dt)
-    if born > reference_dt:
-        rdelta = relativedelta(reference_dt, born)
-        raise ValueError('Reference date {} precedes DOB {}. Got {}'.format(reference_dt, born, rdelta))
-    return relativedelta(reference_dt, born)
+        # handle born as datetime
+        if birth_tz:
+            raise ValueError('timezone specified for aware datetime. Got birth_tz={}'.format(birth_tz))
+        utc = arrow.Arrow.fromdatetime(dt, tzinfo=dt.tzinfo).to('utc')
+    return utc
 
 
-def formatted_age(born, reference_datetime=None):
-    reference_datetime = reference_datetime or get_utcnow()
-    reference_date = localtime(reference_datetime).date()
+def age(born, reference_dt, birth_tz=None):
+    """Returns a relative delta"""
+    # avoid null dates/datetimes
+    if not born:
+        raise ValueError('born cannot be None.')
+    if not reference_dt:
+        raise ValueError('reference_dt cannot be None.')
+    # convert dates or datetimes to UTC datetimes
+    birth_tz = MyTimezone(birth_tz).timezone
+    born_utc = to_utc(born, birth_tz)
+    reference_dt_utc = to_utc(reference_dt, birth_tz)
+    rdelta = relativedelta(reference_dt_utc.datetime, born_utc.datetime)
+    if born_utc.datetime > reference_dt_utc.datetime:
+        raise AgeValueError(
+            'Reference date {} {} precedes DOB {} {}. Got {}'.format(
+                reference_dt, str(reference_dt.tzinfo), born, birth_tz, rdelta))
+    return rdelta
+
+
+def formatted_age(born, reference_dt=None, birth_tz=None):
     if born:
-        rdelta = relativedelta(reference_date, born)
-        if born > reference_date:
+        born = arrow.Arrow.fromdate(born, tzinfo=birth_tz).datetime
+        reference_dt = reference_dt or get_utcnow()
+        age_delta = age(born, reference_dt or get_utcnow())
+        if born > reference_dt:
             return '?'
-        elif rdelta.years == 0 and rdelta.months <= 0:
-            return '%sd' % (rdelta.days)
-        elif rdelta.years == 0 and rdelta.months > 0 and rdelta.months <= 2:
-            return '%sm%sd' % (rdelta.months, rdelta.days)
-        elif rdelta.years == 0 and rdelta.months > 2:
-            return '%sm' % (rdelta.months)
-        elif rdelta.years == 1:
-            m = rdelta.months + 12
+        elif age_delta.years == 0 and age_delta.months <= 0:
+            return '%sd' % (age_delta.days)
+        elif age_delta.years == 0 and age_delta.months > 0 and age_delta.months <= 2:
+            return '%sm%sd' % (age_delta.months, age_delta.days)
+        elif age_delta.years == 0 and age_delta.months > 2:
+            return '%sm' % (age_delta.months)
+        elif age_delta.years == 1:
+            m = age_delta.months + 12
             return '%sm' % (m)
-        elif rdelta.years > 1:
-            return '%sy' % (rdelta.years)
+        elif age_delta.years > 1:
+            return '%sy' % (age_delta.years)
         else:
             raise TypeError(
                 'Age template tag missed a case... today - born. '
-                'rdelta = {} and {}'.format(rdelta, born))
+                'rdelta = {} and {}'.format(age_delta, born))
 
 
 def get_age_in_days(reference_datetime, dob):
-    reference_date = localtime(reference_datetime).date()
-    rdelta = relativedelta(reference_date, dob)
-    return rdelta.days
+    age_delta = age(dob, reference_datetime)
+    return age_delta.days
 
 
 def convert_from_camel(name):

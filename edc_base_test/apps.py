@@ -1,3 +1,5 @@
+import arrow
+
 from django.apps import AppConfig as DjangoAppConfig, apps as django_apps
 from django.core.management.color import color_style
 
@@ -33,7 +35,7 @@ class AppConfig(DjangoAppConfig):
                 'Cannot determine a reference date from get_utcnow. No config for \'{}\'. '
                 'Expected one of {}.See AppConfig and your TestMixin class'.format(
                     self.consent_model, [c.label_lower for c in app_config.consent_configs]))
-        utcnow = test_mixin_reference_datetime.get(self.consent_model)
-        if not utcnow:
-            raise TestMixinError('Cannot determine a reference date from get_utcnow. Got {}.'.format(utcnow))
-        return utcnow
+        now = test_mixin_reference_datetime.get(self.consent_model)
+        if not now:
+            raise TestMixinError('Cannot determine a reference date from get_utcnow. Got {}.'.format(now))
+        return arrow.Arrow.fromdatetime(now, tzinfo=now.tzinfo).to('utc').datetime

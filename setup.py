@@ -34,6 +34,7 @@ setup(
         'Faker',
         'unipath',
         'pytz',
+        'arrow',
         'django-tz-detect',
     ],
     classifiers=[
