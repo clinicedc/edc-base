@@ -1,4 +1,4 @@
-from django.apps import apps as django_apps
+from edc_base_test.utils import get_utcnow
 
 
 class ReferenceDateMixin:
@@ -8,4 +8,4 @@ class ReferenceDateMixin:
     range to be in the past. See edc_consent.apps.AppConfig, edc_protocol.apps.AppConfig"""
 
     def get_utcnow(self):
-        return django_apps.get_app_config('edc_base_test').get_utcnow()
+        return get_utcnow()

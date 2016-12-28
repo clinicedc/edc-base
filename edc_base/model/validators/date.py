@@ -1,7 +1,5 @@
 from datetime import timedelta
 
-from django.core.exceptions import ValidationError
-
 from edc_base.exceptions import FutureDateError, NotFutureDateError
 
 from ...utils import get_utcnow
@@ -16,7 +14,7 @@ def datetime_not_future(value):
 def date_not_future(value):
     now = get_utcnow().date()
     if value > now:
-        raise ValidationError(u'Date cannot be a future date. You entered {}'.format(value))
+        raise FutureDateError(u'Date cannot be a future date. You entered {}'.format(value))
 
 
 def datetime_is_future(value):

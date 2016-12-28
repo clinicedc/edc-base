@@ -2,7 +2,7 @@ from model_mommy import mommy
 
 from django.apps import apps as django_apps
 
-from edc_base.utils import get_utcnow
+from edc_base_test.utils import get_utcnow
 from edc_visit_tracking.constants import SCHEDULED
 
 from ..exceptions import TestMixinError, FutureDateError
