@@ -36,7 +36,7 @@ class DatesTestMixin:
             consent_period_tdelta = consent.end - consent.start
             consent.start = consent.start - tdelta
             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
-            sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.model_name, consent.start, consent.end)))
+            sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
             testconsents.append(consent)
         site_consents.reset_registry()
         for consent in testconsents:
