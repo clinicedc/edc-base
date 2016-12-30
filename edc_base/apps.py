@@ -24,9 +24,7 @@ class AppConfig(DjangoAppConfig):
     def ready(self):
         sys.stdout.write('Loading {} ...\n'.format(self.verbose_name))
         connection_created.connect(activate_foreign_keys)
-        sys.stdout.write(' * TIME ZONE {}.\n'.format(settings.TIME_ZONE))
-        if settings.TIME_ZONE != 'UTC':
-            raise ImproperlyConfigured('EDC requires settings.TIME_ZONE = \'UTC\'')
+        sys.stdout.write(' * default TIME_ZONE {}.\n'.format(settings.TIME_ZONE))
         if not settings.USE_TZ:
             raise ImproperlyConfigured('EDC requires settings.USE_TZ = True')
         sys.stdout.write(' Done loading {}.\n'.format(self.verbose_name))
