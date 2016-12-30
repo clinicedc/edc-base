@@ -5,6 +5,5 @@ from .eligibility import (
     eligible_if_yes, eligible_if_yes_or_declined, eligible_if_no,
     eligible_if_unknown, eligible_if_female, eligible_if_male, eligible_if_negative,
     eligible_if_positive, eligible_not_positive)
-from .gender_of_consent import GenderOfConsent
 from .phone import CellNumber, TelephoneNumber
 from .compare_numbers import CompareNumbersValidator

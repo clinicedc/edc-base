@@ -1,16 +1,14 @@
 import arrow
 
-from datetime import date
-
 from django.core.exceptions import ValidationError
 
 from edc_base.exceptions import FutureDateError
-from edc_base.utils import get_utcnow
-from django.conf import settings
 from edc_base.model.validators.date import date_not_future
 
 
 def dob_not_future(value):
+    """this is unreliable as the DoB is more likely relative to something like the report_datetime
+    and not today."""
     try:
         date_not_future(value)
     except FutureDateError:
@@ -18,6 +16,8 @@ def dob_not_future(value):
 
 
 def dob_not_today(value):
-    now = date.today()
-    if now == value:
+    """this is unreliable as the DoB is more likely relative to something like the report_datetime
+    and not today."""
+    value_utc = arrow.Arrow.fromdatetime(value, value.tzinfo).to('utc').date
+    if value_utc == arrow.utcnow().date:
         raise ValidationError(u'Date of birth cannot be today. You entered {}.'.format(value))

@@ -1,3 +1,4 @@
+import arrow
 import sys
 
 from dateutil.relativedelta import relativedelta
@@ -11,25 +12,37 @@ from datetime import timedelta
 
 class DatesTestMixin:
 
+    """A mixin for tests that changes the protocol start and end dates to be in the past.
+
+    Also changes the consent periods for all registered consents relative to the changed
+    study open/close dates.
+
+    Use get_utcnow to return the study open date."""
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         style = color_style()
         sys.stdout.write(
             style.NOTICE(
-                '\nNOTICE. Overwriting study open/close and consent.start/end dates for tests only. '
-                'See {}\n'.format(cls.__name__)))
+                '\n{}. Overwriting study open/close and consent.start/end dates '
+                'for tests only.\n'.format(cls.__name__)))
         study_open_datetime = django_apps.app_configs['edc_protocol'].study_open_datetime
         study_close_datetime = django_apps.app_configs['edc_protocol'].study_close_datetime
+        django_apps.app_configs['edc_protocol']._original_study_open_datetime = study_open_datetime
+        django_apps.app_configs['edc_protocol']._original_study_close_datetime = study_close_datetime
+        study_open_datetime = arrow.Arrow.fromdatetime(
+            study_open_datetime, study_open_datetime.tzinfo).to('utc').datetime
+        study_close_datetime = arrow.Arrow.fromdatetime(
+            study_close_datetime, study_close_datetime.tzinfo).to('utc').datetime
         duration_delta = relativedelta(study_close_datetime, study_open_datetime)
         django_apps.app_configs['edc_protocol'].study_open_datetime = study_open_datetime - duration_delta
         django_apps.app_configs['edc_protocol'].study_close_datetime = study_open_datetime
-
         edc_protocol_app_config = django_apps.get_app_config('edc_protocol')
         study_open_datetime = edc_protocol_app_config.study_open_datetime
         study_close_datetime = edc_protocol_app_config.study_close_datetime
-        sys.stdout.write(style.NOTICE(' * new study open datetime: {}\n'.format(study_open_datetime)))
-        sys.stdout.write(style.NOTICE(' * new study close datetime: {}\n'.format(study_close_datetime)))
+        sys.stdout.write(style.NOTICE(' * test study open datetime: {}\n'.format(study_open_datetime)))
+        sys.stdout.write(style.NOTICE(' * test study close datetime: {}\n'.format(study_close_datetime)))
         testconsents = []
         for consent in site_consents.registry:
             tdelta = consent.start - study_open_datetime
@@ -38,17 +51,24 @@ class DatesTestMixin:
             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
             testconsents.append(consent)
-        site_consents.reset_registry()
+        site_consents.backup_registry()
         for consent in testconsents:
             site_consents.register(consent)
 
     @classmethod
     def tearDownClass(cls):
+        """Restores edc_protocol app_config open/close dates and edc_consent site_consents registry."""
         super().tearDownClass()
-        site_consents.reset_registry()
-        site_consents.autodiscover(verbose=False)
+        style = color_style()
+        study_open_datetime = django_apps.app_configs['edc_protocol']._original_study_open_datetime
+        study_close_datetime = django_apps.app_configs['edc_protocol']._original_study_close_datetime
+        django_apps.app_configs['edc_protocol'].study_open_datetime = study_open_datetime
+        django_apps.app_configs['edc_protocol'].study_close_datetime = study_close_datetime
+        site_consents.restore_registry()
+        sys.stdout.write(style.NOTICE('\n * restored original values\n'))
 
     def get_utcnow(self):
+        """Returns the earliest date allowed."""
         return self.study_open_datetime
 
     @property
