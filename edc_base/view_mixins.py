@@ -1,7 +1,9 @@
 from django.apps import apps as django_apps
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage
 from django_revision.views import RevisionMixin
-from edc_base.utils import get_utcnow
+
+from .utils import get_utcnow
 
 
 class EdcBaseViewMixin(RevisionMixin):
@@ -17,3 +19,11 @@ class EdcBaseViewMixin(RevisionMixin):
             'DEBUG': settings.DEBUG,
         })
         return context
+
+    def paginate(self, qs):
+        paginator = Paginator(qs, self.paginate_by)
+        try:
+            page = paginator.page(self.kwargs.get('page', 1))
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        return page
