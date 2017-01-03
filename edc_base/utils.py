@@ -2,7 +2,6 @@ import arrow
 import random
 import re
 
-from datetime import datetime
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
