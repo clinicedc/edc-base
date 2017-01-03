@@ -67,9 +67,9 @@ def age(born, reference_dt, timezone=None):
     """Returns a relative delta"""
     # avoid null dates/datetimes
     if not born:
-        raise ValueError('born cannot be None.')
+        raise AgeValueError('Date of birth is required.')
     if not reference_dt:
-        raise ValueError('reference_dt cannot be None.')
+        raise AgeValueError('Reference date is required.')
     # convert dates or datetimes to UTC datetimes
     born_utc = to_arrow_utc(born, timezone)
     reference_dt_utc = to_arrow_utc(reference_dt, timezone)
