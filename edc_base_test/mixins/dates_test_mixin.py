@@ -44,16 +44,35 @@ class DatesTestMixin:
         sys.stdout.write(style.NOTICE(' * test study open datetime: {}\n'.format(study_open_datetime)))
         sys.stdout.write(style.NOTICE(' * test study close datetime: {}\n'.format(study_close_datetime)))
         testconsents = []
-        for consent in site_consents.registry:
+
+        previous_consent_end_date = None
+        for index, consent in enumerate(site_consents.registry):
             tdelta = consent.start - study_open_datetime
             consent_period_tdelta = consent.end - consent.start
-            consent.start = consent.start - tdelta
             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
+            if index == 0:
+                consent.start = consent.start - tdelta
+            else:
+                consent.start = previous_consent_end_date + relativedelta(days=1)
             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
+            previous_consent_end_date = consent.end
             testconsents.append(consent)
         site_consents.backup_registry()
         for consent in testconsents:
             site_consents.register(consent)
+
+#         for consent in testconsents:
+#             site_consents.register(consent)
+#         for consent in site_consents.registry:
+#             tdelta = consent.start - study_open_datetime
+#             consent_period_tdelta = consent.end - consent.start
+#             consent.start = consent.start - tdelta
+#             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
+#             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
+#             testconsents.append(consent)
+#         site_consents.backup_registry()
+#         for consent in testconsents:
+#             site_consents.register(consent)
 
     @classmethod
     def tearDownClass(cls):
