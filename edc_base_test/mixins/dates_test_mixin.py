@@ -33,7 +33,7 @@ class DatesTestMixin:
         testconsents = []
         for consent in site_consents.registry:
             tdelta = consent.start - study_open_datetime
-            consent_period_tdelta = consent.end - consent.start
+            consent_period_tdelta = study_close_datetime - consent.start
             consent.start = consent.start - tdelta
             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.model_name, consent.start, consent.end)))
