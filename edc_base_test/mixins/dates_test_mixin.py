@@ -1,6 +1,6 @@
 import arrow
 import sys
-
+import copy
 from dateutil.relativedelta import relativedelta
 
 from django.apps import apps as django_apps
@@ -44,16 +44,17 @@ class DatesTestMixin:
         sys.stdout.write(style.NOTICE(' * test study open datetime: {}\n'.format(study_open_datetime)))
         sys.stdout.write(style.NOTICE(' * test study close datetime: {}\n'.format(study_close_datetime)))
         testconsents = []
-        for consent in site_consents.registry:
-            tdelta = consent.start - study_open_datetime
-            consent_period_tdelta = consent.end - consent.start
-            consent.start = consent.start - tdelta
-            consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
-            sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
-            testconsents.append(consent)
+        tdelta = site_consents.consents[0].start - study_open_datetime
+        for consent in site_consents.consents:
+            test_consent = copy.copy(consent)
+            test_consent.start = consent.start - tdelta
+            test_consent.end = consent.end - tdelta
+            sys.stdout.write(style.NOTICE(
+                ' * {}: {} - {}\n'.format(test_consent.name, test_consent.start, test_consent.end)))
+            testconsents.append(test_consent)
         site_consents.backup_registry()
-        for consent in testconsents:
-            site_consents.register(consent)
+        for test_consent in testconsents:
+            site_consents.register(test_consent)
 
     @classmethod
     def tearDownClass(cls):
