@@ -121,10 +121,10 @@
     {% endif %}
 <footer class="footer">
   <div class="container">
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-copyright-mark"></span> {{ year }}&nbsp;{{ institution }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-grain"></span> Revision: {{ revision }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-time"></span> {% get_current_timezone as TIME_ZONE%}{{TIME_ZONE}}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="glyphicon glyphicon-exclamation-sign"></span> For Research Purposes Only</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-copyright"></span> {{ copyright }}&nbsp;{{ institution }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-leaf"></span> Revision: {{ revision }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-clock-o"></span> {% get_current_timezone as TIME_ZONE%}{{TIME_ZONE}}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-exclamation"></span> {{ disclaimer }}</p></div>
   </div>
 </footer>
 {% endblock footer %}
