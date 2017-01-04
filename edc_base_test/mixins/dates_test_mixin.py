@@ -1,13 +1,13 @@
 import arrow
-import sys
 import copy
+import sys
+
 from dateutil.relativedelta import relativedelta
 
 from django.apps import apps as django_apps
 from django.core.management.color import color_style
 
 from edc_consent.site_consents import site_consents
-from datetime import timedelta
 
 
 class DatesTestMixin:
