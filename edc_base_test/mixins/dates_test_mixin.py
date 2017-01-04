@@ -49,11 +49,12 @@ class DatesTestMixin:
         for index, consent in enumerate(site_consents.registry):
             tdelta = consent.start - study_open_datetime
             consent_period_tdelta = consent.end - consent.start
-            consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
             if index == 0:
                 consent.start = consent.start - tdelta
+                consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
             else:
                 consent.start = previous_consent_end_date + relativedelta(days=1)
+            consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
             previous_consent_end_date = consent.end
             testconsents.append(consent)
