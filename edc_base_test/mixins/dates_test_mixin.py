@@ -61,19 +61,6 @@ class DatesTestMixin:
         for consent in testconsents:
             site_consents.register(consent)
 
-#         for consent in testconsents:
-#             site_consents.register(consent)
-#         for consent in site_consents.registry:
-#             tdelta = consent.start - study_open_datetime
-#             consent_period_tdelta = consent.end - consent.start
-#             consent.start = consent.start - tdelta
-#             consent.end = consent.start + consent_period_tdelta - timedelta(minutes=24 * 60)
-#             sys.stdout.write(style.NOTICE(' * {}: {} - {}\n'.format(consent.name, consent.start, consent.end)))
-#             testconsents.append(consent)
-#         site_consents.backup_registry()
-#         for consent in testconsents:
-#             site_consents.register(consent)
-
     @classmethod
     def tearDownClass(cls):
         """Restores edc_protocol app_config open/close dates and edc_consent site_consents registry."""
