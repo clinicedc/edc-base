@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 
 from .models import TestValidatorModel
 from edc_base.model.validators import (
-    MaxConsentAgeValidator, GenderOfConsent, CompareNumbersValidator, MinConsentAgeValidator)
+    MaxConsentAgeValidator, CompareNumbersValidator, MinConsentAgeValidator)
 
 
 class TestValidationForm(forms.ModelForm):
@@ -30,21 +30,6 @@ class TestValidators(TestCase):
         self.assertRaises(ValidationError, validator, date.today() - relativedelta(years=65))
         self.assertIsNone(validator(date.today() - relativedelta(years=64)))
         self.assertIsNone(validator(date.today() - relativedelta(years=63)))
-
-    def test_gender_of_consent_none(self):
-        with self.settings(GENDER_OF_CONSENT='MF'):
-            value = None
-            self.assertRaises(ValidationError, GenderOfConsent, value)
-
-    def test_gender_of_consent_in(self):
-        with self.settings(GENDER_OF_CONSENT='MF'):
-            value = 'M'
-            self.assertIsNone(GenderOfConsent(value))
-
-    def test_gender_of_consent_as_list(self):
-        with self.settings(GENDER_OF_CONSENT=['M', 'F']):
-            value = 'M'
-            self.assertIsNone(GenderOfConsent(value))
 
     def test_compare_numbers_gt(self):
         validator = CompareNumbersValidator(10, '>')

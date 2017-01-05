@@ -2,7 +2,6 @@ import arrow
 import random
 import re
 
-from datetime import datetime
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
@@ -20,12 +19,9 @@ safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
 class MyTimezone:
     def __init__(self, timezone):
         if timezone:
-            self.timezone = tz.gettz(timezone)
+            self.tzinfo = tz.gettz(timezone)
         else:
-            try:
-                self.timezone = tz.gettz(settings.DEFAULT_LOCAL_TZ)
-            except AttributeError:
-                self.timezone = None
+            self.tzinfo = tz.gettz(settings.TIME_ZONE)
 
 
 class ConvertError(Exception):
@@ -53,33 +49,30 @@ def get_utcnow():
     return arrow.utcnow().datetime
 
 
-def to_utc(dt, timezone=None):
+def to_arrow_utc(dt, timezone=None):
     """Returns a datetime after converting date or datetime from the given timezone string to \'UTC\'."""
     try:
         dt.date()
     except AttributeError:
         # handle born as date. Use 0hr as time before converting to UTC
-        tzinfo = MyTimezone(timezone).timezone
-        utc = arrow.Arrow.fromdate(datetime(dt.year, dt.month, dt.day, 0, 0, 0), tzinfo=tzinfo).to('utc')
+        tzinfo = MyTimezone(timezone).tzinfo
+        r_utc = arrow.Arrow.fromdate(dt, tzinfo=tzinfo).to('utc')
     else:
         # handle born as datetime
-        if timezone:
-            raise ValueError('timezone specified for aware datetime. Got timezone={}'.format(timezone))
-        utc = arrow.Arrow.fromdatetime(dt, tzinfo=dt.tzinfo).to('utc')
-    return utc
+        r_utc = arrow.Arrow.fromdatetime(dt, tzinfo=dt.tzinfo).to('utc')
+    return r_utc
 
 
 def age(born, reference_dt, timezone=None):
     """Returns a relative delta"""
     # avoid null dates/datetimes
     if not born:
-        raise ValueError('born cannot be None.')
+        raise AgeValueError('Date of birth is required.')
     if not reference_dt:
-        raise ValueError('reference_dt cannot be None.')
+        raise AgeValueError('Reference date is required.')
     # convert dates or datetimes to UTC datetimes
-    tzinfo = MyTimezone(timezone).timezone
-    born_utc = to_utc(born, tzinfo)
-    reference_dt_utc = to_utc(reference_dt, tzinfo)
+    born_utc = to_arrow_utc(born, timezone)
+    reference_dt_utc = to_arrow_utc(reference_dt, timezone)
     rdelta = relativedelta(reference_dt_utc.datetime, born_utc.datetime)
     if born_utc.datetime > reference_dt_utc.datetime:
         raise AgeValueError(
@@ -90,7 +83,7 @@ def age(born, reference_dt, timezone=None):
 
 def formatted_age(born, reference_dt=None, timezone=None):
     if born:
-        tzinfo = MyTimezone(timezone).timezone
+        tzinfo = MyTimezone(timezone).tzinfo
         born = arrow.Arrow.fromdate(born, tzinfo=tzinfo).datetime
         reference_dt = reference_dt or get_utcnow()
         age_delta = age(born, reference_dt or get_utcnow())
