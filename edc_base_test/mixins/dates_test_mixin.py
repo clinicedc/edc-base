@@ -44,17 +44,18 @@ class DatesTestMixin:
         sys.stdout.write(style.NOTICE(' * test study open datetime: {}\n'.format(study_open_datetime)))
         sys.stdout.write(style.NOTICE(' * test study close datetime: {}\n'.format(study_close_datetime)))
         testconsents = []
-        tdelta = site_consents.consents[0].start - study_open_datetime
-        for consent in site_consents.consents:
-            test_consent = copy.copy(consent)
-            test_consent.start = consent.start - tdelta
-            test_consent.end = consent.end - tdelta
-            sys.stdout.write(style.NOTICE(
-                ' * {}: {} - {}\n'.format(test_consent.name, test_consent.start, test_consent.end)))
-            testconsents.append(test_consent)
-        site_consents.backup_registry()
-        for test_consent in testconsents:
-            site_consents.register(test_consent)
+        if site_consents.consents:
+            tdelta = site_consents.consents[0].start - study_open_datetime
+            for consent in site_consents.consents:
+                test_consent = copy.copy(consent)
+                test_consent.start = consent.start - tdelta
+                test_consent.end = consent.end - tdelta
+                sys.stdout.write(style.NOTICE(
+                    ' * {}: {} - {}\n'.format(test_consent.name, test_consent.start, test_consent.end)))
+                testconsents.append(test_consent)
+            site_consents.backup_registry()
+            for test_consent in testconsents:
+                site_consents.register(test_consent)
 
     @classmethod
     def tearDownClass(cls):

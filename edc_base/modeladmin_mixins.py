@@ -10,6 +10,16 @@ from django.forms.widgets import DateInput
 from .utils import get_utcnow
 
 
+audit_fields = ('user_created', 'user_modified',
+                'created', 'modified', 'hostname_created', 'hostname_modified',
+                'revision')
+
+audit_fieldset_tuple = (
+    'Audit', {
+        'classes': ('collapse',),
+        'fields': audit_fields})
+
+
 class ModelAdminBasicMixin:
 
     """Merge ModelAdmin attributes with the concrete class attributes fields, radio_fields, list_display,
