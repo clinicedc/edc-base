@@ -19,35 +19,41 @@ class BaseModel(CommonCleanModelMixin, models.Model):
     get_latest_by = 'modified'
 
     created = models.DateTimeField(
+        blank=True,
         default=get_utcnow)
 
     modified = models.DateTimeField(
+        blank=True,
         default=get_utcnow)
 
     user_created = UserField(
         max_length=50,
+        blank=True,
         verbose_name='user created',
     )
 
     user_modified = UserField(
         max_length=50,
+        blank=True,
         verbose_name='user modified',
     )
 
     hostname_created = models.CharField(
         max_length=50,
+        blank=True,
         default=socket.gethostname(),
         help_text="System field. (modified on create only)",
     )
 
     hostname_modified = HostnameModificationField(
         max_length=50,
+        blank=True,
         help_text="System field. (modified on every save)",
     )
 
     revision = RevisionField(
         help_text="System field. Git repository tag:branch:commit.",
-        editable=True,
+        blank=True,
     )
 
     objects = models.Manager()
