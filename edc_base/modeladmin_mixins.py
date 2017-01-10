@@ -11,8 +11,7 @@ from .utils import get_utcnow
 
 
 audit_fields = ('user_created', 'user_modified',
-                'created', 'modified', 'hostname_created', 'hostname_modified',
-                'revision')
+                'created', 'modified', 'hostname_created', 'hostname_modified')
 
 audit_fieldset_tuple = (
     'Audit', {

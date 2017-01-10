@@ -6,11 +6,14 @@ from django_revision.views import RevisionMixin
 class EdcBaseViewMixin(RevisionMixin):
     """Mixes in common template variables for the footer, etc."""
 
+    base_html = 'edc_base/base.html'
+
     def get_context_data(self, **kwargs):
         context = super(EdcBaseViewMixin, self).get_context_data(**kwargs)
         context = self.get_edc_base_extra_context(context)
         context.update({
             'DEBUG': settings.DEBUG,
+            'base_html': self.base_html,
         })
         return context
 
