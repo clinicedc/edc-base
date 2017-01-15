@@ -91,13 +91,27 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <span class="navbar-brand">{% if protocol %}{{ protocol }}: {% endif %}{{ protocol_name |default:project_name }}</span>
+
+          {% block topbar_title %}
+            <span class="navbar-brand">{% if protocol %}{{ protocol }}: {% endif %}{{ protocol_name |default:project_name }}</span>
+          {% endblock topbar_title %}
+
         </div>
 
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+
+            {% block topbar_navbar_extra_items %}{% endblock topbar_navbar_extra_items %}
+
             <li id="li-topbar-home"><a class="glyphicon glyphicon-home" title="home" href="{% url 'home_url' %}"></a></li>
-            {% block settings_url %}<li id="li-topbar-settings"><a class="glyphicon glyphicon-wrench" title="settings" href="{% url 'edc-base:settings_url' %}"></a></li>{% endblock settings_url %}
+            
+            {% block settings_url %}
+
+              <li id="li-topbar-settings"><a class="glyphicon glyphicon-wrench" title="settings" href="{% url 'edc-base:settings_url' %}"></a></li>
+
+            {% endblock settings_url %}
+
+            <li id="li-topbar-settings"><a class="fa fa-group" title="users" href="#"></a></li>
             <li id="li-topbar-user-profile"><a title="user profile" href="{% url "admin:auth_user_change" user.id %}">{{ user.username }}</a></li>
             <li id="li-topbar-logout"><a class="glyphicon glyphicon-log-out" title="logout" href="{% url 'logout_url' %}"></a></li>
           </ul>
@@ -121,6 +135,9 @@
     {% endif %}
 <footer class="footer">
   <div class="container">
+
+    {% block footer_extra_items %}
+    {% endblock footer_extra_items %}
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-copyright"></span> {{ copyright }}&nbsp;{{ institution }}</p></div>
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-leaf"></span> Revision: {{ revision }}</p></div>
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-clock-o"></span> {% get_current_timezone as TIME_ZONE%}{{TIME_ZONE}}</p></div>
