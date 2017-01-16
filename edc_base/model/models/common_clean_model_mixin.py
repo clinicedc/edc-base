@@ -6,7 +6,8 @@ class CommonCleanModelMixin(models.Model):
     when the form is declared using the CommonCleanModelFormMixin."""
 
     def save(self, *args, **kwargs):
-        self.common_clean()
+        if not kwargs.get('update_fields'):
+            self.common_clean()
         super().save(*args, **kwargs)
 
     def common_clean(self):
