@@ -9,9 +9,10 @@ from ..constants import BASE_MODEL_UPDATE_FIELDS
 from ..fields import HostnameModificationField, UserField
 
 from .common_clean_model_mixin import CommonCleanModelMixin
+from .url_mixin import UrlMixin
 
 
-class BaseModel(CommonCleanModelMixin, models.Model):
+class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer)."""

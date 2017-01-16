@@ -9,7 +9,7 @@ class EdcBaseViewMixin(RevisionMixin):
     base_html = 'edc_base/base.html'
 
     def get_context_data(self, **kwargs):
-        context = super(EdcBaseViewMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context = self.get_edc_base_extra_context(context)
         context.update({
             'DEBUG': settings.DEBUG,

@@ -404,7 +404,7 @@ class ModelAdminAuditFieldsMixin:
         return tuple(self.list_filter)
 
     def get_readonly_fields(self, request, obj=None):
-        return super().get_readonly_fields(request, obj=obj) + audit_fields
+            return super().get_readonly_fields(request, obj=obj) + audit_fields
 
 
 class ModelAdminFormAutoNumberMixin:

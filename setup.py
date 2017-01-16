@@ -36,6 +36,7 @@ setup(
         'pytz',
         'arrow',
         'django-tz-detect',
+        'mysqlclient',
     ],
     classifiers=[
         'Environment :: Web Environment',
