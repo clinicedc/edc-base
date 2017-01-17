@@ -1,4 +1,5 @@
 from copy import copy
+from inspect import ismethod
 
 from dateutil.relativedelta import relativedelta
 
@@ -13,6 +14,7 @@ from crispy_forms.layout import Submit, Field, Layout, ButtonHolder, Button
 from edc_constants.constants import YES, NO, UNKNOWN, OTHER, NOT_APPLICABLE
 
 from .utils import get_utcnow
+from edc_base.exceptions import CommonCleanError
 
 
 comparison_phrase = {
@@ -66,6 +68,12 @@ class CommonCleanModelFormMixin:
             if key not in m2ms:
                 setattr(instance, key, value)
         if instance.common_clean_exceptions:
+            # common mistake, i guess
+            if ismethod(instance.common_clean_exceptions):
+                raise CommonCleanError(
+                    'Expected \'common_clean_exceptions\' to be a '
+                    'property not method. Got {}'.format(
+                        instance.__class__, instance.common_clean_exceptions()))
             try:
                 instance.common_clean()
             except tuple(instance.common_clean_exceptions) as e:
