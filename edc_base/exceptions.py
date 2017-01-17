@@ -13,3 +13,7 @@ class NextUrlError(Exception):
 
 class AgeValueError(Exception):
     pass
+
+
+class CommonCleanError(Exception):
+    pass

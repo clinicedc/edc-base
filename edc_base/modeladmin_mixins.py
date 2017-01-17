@@ -404,7 +404,11 @@ class ModelAdminAuditFieldsMixin:
         return tuple(self.list_filter)
 
     def get_readonly_fields(self, request, obj=None):
-            return super().get_readonly_fields(request, obj=obj) + audit_fields
+        # FIXME: somewhere the readonly_fields is being changed to a list
+        readonly_fields = super().get_readonly_fields(request, obj=obj)
+        if readonly_fields:
+            readonly_fields = tuple(readonly_fields)
+        return readonly_fields + audit_fields
 
 
 class ModelAdminFormAutoNumberMixin:
