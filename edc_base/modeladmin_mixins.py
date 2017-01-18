@@ -149,10 +149,10 @@ class ModelAdminRedirectMixin:
         return None
 
     def redirect_url_on_add(self, request, obj, post_url_continue=None):
-        return self.redirect_url(request, obj, post_url_continue)
+        return self.redirect_url(request, obj, post_url_continue=post_url_continue)
 
     def redirect_url_on_change(self, request, obj, post_url_continue=None):
-        return self.redirect_url(request, obj, post_url_continue)
+        return self.redirect_url(request, obj, post_url_continue=post_url_continue)
 
     def redirect_url_on_delete(self, request, obj_display, obj_id):
         return None
@@ -163,7 +163,7 @@ class ModelAdminRedirectMixin:
             redirect_url = self.redirect_url_on_add(request, obj)
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
-        return super(ModelAdminRedirectMixin, self).response_add(request, obj)
+        return super().response_add(request, obj)
 
     def response_change(self, request, obj, post_url_continue=None):
         redirect_url = None
@@ -171,13 +171,13 @@ class ModelAdminRedirectMixin:
             redirect_url = self.redirect_url_on_change(request, obj)
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
-        return super(ModelAdminRedirectMixin, self).response_change(request, obj)
+        return super().response_change(request, obj)
 
     def response_delete(self, request, obj_display, obj_id):
         redirect_url = self.redirect_url_on_delete(request, obj_display, obj_id)
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
-        return super(ModelAdminRedirectMixin, self).response_delete(request, obj_display, obj_id)
+        return super().response_delete(request, obj_display, obj_id)
 
 
 class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
@@ -188,10 +188,16 @@ class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
 
     querystring_name = 'next'
 
+    def render_delete_form(self, request, context):
+        return super().render_delete_form(request, context)
+
+    def delete_view(self, request, object_id, extra_context=None):
+        return super().delete_view(request, object_id, extra_context=extra_context)
+
     def redirect_url(self, request, obj, post_url_continue=None):
         kwargs = request.GET.dict()
-        redirect_url = super(ModelAdminNextUrlRedirectMixin, self).redirect_url(
-            request, obj, post_url_continue)
+        redirect_url = super().redirect_url(
+            request, obj, post_url_continue=post_url_continue)
         if kwargs.get(self.querystring_name):
             url_name = kwargs.get(self.querystring_name).split(',')[0]
             attrs = kwargs.get(self.querystring_name).split(',')[1:]
