@@ -19,7 +19,7 @@ class LoginView(FormInvalidMessageMixin, EdcBaseViewMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return super(LoginView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
@@ -46,4 +46,4 @@ class LogoutView(RedirectView):
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return super(LogoutView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
