@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
+    'django_js_reverse',
     'edc_protocol.apps.AppConfig',
     'edc_device.apps.AppConfig',
     'edc_identifier.apps.AppConfig',
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     'edc_visit_tracking.apps.AppConfig',
     'edc_metadata.apps.AppConfig',
     'edc_base.apps.AppConfig',
-    'edc_base.tests',
+    'edc_example.apps.AppConfig'
 ]
 
 MIDDLEWARE_CLASSES = [
