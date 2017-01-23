@@ -93,11 +93,11 @@ class TestFieldsets(TestCase):
         self.assertEqual(
             fieldsets.fieldsets[1][1]['fields'], ('field1', 'field2', 'field3'))
 
-    def test_insert_field_after(self):
+    def test_insert_insert_after(self):
         """Asserts adds fields to an existing section."""
         fs = Fieldsets(self.fieldsets)
         f = ('field1', 'field2', 'field3')
-        fs.insert_fields(*f, field_after='on_arv')
+        fs.insert_fields(*f, insert_after='on_arv')
         pos = self.original_fields.index('on_arv')
         self.assertEqual(
             fs.fieldsets[0][1]['fields'][0:pos], self.original_fields[0:pos])
@@ -110,7 +110,7 @@ class TestFieldsets(TestCase):
         f = ('field1', 'field2', 'field3')
         self.assertRaises(
             FieldsetError,
-            fs.insert_fields, *f, field_after='on_arv', section='Hospitalization')
+            fs.insert_fields, *f, insert_after='on_arv', section='Hospitalization')
 
     def test_remove_fields(self):
         """Asserts removes fields from an existing section."""

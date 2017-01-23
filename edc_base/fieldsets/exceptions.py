@@ -1,0 +1,3 @@
+
+class FieldsetError(Exception):
+    pass
