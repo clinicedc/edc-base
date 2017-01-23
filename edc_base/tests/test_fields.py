@@ -5,13 +5,14 @@ import socket
 
 from django.test import TestCase
 
-from .models import TestModel
+from edc_example.models import TestModel
 
 
 class TestFields(TestCase):
 
     def setUp(self):
-        self.uuid_regex = re.compile('[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}')
+        self.uuid_regex = re.compile(
+            '[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}')
 
     def test_uuid_none_on_instance(self):
         test_model = TestModel()

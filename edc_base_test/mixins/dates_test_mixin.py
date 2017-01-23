@@ -1,4 +1,3 @@
-import arrow
 import copy
 import sys
 
@@ -19,6 +18,8 @@ class DatesTestMixin:
 
     Use get_utcnow to return the study open date."""
 
+    study_tdelta = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -35,10 +36,10 @@ class DatesTestMixin:
         ropen = django_apps.app_configs['edc_protocol'].arrow.ropen
         rclose = django_apps.app_configs['edc_protocol'].arrow.rclose
 
-        tdelta = rclose.floor('hour').datetime - ropen.floor('hour').datetime
+        cls.study_tdelta = rclose.floor('hour').datetime - ropen.floor('hour').datetime
 
         django_apps.app_configs['edc_protocol'].study_open_datetime = (
-            ropen.datetime - relativedelta(days=tdelta.days))
+            ropen.datetime - relativedelta(days=cls.study_tdelta.days))
         django_apps.app_configs['edc_protocol'].study_close_datetime = (
             ropen.ceil('hour').datetime)
 
@@ -52,8 +53,12 @@ class DatesTestMixin:
 
         testconsents = []
         if site_consents.consents:
-            tdelta = (site_consents.consents[0].arrow.rstart.floor('hour').datetime -
-                      edc_protocol_app_config.arrow.ropen.floor('hour').datetime)
+            new_startdate = (
+                site_consents.consents[0].arrow.rstart.floor('hour').datetime -
+                relativedelta(days=cls.study_tdelta.days))
+            tdelta = (
+                site_consents.consents[0].arrow.rstart.floor('hour').datetime -
+                new_startdate)
 
             for consent in site_consents.consents:
                 test_consent = copy.copy(consent)

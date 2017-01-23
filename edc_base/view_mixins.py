@@ -2,9 +2,31 @@ from django.apps import apps as django_apps
 from django.conf import settings
 from django_revision.views import RevisionMixin
 
+from edc_base.exceptions import NavbarError
+
 
 class EdcBaseViewMixin(RevisionMixin):
-    """Mixes in common template variables for the footer, etc."""
+    """Mixes in common template variables for the navbar and footer, etc."""
+
+    navbar_item_selected = None
+    navbar_name = 'default'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.navbar = None
+        self.navbars = django_apps.get_app_config('edc_base').navbars
+
+    def get(self, request, *args, **kwargs):
+        self.navbar = self.navbars.get(self.navbar_name) or []
+        if self.navbar_item_selected:
+            if self.navbar_item_selected not in [navbar_item.name for navbar_item in self.navbar]:
+                raise NavbarError(
+                    'Navbar item does not exist. Got {}. Expected one of {}'.format(
+                        self.navbar_item_selected, self.navbar))
+        kwargs['navbar_item_selected'] = self.navbar_item_selected
+        kwargs['navbar'] = self.navbar
+        kwargs['navbar_name'] = self.navbar_name
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

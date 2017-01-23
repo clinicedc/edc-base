@@ -101,17 +101,36 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
 
+            {% block topbar_navbar_apps %}
+
+	            {% for navbar_item in navbar %}
+	
+	                <li id="li-topbar-{{ navbar_item.html_id }}"
+	                   class="{%if navbar_item_selected == navbar_item.name %}active{%endif%}">
+	                    <a title="{{ navbar_item.title }}"
+	                        href="{% url navbar_item.url_name %}">
+	                        <i class="fa {{navbar_item.fa_icon}} fa-fw"></i>
+	                        {{ navbar_item.label|title }}
+	                    </a>
+	                </li>
+	
+	            {% endfor %}
+
+            {% endblock topbar_navbar_apps %}
+
             {% block topbar_navbar_extra_items %}{% endblock topbar_navbar_extra_items %}
 
             <li id="li-topbar-home"><a class="glyphicon glyphicon-home" title="home" href="{% url 'home_url' %}"></a></li>
             
             {% block settings_url %}
 
-              <li id="li-topbar-settings"><a class="glyphicon glyphicon-wrench" title="settings" href="{% url 'edc-base:settings_url' %}"></a></li>
+              <li id="li-topbar-settings">
+                <a class="fa fa-wrench fa-lg" title="settings" href="{% url 'edc-base:settings_url' %}">
+                </a>
+              </li>
 
             {% endblock settings_url %}
 
-            <li id="li-topbar-settings"><a class="fa fa-group" title="users" href="#"></a></li>
             <li id="li-topbar-user-profile"><a title="user profile" href="{% url "admin:auth_user_change" user.id %}">{{ user.username }}</a></li>
             <li id="li-topbar-logout"><a class="glyphicon glyphicon-log-out" title="logout" href="{% url 'logout_url' %}"></a></li>
           </ul>
@@ -124,6 +143,8 @@
 {% endblock topbar %}
 
 {% block main %}{% endblock main %}
+
+{% block modals %}{% endblock modals %}
 
 {% block bottombar %}{% endblock bottombar %}
 

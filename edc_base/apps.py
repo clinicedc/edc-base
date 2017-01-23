@@ -6,6 +6,7 @@ from django.db.backends.signals import connection_created
 from django.core.management.color import color_style
 from django.core.exceptions import ImproperlyConfigured
 from edc_base.utils import get_utcnow
+from edc_base.navbar_item import NavbarItem
 
 style = color_style()
 
@@ -24,8 +25,22 @@ class AppConfig(DjangoAppConfig):
     copyright = get_utcnow().year
     license = None
     disclaimer = 'For research purposes only.'
+    default_url_name = 'home_url'
+    navbars = {
+        'default':
+        [NavbarItem(
+            label='Section',
+            app_config_name='edc_base')]}
+
+    def __init__(self, app_name, app_module):
+        self._navbars = {}
+        super().__init__(app_name, app_module)
+
+    def get_navbars(self):
+        return self.navbars
 
     def ready(self):
+        self.navbars = self.get_navbars()
         sys.stdout.write('Loading {} ...\n'.format(self.verbose_name))
         connection_created.connect(activate_foreign_keys)
         sys.stdout.write(' * default TIME_ZONE {}.\n'.format(settings.TIME_ZONE))
