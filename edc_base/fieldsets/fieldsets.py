@@ -8,6 +8,8 @@ from .exceptions import FieldsetError
 
 class Fieldsets:
 
+    """A class to use with model admin fieldsets."""
+
     def __init__(self, fieldsets=None, **kwargs):
         self.fieldsets_asdict = OrderedDict(copy.deepcopy(fieldsets))
 
@@ -17,8 +19,8 @@ class Fieldsets:
 
     def add_fieldset(self, section=None, fields=None, fieldset=None):
         if fieldset:
-            section = fieldset[0]
-            fields = fieldset[1]['fields']
+            section = fieldset()[0]
+            fields = fieldset()[1]['fields']
         self.fieldsets_asdict.update({section: {'fields': fields}})
 
     def insert_fields(self, *insert_fields, insert_after=None, section=None):
@@ -31,6 +33,7 @@ class Fieldsets:
             self.fieldsets_asdict[section]['fields'] = tuple(fields)
 
     def remove_fields(self, *remove_fields, section=None):
+        """Removes fields from the given section."""
         if remove_fields and remove_fields != (None, ):
             fields = self._copy_section_fields(section)
             fields = [f for f in fields if f not in remove_fields]
