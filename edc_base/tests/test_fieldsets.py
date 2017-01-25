@@ -96,30 +96,32 @@ class TestFieldsets(TestCase):
     def test_insert_insert_after(self):
         """Asserts adds fields to an existing section."""
         fs = Fieldsets(self.fieldsets)
-        f = ('field1', 'field2', 'field3')
-        fs.insert_fields(*f, insert_after='on_arv')
+        fields = ('field1', 'field2', 'field3')
+        fs.insert_fields(*fields, insert_after='on_arv')
         pos = self.original_fields.index('on_arv')
         self.assertEqual(
             fs.fieldsets[0][1]['fields'][0:pos], self.original_fields[0:pos])
         self.assertEqual(
-            fs.fieldsets[0][1]['fields'][pos + 1:][0:3], f)
+            fs.fieldsets[0][1]['fields'][pos + 1:][0:3], fields)
 
     def test_insert_fields_after_bad_section(self):
         """Asserts raises if section does not exist."""
         fs = Fieldsets(self.fieldsets)
-        f = ('field1', 'field2', 'field3')
+        fields = ('field1', 'field2', 'field3')
         self.assertRaises(
             FieldsetError,
-            fs.insert_fields, *f, insert_after='on_arv', section='Hospitalization')
+            fs.insert_fields,
+            *fields, insert_after='on_arv',
+            section='Hospitalization')
 
     def test_remove_fields(self):
         """Asserts removes fields from an existing section."""
         fs = Fieldsets(self.fieldsets)
-        f = ('ever_taken_arv', 'why_no_arv', 'why_no_arv_other')
-        fs.remove_fields(*f, section=None)
+        fields = ('ever_taken_arv', 'why_no_arv', 'why_no_arv_other')
+        fs.remove_fields(*fields, section=None)
         self.assertTrue(
-            f[0] not in fs.fieldsets[0][1]['fields'])
+            fields[0] not in fs.fieldsets[0][1]['fields'])
         self.assertTrue(
-            f[1] not in fs.fieldsets[0][1]['fields'])
+            fields[1] not in fs.fieldsets[0][1]['fields'])
         self.assertTrue(
-            f[2] not in fs.fieldsets[0][1]['fields'])
+            fields[2] not in fs.fieldsets[0][1]['fields'])

@@ -5,17 +5,19 @@ from ..managers import BaseListManager
 
 class ListModelMixin(models.Model):
 
-    """Mixin for list data used in dropdown and radio widgets having display value and store value pairs."""
+    """Mixin for list data used in dropdown and radio widgets having
+    display value and store value pairs.
+    """
 
     name = models.CharField(
         verbose_name='Name',
         max_length=250,
         unique=True,
         db_index=True,
-        null=True,
         help_text='(suggest 40 characters max.)',
     )
 
+    # FIXME: this should be a short string, e.g. 15-25 chars!
     short_name = models.CharField(
         verbose_name="Stored value",
         max_length=250,
@@ -29,7 +31,8 @@ class ListModelMixin(models.Model):
         verbose_name="display index",
         default=0,
         db_index=True,
-        help_text='Index to control display order if not alphabetical, not required',
+        help_text=(
+            'Index to control display order if not alphabetical, not required'),
     )
 
     field_name = models.CharField(
@@ -56,7 +59,7 @@ class ListModelMixin(models.Model):
         super(ListModelMixin, self).save(*args, **kwargs)
 
     def natural_key(self):
-        return (self.name, )
+        return (self.short_name, )
 
     class Meta:
         abstract = True
