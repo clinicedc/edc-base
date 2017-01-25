@@ -19,10 +19,10 @@ class Fieldsets:
 
     def add_fieldset(self, section=None, fields=None, fieldset=None):
         if fieldset:
-            section = fieldset()[0]
-            fields = fieldset()[1]['fields']
+            section = fieldset[0]
+            fields = fieldset[1]['fields']
         self.fieldsets_asdict.update({section: {'fields': fields}})
-
+        
     def insert_fields(self, *insert_fields, insert_after=None, section=None):
         """Inserts fields after insert_after in the given section."""
         if insert_fields and insert_fields != (None, ):
