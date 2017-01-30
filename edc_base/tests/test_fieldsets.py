@@ -53,12 +53,14 @@ class TestFieldsets(TestCase):
             'adherence_4_wk')
 
     def test_fieldset(self):
-        """Asserts returns fieldset in original format."""
+        """Asserts returns fieldset in original format.
+        """
         fs = Fieldsets(self.fieldsets)
         self.assertEqual(fs.fieldsets, self.fieldsets)
 
     def test_add_fieldset(self):
-        """Asserts returns fieldset with added fields."""
+        """Asserts returns fieldset with added fields.
+        """
         fs = Fieldsets(self.fieldsets)
         fs.add_fieldset(
             'Hospitalisation', ('field1', 'field2', 'field3'))
@@ -66,7 +68,8 @@ class TestFieldsets(TestCase):
         self.assertEqual(flatten[-3:], ['field1', 'field2', 'field3'])
 
     def test_add_fieldset2(self):
-        """Asserts creates sections."""
+        """Asserts creates sections.
+        """
         fs = Fieldsets(self.fieldsets)
         fs.add_fieldset(
             'Hospitalisation', ('field1', 'field2', 'field3'))
@@ -74,7 +77,8 @@ class TestFieldsets(TestCase):
         self.assertEqual(fs.fieldsets[1][0], 'Hospitalisation')
 
     def test_adds_fieldset_section(self):
-        """Asserts adds fields to a new section."""
+        """Asserts adds fields to a new section.
+        """
         fs = Fieldsets(self.fieldsets)
         fs.add_fieldset(
             'Hospitalisation', ('field1', 'field2', 'field3'))
@@ -83,7 +87,8 @@ class TestFieldsets(TestCase):
             fs.fieldsets[1][1]['fields'], ('field1', 'field2', 'field3'))
 
     def test_adds_fieldset_section_with_fieldset(self):
-        """Asserts adds fields to a new section."""
+        """Asserts adds fields to a new section.\
+        """
         fieldsets = Fieldsets(self.fieldsets)
         fieldset = Fieldset(
             'field1', 'field2', 'field3', section='Hospitalisation')
@@ -94,7 +99,8 @@ class TestFieldsets(TestCase):
             fieldsets.fieldsets[1][1]['fields'], ('field1', 'field2', 'field3'))
 
     def test_insert_insert_after(self):
-        """Asserts adds fields to an existing section."""
+        """Asserts adds fields to an existing section.
+        """
         fs = Fieldsets(self.fieldsets)
         fields = ('field1', 'field2', 'field3')
         fs.insert_fields(*fields, insert_after='on_arv')
@@ -115,7 +121,8 @@ class TestFieldsets(TestCase):
             section='Hospitalization')
 
     def test_remove_fields(self):
-        """Asserts removes fields from an existing section."""
+        """Asserts removes fields from an existing section.
+        """
         fs = Fieldsets(self.fieldsets)
         fields = ('ever_taken_arv', 'why_no_arv', 'why_no_arv_other')
         fs.remove_fields(*fields, section=None)

@@ -82,7 +82,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
     def get_fieldsets(self, request, obj=None):
         """Returns fieldsets after modifications declared in
-        "conditional" dictionaries."""
+        "conditional" dictionaries.
+        """
         fieldsets = super().get_fieldsets(request, obj=obj)
         fieldsets = Fieldsets(fieldsets=fieldsets)
         key = self.get_key(request)
