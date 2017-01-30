@@ -1,23 +1,9 @@
 dist: trusty
 sudo: required
+
 language: python
 python:
-  - "3.5"
-#  - "nightly"
-# env:
-#  - DJANGO_VERSION=1.6
-#  - DJANGO_VERSION=1.7
-#  - DJANGO_VERSION=1.8
-#  - DJANGO_VERSION=1.10
-
-#addons:
-#  apt_packages:
-#     - swig
-#     - libssl-dev
-#     - libssl0.9.8
-#     - libcups2-dev
-#     - unixodbc-dev
-#     - python-mysqldb
+  - "3.5.1"
 
 services:
   - mysql
@@ -27,9 +13,6 @@ before_install:
     - "sh -e /etc/init.d/xvfb start"
     - sleep 3 # give xvfb some time to start
 
-virtualenv:
-  system_site_packages: true
-
 install:
   - pip install --upgrade pip
   - pip install -r requirements.txt
@@ -38,8 +21,9 @@ install:
 
 before_script:
   - flake8 edc_base
-  - mysql -e 'create database edc;'
-  # - mysql -e 'create database edc_lab;'
+  - mysql -e 'create database edc character set utf8;'
+  - python manage.py makemigrations
+  - python manage.py migrate
 
 script: 
   - coverage run --source=edc_base manage.py test
