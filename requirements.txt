@@ -13,4 +13,5 @@ git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc_constants
 git+https://github.com/botswana-harvard/edc-visit-tracking@develop#egg=edc-visit-tracking
 git+https://github.com/botswana-harvard/edc-metadata@develop#egg=edc-metadata
 git+https://github.com/botswana-harvard/edc-rule-groups@develop#egg=edc-rule-groups
+git+https://github.com/botswana-harvard/edc-visit-schedule@develop#egg=edc-protocol
 git+https://github.com/botswana-harvard/edc-visit-schedule@develop#egg=edc-visit-schedule
