@@ -1,4 +1,5 @@
 Django
+arrow
 django-braces
 django-simple-history
 django-js-reverse
