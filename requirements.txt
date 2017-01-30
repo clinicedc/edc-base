@@ -28,3 +28,4 @@ git+https://github.com/botswana-harvard/edc-rule-groups@develop#egg=edc-rule-gro
 git+https://github.com/botswana-harvard/edc-timepoint@develop#egg=edc-timepoint
 git+https://github.com/botswana-harvard/edc-visit-schedule@develop#egg=edc-visit-schedule
 git+https://github.com/botswana-harvard/edc-visit-tracking@develop#egg=edc-visit-tracking
+git+https://github.com/botswana-harvard/edc-off-study@develop#egg=edc-off-study
