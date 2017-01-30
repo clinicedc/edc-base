@@ -1,8 +1,7 @@
+dist: trusty
+sudo: false
 language: python
 python:
-#  - "2.7"
-#  - "3.2"
-#  - "3.3"
   - "3.5"
 #  - "nightly"
 env:
@@ -11,14 +10,14 @@ env:
 #  - DJANGO_VERSION=1.8
   - DJANGO_VERSION=1.10
 
-addons:
-  apt_packages:
-     - swig
-     - libssl-dev
-     - libssl0.9.8
-     - libcups2-dev
-     - unixodbc-dev
-     - python-mysqldb
+#addons:
+#  apt_packages:
+#     - swig
+#     - libssl-dev
+#     - libssl0.9.8
+#     - libcups2-dev
+#     - unixodbc-dev
+#     - python-mysqldb
 
 services:
   - mysql
