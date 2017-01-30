@@ -20,6 +20,7 @@ git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc_constants
 git+https://github.com/botswana-harvard/edc-device@develop#egg=edc-device
 git+https://github.com/botswana-harvard/edc-example@develop#egg=edc-example
 git+https://github.com/botswana-harvard/edc-identifier@develop#egg=edc-identifier
+git+https://github.com/botswana-harvard/edc-lab@develop#egg=edc-lab
 git+https://github.com/botswana-harvard/edc-metadata@develop#egg=edc-metadata
 git+https://github.com/botswana-harvard/edc-protocol@develop#egg=edc_protocol
 git+https://github.com/botswana-harvard/edc-registration@develop#egg=edc-registration
