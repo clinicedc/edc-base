@@ -2,13 +2,13 @@ import copy
 
 from collections import OrderedDict
 
-
 from .exceptions import FieldsetError
 
 
 class Fieldsets:
 
-    """A class to use with model admin fieldsets."""
+    """A class to use with model admin fieldsets.
+    """
 
     def __init__(self, fieldsets=None, **kwargs):
         self.fieldsets_asdict = OrderedDict(copy.deepcopy(fieldsets))
@@ -18,13 +18,18 @@ class Fieldsets:
         return tuple([(k, v) for k, v in self.fieldsets_asdict.items()])
 
     def add_fieldset(self, section=None, fields=None, fieldset=None):
+        """Adds a fieldset to the given section/fields or fieldset.
+
+        * fieldset: a Fieldset class instance.
+        """
         if fieldset:
-            section = fieldset()[0]
-            fields = fieldset()[1]['fields']
+            section = fieldset.fieldset[0]
+            fields = fieldset.fieldset[1]['fields']
         self.fieldsets_asdict.update({section: {'fields': fields}})
 
     def insert_fields(self, *insert_fields, insert_after=None, section=None):
-        """Inserts fields after insert_after in the given section."""
+        """Inserts fields after insert_after in the given section.
+        """
         if insert_fields and insert_fields != (None, ):
             fields = self._copy_section_fields(section)
             position = self._get_field_position(fields, insert_after)
@@ -33,15 +38,17 @@ class Fieldsets:
             self.fieldsets_asdict[section]['fields'] = tuple(fields)
 
     def remove_fields(self, *remove_fields, section=None):
-        """Removes fields from the given section."""
+        """Removes fields from the given section.
+        """
         if remove_fields and remove_fields != (None, ):
             fields = self._copy_section_fields(section)
             fields = [f for f in fields if f not in remove_fields]
             self.fieldsets_asdict[section]['fields'] = tuple(fields)
 
     def _copy_section_fields(self, section):
-        """Returns fields as a list which is a copy of the fields tuple in a
-        section or raises if section does not exist."""
+        """Returns fields as a list which is a copy of the fields
+        tuple in a section or raises if section does not exist.
+        """
         try:
             fields = copy.copy(
                 self.fieldsets_asdict[section]['fields'])

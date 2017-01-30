@@ -8,6 +8,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django.forms.widgets import DateInput
 
 from .utils import get_utcnow
+from django.utils.safestring import mark_safe
 
 
 audit_fields = ('user_created', 'user_modified',
@@ -21,12 +22,15 @@ audit_fieldset_tuple = (
 
 class ModelAdminBasicMixin:
 
-    """Merge ModelAdmin attributes with the concrete class attributes fields, radio_fields, list_display,
-    list_filter and search_fields.
+    """Merge ModelAdmin attributes with the concrete class attributes
+    fields, radio_fields, list_display, list_filter and search_fields.
 
-    `mixin_exclude_fields` is a list of fields included in the mixin but not wanted on the concrete.
+    `mixin_exclude_fields` is a list of fields included in the mixin
+    but not wanted on the concrete.
 
-    Use for a ModelAdmin mixin prepared for an abstract models, e.g. edc_consent.models.BaseConsent."""
+    Use for a ModelAdmin mixin prepared for an abstract models,
+    e.g. edc_consent.models.BaseConsent.
+    """
 
     mixin_fields = []
 
@@ -43,8 +47,9 @@ class ModelAdminBasicMixin:
     mixin_exclude_fields = []
 
     def reorder(self, original_list):
-        """Return an ordered list after inserting list items from the original
-        that were passed tuples of (index, item)"""
+        """Return an ordered list after inserting list items from the
+        original that were passed tuples of (index, item).
+        """
         new_list = []
         items_with_pos = []
         for index, item in enumerate(original_list):
@@ -62,27 +67,36 @@ class ModelAdminBasicMixin:
         return new_list
 
     def get_list_display(self, request):
-        self.list_display = list(super(ModelAdminBasicMixin, self).get_list_display(request) or [])
-        self.list_display = self.reorder(list(self.list_display) + list(self.list_display_pos or []))
-        self.list_display = self.extend_from(self.list_display, self.mixin_list_display or [])
+        self.list_display = list(
+            super(ModelAdminBasicMixin, self).get_list_display(request) or [])
+        self.list_display = self.reorder(
+            list(self.list_display) + list(self.list_display_pos or []))
+        self.list_display = self.extend_from(
+            self.list_display, self.mixin_list_display or [])
         self.list_display = self.remove_from(self.list_display)
         return tuple(self.list_display)
 
     def get_list_filter(self, request):
-        self.list_filter = list(super(ModelAdminBasicMixin, self).get_list_filter(request) or [])
-        self.list_filter = self.reorder(list(self.list_filter) + list(self.list_filter_pos or []))
-        self.list_filter = self.update_from_mixin(self.list_filter, self.mixin_list_filter or [])
+        self.list_filter = list(
+            super(ModelAdminBasicMixin, self).get_list_filter(request) or [])
+        self.list_filter = self.reorder(
+            list(self.list_filter) + list(self.list_filter_pos or []))
+        self.list_filter = self.update_from_mixin(
+            self.list_filter, self.mixin_list_filter or [])
         return tuple(self.list_filter)
 
     def get_search_fields(self, request):
-        self.search_fields = list(super(ModelAdminBasicMixin, self).get_search_fields(request) or [])
-        self.search_fields = self.update_from_mixin(self.search_fields, self.mixin_search_fields or [])
+        self.search_fields = list(
+            super(ModelAdminBasicMixin, self).get_search_fields(request) or [])
+        self.search_fields = self.update_from_mixin(
+            self.search_fields, self.mixin_search_fields or [])
         return tuple(self.search_fields)
 
     def get_fields(self, request, obj=None):
         self.radio_fields = self.get_radio_fields(request, obj)
         if self.mixin_fields:
-            self.fields = self.update_from_mixin(self.fields, self.mixin_fields or [])
+            self.fields = self.update_from_mixin(
+                self.fields, self.mixin_fields or [])
             return self.fields
         elif self.fields:
             return self.fields
@@ -95,7 +109,8 @@ class ModelAdminBasicMixin:
         return tuple(field_list)
 
     def extend_from(self, field_list, mixin_field_list):
-        return list(field_list) + list([fld for fld in mixin_field_list if fld not in field_list])
+        return (list(field_list)
+                + list([fld for fld in mixin_field_list if fld not in field_list]))
 
     def remove_from(self, field_list):
         field_list = list(field_list)
@@ -120,6 +135,7 @@ class ModelAdminInstitutionMixin:
 
     """Adds instituion attrs to the ModelAdmin context.
     """
+
     def get_institution_extra_context(self, extra_context):
         app_config = django_apps.get_app_config('edc_base')
         extra_context.update({
@@ -132,7 +148,8 @@ class ModelAdminInstitutionMixin:
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context = self.get_institution_extra_context(extra_context)
-        return super().add_view(request, form_url=form_url, extra_context=extra_context)
+        return super().add_view(
+            request, form_url=form_url, extra_context=extra_context)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
@@ -174,7 +191,8 @@ class ModelAdminRedirectMixin:
         return super().response_change(request, obj)
 
     def response_delete(self, request, obj_display, obj_id):
-        redirect_url = self.redirect_url_on_delete(request, obj_display, obj_id)
+        redirect_url = self.redirect_url_on_delete(
+            request, obj_display, obj_id)
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
         return super().response_delete(request, obj_display, obj_id)
@@ -182,9 +200,12 @@ class ModelAdminRedirectMixin:
 
 class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
 
-    """Redirect on add, change, delete by reversing a url_name in the querystring.
+    """Redirect on add, change, delete by reversing a url_name
+    in the querystring.
 
-    In your url &next=my_url_name,arg1,arg2&agr1=value1&arg2=value2&arg3=value3&arg4=value4...etc"""
+    In your url &next=my_url_name,arg1,arg2&agr1=value1&arg2=
+    value2&arg3=value3&arg4=value4...etc.
+    """
 
     querystring_name = 'next'
 
@@ -208,7 +229,8 @@ class ModelAdminNextUrlRedirectMixin(ModelAdminRedirectMixin):
 
 class ModelAdminModelRedirectMixin(ModelAdminRedirectMixin):
 
-    """Redirect to another model's changelist on add, change or delete."""
+    """Redirect to another model's changelist on add, change or delete.
+    """
 
     redirect_app_label = None
     redirect_model_name = None
@@ -232,35 +254,43 @@ class ModelAdminModelRedirectMixin(ModelAdminRedirectMixin):
         return '{}?q={}'.format(
             reverse(
                 '{namespace}:{app_label}_{model_name}_changelist'.format(
-                    namespace=namespace, app_label=self.redirect_app_label, model_name=self.redirect_model_name)),
+                    namespace=namespace,
+                    app_label=self.redirect_app_label,
+                    model_name=self.redirect_model_name)),
             self.search_value(obj) or '')
 
     def redirect_url_on_delete(self, request, obj_display, obj_id, namespace=None):
         namespace = namespace or self.redirect_namespace
         return reverse(
             '{namespace}:{app_label}_{model_name}_changelist'.format(
-                namespace=namespace, app_label=self.redirect_app_label, model_name=self.redirect_model_name))
+                namespace=namespace,
+                app_label=self.redirect_app_label,
+                model_name=self.redirect_model_name))
 
 
 class ModelAdminChangelistButtonMixin:
 
-    changelist_model_button_template = '<a href="{{url}}" class="button" title="{{title}}" {{disabled}}>{label}</a>'
+    changelist_model_button_template = (
+        '<a href="{{url}}" class="button" title="{{title}}" {{disabled}}>{label}</a>')
 
-    def button(self, url_name, reverse_args, disabled=None, label=None, title=None, namespace=None):
+    def button(self, url_name, reverse_args, disabled=None, label=None,
+               title=None, namespace=None):
         label = label or 'change'
         if namespace:
             url_name = '{}:{}'.format(namespace, url_name)
         url = reverse(url_name, args=reverse_args)
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
-    def change_button(self, url_name, reverse_args, disabled=None, label=None, title=None, namespace=None):
+    def change_button(self, url_name, reverse_args, disabled=None,
+                      label=None, title=None, namespace=None):
         label = label or 'change'
         if namespace:
             url_name = '{}:{}'.format(namespace, url_name)
         url = reverse(url_name, args=reverse_args)
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
-    def add_button(self, url_name, disabled=None, label=None, querystring=None, namespace=None, title=None):
+    def add_button(self, url_name, disabled=None, label=None,
+                   querystring=None, namespace=None, title=None):
         label = label or 'add'
         if namespace:
             url_name = '{}:{}'.format(namespace, url_name)
@@ -272,7 +302,8 @@ class ModelAdminChangelistButtonMixin:
         disabled = 'disabled' if disabled else ''
         if disabled or not url:
             url = '#'
-        button_template = self.changelist_model_button_template.format(label=label)
+        button_template = self.changelist_model_button_template.format(
+            label=label)
         button_template = format_html(
             button_template, disabled=disabled, title=title, url=url)
         return button_template
@@ -280,51 +311,66 @@ class ModelAdminChangelistButtonMixin:
 
 class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
 
-    """Use a button as a list_display field with a link to add, change or changelist"""
+    """Use a button as a list_display field with a link to add,
+    change or changelist.
+    """
 
-    def changelist_model_button(self, app_label, model_name, reverse_args=None, namespace=None, change_label=None,
-                                add_label=None, add_querystring=None, disabled=None, title=None):
+    def changelist_model_button(self, app_label, model_name, reverse_args=None,
+                                namespace=None, change_label=None,
+                                add_label=None, add_querystring=None,
+                                disabled=None, title=None):
         if disabled:
-            changelist_model_button = self.disabled_button(add_label or change_label)
+            changelist_model_button = self.disabled_button(
+                add_label or change_label)
         else:
             app_label = app_label
             model_name = model_name
             if reverse_args:
                 changelist_model_button = self.change_model_button(
-                    app_label, model_name, reverse_args, namespace=namespace, label=change_label, title=title)
+                    app_label, model_name, reverse_args, namespace=namespace,
+                    label=change_label, title=title)
             else:
                 changelist_model_button = self.add_model_button(
-                    app_label, model_name, label=add_label, querystring=add_querystring,
+                    app_label, model_name, label=add_label,
+                    querystring=add_querystring,
                     namespace=namespace, title=title)
         return changelist_model_button
 
-    def change_model_button(self, app_label, model_name, reverse_args, label=None, namespace=None, title=None):
+    def change_model_button(self, app_label, model_name, reverse_args,
+                            label=None, namespace=None, title=None):
         label = label or 'change'
         namespace = namespace or 'admin'
         url = reverse(
             '{namespace}:{app_label}_{model_name}_change'.format(
-                namespace=namespace, app_label=app_label, model_name=model_name), args=reverse_args)
+                namespace=namespace, app_label=app_label,
+                model_name=model_name),
+            args=reverse_args)
         return self.button_template(label, url=url, title=title)
 
-    def add_model_button(self, app_label, model_name, label=None, querystring=None, namespace=None, title=None):
+    def add_model_button(self, app_label, model_name, label=None,
+                         querystring=None, namespace=None, title=None):
         label = label or 'add'
         namespace = namespace or 'admin'
         url = reverse(
-            '{namespace}:{app_label}_{model_name}_add'.format(
-                namespace=namespace, app_label=app_label, model_name=model_name)) + (querystring or '')
+            ('{namespace}:{app_label}_{model_name}_add'.format(
+                namespace=namespace, app_label=app_label, model_name=model_name))
+            + (querystring or ''))
         return self.button_template(label, url=url, title=title)
 
     def changelist_list_button(self, app_label, model_name, querystring_value=None,
                                label=None, disabled=None, namespace=None, title=None):
-        """Return a button that goes to the app changelist filter for this model instance."""
+        """Return a button that goes to the app changelist filter for
+        this model instance.
+        """
         label = label or 'change'
         namespace = namespace or 'admin'
         querystring = ''
         if querystring_value:
             querystring = '?q={}'.format(querystring_value)
         url = reverse(
-            '{namespace}:{app_label}_{model_name}_changelist'.format(
-                namespace=namespace, app_label=app_label, model_name=model_name)) + querystring
+            ('{namespace}:{app_label}_{model_name}_changelist'.format(
+                namespace=namespace, app_label=app_label, model_name=model_name))
+            + querystring)
         return self.button_template(label, disabled=disabled, title=title, url=url)
 
     def disabled_button(self, label):
@@ -336,8 +382,9 @@ class ModelAdminFormInstructionsMixin:
 
     Override the change_form.html to add {{ instructions }}
 
-    Create a blank change_form.html in your /templates/admin/<app_label> folder
-    and add this (or something like it):
+    Create a blank change_form.html in your
+    /templates/admin/<app_label> folder and add this
+    (or something like it):
 
         {% extends "admin/change_form.html" %}
         {% block field_sets %}
@@ -345,18 +392,19 @@ class ModelAdminFormInstructionsMixin:
             <p class="help"><b>Instructions:</b>&nbsp;{{ instructions }}</p>
         {% endif %}
         {% if additional_instructions %}
-            <p class="help"><b>Additional Instructions:</b>&nbsp;{{ additional_instructions }}</p>
+            <p class="help"><b>Additional Instructions:</b>
+            &nbsp;{{ additional_instructions }}</p>
         {% endif %}
         {{ block.super }}
         {% endblock %}
-
     """
 
     instructions = (
         'Please complete the form below. '
         'Required questions are in bold. '
         'When all required questions are complete click SAVE '
-        'or, if available, SAVE NEXT. Based on your responses, additional questions may be '
+        'or, if available, SAVE NEXT. Based on your responses, '
+        'additional questions may be '
         'required or some answers may need to be corrected.')
 
     additional_instructions = None
@@ -369,14 +417,16 @@ class ModelAdminFormInstructionsMixin:
 
     def update_add_instructions(self, extra_context):
         extra_context = extra_context or {}
-        extra_context['instructions'] = self.add_instructions or self.instructions
+        extra_context[
+            'instructions'] = self.add_instructions or self.instructions
         extra_context['additional_instructions'] = (
             self.add_additional_instructions or self.additional_instructions)
         return extra_context
 
     def update_change_instructions(self, extra_context):
         extra_context = extra_context or {}
-        extra_context['instructions'] = self.change_instructions or self.instructions
+        extra_context[
+            'instructions'] = self.change_instructions or self.instructions
         extra_context['additional_instructions'] = (
             self.change_additional_instructions or self.additional_instructions)
         return extra_context
@@ -401,12 +451,15 @@ class ModelAdminAuditFieldsMixin:
         else:
             obj.user_modified = request.user.username
             obj.modified = get_utcnow()
-        super(ModelAdminAuditFieldsMixin, self).save_model(request, obj, form, change)
+        super(ModelAdminAuditFieldsMixin, self).save_model(
+            request, obj, form, change)
 
     def get_list_filter(self, request):
-        columns = ['created', 'modified', 'user_created', 'user_modified', 'hostname_created', 'hostname_modified']
+        columns = ['created', 'modified', 'user_created',
+                   'user_modified', 'hostname_created', 'hostname_modified']
         self.list_filter = list(self.list_filter or [])
-        self.list_filter = self.list_filter + [item for item in columns if item not in self.list_filter]
+        self.list_filter = self.list_filter + \
+            [item for item in columns if item not in self.list_filter]
         return tuple(self.list_filter)
 
     def get_readonly_fields(self, request, obj=None):
@@ -427,11 +480,14 @@ class ModelAdminFormAutoNumberMixin:
         if auto_number:
             for index, fld in enumerate(form.base_fields.items()):
                 if not re.match(r'^\d+\.', str(fld[WIDGET].label)):
-                    fld[WIDGET].label = '{0}. {1}'.format(str(index + 1), str(fld[WIDGET].label))
+                    fld[WIDGET].label = mark_safe(
+                        '<a title="{0}">{1}</a>. {2}'.format(
+                            fld[0], str(index + 1), str(fld[WIDGET].label)))
         return form
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(ModelAdminFormAutoNumberMixin, self).get_form(request, obj, **kwargs)
+        form = super(ModelAdminFormAutoNumberMixin, self).get_form(
+            request, obj, **kwargs)
         form = self.auto_number(form)
         return form
 
@@ -445,13 +501,16 @@ class TabularInlineMixin(ModelAdminAuditFieldsMixin):
 
 
 class LimitedAdminInlineMixin:
-    """Limit choices on a foreignkey field in an inline to a value on the parent model.
+    """Limit choices on a foreignkey field in an inline to a value
+    on the parent model.
 
-    From getresults_csv. For example, model CsvDictionary is an inline to CsvFormat.
-    The inline has a foreignkey to model CsvFields. By using the mixin, csv_field is
-    filtered by the value of csv_format instead of showing everything in CsvFields.
+    From getresults_csv. For example, model CsvDictionary is an
+    inline to CsvFormat. The inline has a foreignkey to model
+    CsvFields. By using the mixin, csv_field is filtered by the
+    value of csv_format instead of showing everything in CsvFields.
 
-        class CsvDictionaryInline(LimitedAdminInlineMixin, admin.TabularInline):
+        class CsvDictionaryInline(LimitedAdminInlineMixin,
+                                  admin.TabularInline):
             model = CsvDictionary
             form = CsvDictionaryForm
             extra = 0
@@ -464,7 +523,8 @@ class LimitedAdminInlineMixin:
 
         class CsvFormatAdmin(admin.ModelAdmin):
             inlines = [CsvDictionaryInline]
-        admin_site.register(CsvFormat, CsvFormatAdmin)"""
+        admin_site.register(CsvFormat, CsvFormatAdmin)
+    """
 
     @staticmethod
     def limit_inline_choices(formset, field, empty=False, **filters):
@@ -477,7 +537,8 @@ class LimitedAdminInlineMixin:
             formset.form.base_fields[field].queryset = qs
 
     def get_formset(self, request, obj=None, **kwargs):
-        formset = super(LimitedAdminInlineMixin, self).get_formset(request, obj, **kwargs)
+        formset = super(LimitedAdminInlineMixin, self).get_formset(
+            request, obj, **kwargs)
 
         for (field, filters) in self.get_filters(obj):
             if obj:
@@ -493,16 +554,20 @@ class LimitedAdminInlineMixin:
 
 class ModelAdminReadOnlyMixin:
     """
-    A mixin that presents an admin form with the submit_row replaced with a Close button
-    effectively making the form a read-only form.
+    A mixin that presents an admin form with the submit_row replaced
+    with a Close button effectively making the form a read-only form.
 
-        The Close button navigates to the "next" url from the GET/querystring.
+        The Close button navigates to the "next" url from the
+        GET/querystring.
 
         Subclass the change_form.html. Add
 
             {% block submit_buttons_bottom %}
             {% if edc_readonly %}
-              <div class="submit_row"><input type="button" value="Close" class="default" name="_close" onclick="location.href='{{ edc_readonly_next }}';" /></div>
+              <div class="submit_row"><input type="button"
+              value="Close" class="default" name="_close"
+              onclick="location.href='{{ edc_readonly_next }}';" />
+              </div>
             {% else %}
               {% submit_row %}
             {% endif %}
@@ -515,7 +580,8 @@ class ModelAdminReadOnlyMixin:
     querystring_name = 'next'
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(ModelAdminReadOnlyMixin, self).get_form(request, obj, **kwargs)
+        form = super(ModelAdminReadOnlyMixin, self).get_form(
+            request, obj, **kwargs)
         if request.GET.get('edc_readonly'):
             for form_field in form.base_fields.values():
                 form_field.disabled = True
@@ -532,7 +598,9 @@ class ModelAdminReadOnlyMixin:
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         if request.GET.get('edc_readonly'):
-            extra_context.update({'edc_readonly': request.GET.get('edc_readonly')})
-            extra_context.update({'edc_readonly_next': request.GET.get(self.querystring_name)})
+            extra_context.update(
+                {'edc_readonly': request.GET.get('edc_readonly')})
+            extra_context.update(
+                {'edc_readonly_next': request.GET.get(self.querystring_name)})
         return super(ModelAdminReadOnlyMixin, self).change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)

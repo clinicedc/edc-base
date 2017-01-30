@@ -17,6 +17,7 @@ safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
 
 
 class MyTimezone:
+
     def __init__(self, timezone):
         if timezone:
             self.tzinfo = tz.gettz(timezone)
@@ -125,9 +126,12 @@ class Convert(object):
         self.time_format = time_format or '%H:%M'
 
     def to_value(self):
-        """Converts a string representation of a value into its original datatype.
+        """Converts a string representation of a value into
+        its original datatype.
 
-        For dates and datetimes always returns a time zone aware datetime."""
+        For dates and datetimes always returns a time zone
+        aware datetime.
+        """
         string_value = self.value.strip(' "')
         if self.convert:
             try:
@@ -150,7 +154,6 @@ class Convert(object):
                 return self.to_datetime(string_value)
             except ConvertError:
                 pass
-            # raise ConvertError('Cannot convert string to value. Got \'{}\''.format(self.value))
         return string_value
 
     def to_string(self):
@@ -158,7 +161,8 @@ class Convert(object):
             string_value = self.value.isoformat()
             try:
                 self.value.time()
-                string_value = '{} {}'.format(string_value, self.value.strftime(self.time_format))
+                string_value = '{} {}'.format(
+                    string_value, self.value.strftime(self.time_format))
             except AttributeError:
                 pass
         except AttributeError:

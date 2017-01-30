@@ -6,6 +6,11 @@ from .fieldsets import Fieldsets
 
 class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
+    """A class that helps modify fieldsets for subject models
+
+    * Model is expected to have a relation to have subject_visit__appointment.
+    * Expects appointment to be in GET"""
+
     # key: value where key is a visit_code. value is a fieldlist object
     conditional_fieldlists = {}
     # key: value where key is a visit code. value is a fieldsets object.
@@ -29,12 +34,16 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         form = super().get_form(request, obj=obj, **kwargs)
         return self.update_form_labels(request, form)
 
-    def get_previous_instance(self, request, appointment=None, **kwargs):
+    def get_previous_instance(self, request, instance=None, **kwargs):
         """Returns a model instance that is the previous relative to
-        this object's subject_visit."""
+        this object's subject_visit.
+
+        Override this method if not a subject model"""
         obj = None
-        appointment = appointment or self.get_appointment(request)
+        appointment = instance or self.get_instance(request)
         if appointment:
+            # FIXME: dont hardcode subject_visit as attr name to the
+            # visit model.
             obj = self.model.objects.filter(
                 subject_visit__appointment__subject_identifier=appointment.subject_identifier).order_by(
                     'report_datetime').last()
@@ -49,17 +58,39 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         except Appointment.DoesNotExist:
             return None
 
+    def get_instance(self, request):
+        """Returns the instance that provides the key
+        for the "conditional" dictionaries.
+
+        For example: appointment."""
+        return self.get_appointment(request)
+
+    def get_key(self, request):
+        """Returns a string that is the key to `get` the
+        value in the "conditional" dictionaries.
+
+        For example:
+            appointment.visit_code == '1000' will be used
+            to look into:
+                conditional_fieldsets = {
+                    '1000': ...}
+        """
+        try:
+            return self.get_instance(request).visit_code
+        except AttributeError:
+            return None
+
     def get_fieldsets(self, request, obj=None):
         """Returns fieldsets after modifications declared in
         "conditional" dictionaries."""
         fieldsets = super().get_fieldsets(request, obj=obj)
         fieldsets = Fieldsets(fieldsets=fieldsets)
-        appointment = self.get_appointment(request)
-        if appointment:
-            fieldset = self.conditional_fieldsets.get(appointment.visit_code)
+        key = self.get_key(request)
+        if key:
+            fieldset = self.conditional_fieldsets.get(key)
             if fieldset:
-                fieldsets.add_fieldset(fieldset=fieldset())
-            fieldlist = self.conditional_fieldlists.get(appointment.visit_code)
+                fieldsets.add_fieldset(fieldset=fieldset)
+            fieldlist = self.conditional_fieldlists.get(key)
             if fieldlist:
                 try:
                     fieldsets.insert_fields(
@@ -75,14 +106,17 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                 except AttributeError:
                     pass
         fieldsets = self.update_fieldset_for_form(
-            fieldsets, request, appointment=appointment)
+            fieldsets, request)
         return fieldsets.fieldsets
 
-    def update_fieldset_for_form(self, fieldsets, request, appointment=None, **kwargs):
+    def update_fieldset_for_form(self, fieldsets, request, **kwargs):
+        """Not ready"""
         if self.custom_form_labels:
-            obj = self.get_previous_instance(request, appointment=appointment)
-            if obj:
-                pass  # do something
+            instance = self.get_instance(request)
+            if instance:
+                obj = self.get_previous_instance(request, instance=instance)
+                if obj:
+                    pass  # do something
             else:
                 pass  # possibly remove field"
 #                 fieldsets.remove_fields(

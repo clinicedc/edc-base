@@ -18,17 +18,17 @@ class TestModelForms(TestCase):
                 model = TestModel
                 fields = '__all__'
 
-        form = TestModelForm1(data={'f1': '1', 'f2': '2', 'f5': '3'})
+        form = TestModelForm1(data={'f1': '1', 'f2': '2'})
         self.assertFalse(form.is_valid())
 
         class TestModelForm2(ReadonlyFieldsFormMixin, forms.ModelForm):
 
             def get_readonly_fields(self):
-                return ['f3', 'f4']
+                return ['f3']
 
             class Meta:
                 model = TestModel
                 fields = '__all__'
 
-        form = TestModelForm2(data={'f1': '1', 'f2': '2', 'f5': '3'})
+        form = TestModelForm2(data={'f1': '1', 'f2': '2'})
         self.assertTrue(form.is_valid())
