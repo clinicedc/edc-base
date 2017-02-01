@@ -29,38 +29,14 @@ class CommonCleanException:
 
     def __init__(self, e):
         self.exception = e
-        if self.template and self.params:
-            self.msg = self.template
-        elif self.field:
+        self.msg = e.args[0]
+        if self.field:
             self.msg = {self.field: self.msg}
-        else:
-            self.msg = e.args[0]
 
     @property
     def field(self):
         try:
             return self.exception.args[1]
-        except IndexError:
-            return None
-
-    @property
-    def params(self):
-        try:
-            return self.exception.args[2]
-        except IndexError:
-            return None
-
-    @property
-    def code(self):
-        try:
-            return self.exception.args[3]
-        except IndexError:
-            return 'common_clean'
-
-    @property
-    def template(self):
-        try:
-            return self.exception.args[3]
         except IndexError:
             return None
 
@@ -122,8 +98,7 @@ class CommonCleanModelFormMixin:
 
     def common_clean_raise_exception(self, e):
         exception = CommonCleanException(e)
-        raise forms.ValidationError(
-            exception.msg, code=exception.code, params=exception.params)
+        raise forms.ValidationError(exception.msg)
 
 
 class AuditFieldsMixin:
