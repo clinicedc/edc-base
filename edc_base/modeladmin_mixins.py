@@ -389,11 +389,10 @@ class ModelAdminFormInstructionsMixin:
         {% extends "admin/change_form.html" %}
         {% block field_sets %}
         {% if instructions %}
-            <p class="help"><b>Instructions:</b>&nbsp;{{ instructions }}</p>
+            <H5>Instructions:</H5><p>{{ instructions }}</p>
         {% endif %}
         {% if additional_instructions %}
-            <p class="help"><b>Additional Instructions:</b>
-            &nbsp;{{ additional_instructions }}</p>
+            <H5>Additional Instructions:</H5><p>{{ additional_instructions }}</p>
         {% endif %}
         {{ block.super }}
         {% endblock %}
