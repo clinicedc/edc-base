@@ -17,7 +17,7 @@ class EdcBaseViewMixin(RevisionMixin):
         self.navbars = django_apps.get_app_config('edc_base').navbars
 
     def get(self, request, *args, **kwargs):
-        self.navbar = self.navbars.get(self.navbar_name) or []
+        self.navbar = self.navbars.get(self.navbar_name or 'default')
         if self.navbar_item_selected:
             if self.navbar_item_selected not in [navbar_item.name for navbar_item in self.navbar]:
                 raise NavbarError(
