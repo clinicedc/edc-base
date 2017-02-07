@@ -55,7 +55,6 @@ class Many2ManyModelValidationMixin:
         found = False
         if qs and qs.count() > 0:
             selected = {obj.short_name: obj.name for obj in qs}
-            print('selected={}'.format(selected))
             for response in responses:
                 if response in selected:
                     found = True
@@ -84,7 +83,6 @@ class Many2ManyModelValidationMixin:
         found = False
         if qs and qs.count() > 0:
             selected = {obj.short_name: obj.name for obj in qs}
-            print('selected={}'.format(selected))
             for response in responses:
                 if response in selected:
                     found = True

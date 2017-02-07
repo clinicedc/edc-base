@@ -19,9 +19,6 @@ class ApplicableValidationMixin:
         question 2 applicable.
         """
         cleaned_data = self.cleaned_data
-        print(responses)
-        print('field={}'.format(field))
-        print('field_applicable={}'.format(field_applicable))
         if (cleaned_data.get(field) in responses
                 and cleaned_data.get(field_applicable) == NOT_APPLICABLE):
             raise forms.ValidationError({
