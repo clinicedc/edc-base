@@ -50,7 +50,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         return obj
 
     def get_appointment(self, request):
-        """Returns the appointment instance for this request or None."""
+        """Returns the appointment instance for this request or None.
+        """
         Appointment = django_apps.get_app_config('edc_appointment').model
         try:
             return Appointment.objects.get(
@@ -62,7 +63,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """Returns the instance that provides the key
         for the "conditional" dictionaries.
 
-        For example: appointment."""
+        For example: appointment.
+        """
         return self.get_appointment(request)
 
     def get_key(self, request):
