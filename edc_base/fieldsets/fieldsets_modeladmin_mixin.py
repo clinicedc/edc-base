@@ -67,7 +67,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """
         return self.get_appointment(request)
 
-    def get_key(self, request):
+    def get_key(self, request, obj=None):
         """Returns a string that is the key to `get` the
         value in the "conditional" dictionaries.
 
@@ -88,26 +88,25 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """
         fieldsets = super().get_fieldsets(request, obj=obj)
         fieldsets = Fieldsets(fieldsets=fieldsets)
-        key = self.get_key(request)
-        if key:
-            fieldset = self.conditional_fieldsets.get(key)
-            if fieldset:
-                fieldsets.add_fieldset(fieldset=fieldset)
-            fieldlist = self.conditional_fieldlists.get(key)
-            if fieldlist:
-                try:
-                    fieldsets.insert_fields(
-                        fieldlist.insert_fields,
-                        insert_after=fieldlist.insert_after,
-                        section=fieldlist.section)
-                except AttributeError:
-                    pass
-                try:
-                    fieldsets.remove_fields(
-                        fieldlist.remove_fields,
-                        section=fieldlist.section)
-                except AttributeError:
-                    pass
+        key = self.get_key(request, obj)
+        fieldset = self.conditional_fieldsets.get(key)
+        if fieldset:
+            fieldsets.add_fieldset(fieldset=fieldset)
+        fieldlist = self.conditional_fieldlists.get(key)
+        if fieldlist:
+            try:
+                fieldsets.insert_fields(
+                    fieldlist.insert_fields,
+                    insert_after=fieldlist.insert_after,
+                    section=fieldlist.section)
+            except AttributeError:
+                pass
+            try:
+                fieldsets.remove_fields(
+                    fieldlist.remove_fields,
+                    section=fieldlist.section)
+            except AttributeError:
+                pass
         fieldsets = self.update_fieldset_for_form(
             fieldsets, request)
         return fieldsets.fieldsets
