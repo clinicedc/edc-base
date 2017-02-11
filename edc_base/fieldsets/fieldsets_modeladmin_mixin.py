@@ -20,7 +20,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
     def update_form_labels(self, request, form):
         """Returns a form instance after modifying form labels
-        referred to in custom_form_labels."""
+        referred to in custom_form_labels.
+        """
         for field, options in self.custom_form_labels.items():
             if field in form.base_fields:
                 obj = self.get_previous_instance(request)
@@ -38,7 +39,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """Returns a model instance that is the previous relative to
         this object's subject_visit.
 
-        Override this method if not a subject model"""
+        Override this method if not a subject model.
+        """
         obj = None
         appointment = instance or self.get_instance(request)
         if appointment:

@@ -11,14 +11,14 @@ class Fieldlist:
 
 class Remove:
 
-    def __init__(self, fields, section=None, **kwargs):
+    def __init__(self, *fields, section=None, **kwargs):
         self.remove_fields = fields
         self.section = section
 
 
 class Insert:
 
-    def __init__(self, fields, after=None, section=None, **kwargs):
+    def __init__(self, *fields, after=None, section=None, **kwargs):
         self.insert_fields = fields
         self.insert_after = after
         self.section = section

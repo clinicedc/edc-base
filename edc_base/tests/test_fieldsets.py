@@ -63,7 +63,8 @@ class TestFieldsets(TestCase):
         """
         fs = Fieldsets(self.fieldsets)
         fs.add_fieldset(
-            'Hospitalisation', ('field1', 'field2', 'field3'))
+            section='Hospitalisation',
+            fields=('field1', 'field2', 'field3'))
         flatten = flatten_fieldsets(fs.fieldsets)
         self.assertEqual(flatten[-3:], ['field1', 'field2', 'field3'])
 
