@@ -16,24 +16,26 @@ class EdcBaseViewMixin(RevisionMixin):
         self.navbar = None
         self.navbars = django_apps.get_app_config('edc_base').navbars
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = self.get_edc_base_extra_context(context)
+        context = self.get_navbar_context(context)
+        context.update({
+            'DEBUG': settings.DEBUG,
+        })
+        return context
+
+    def get_navbar_context(self, context):
         self.navbar = self.navbars.get(self.navbar_name or 'default')
         if self.navbar_item_selected:
             if self.navbar_item_selected not in [navbar_item.name for navbar_item in self.navbar]:
                 raise NavbarError(
                     'Navbar item does not exist. Got {}. Expected one of {}'.format(
                         self.navbar_item_selected, self.navbar))
-        kwargs['navbar_item_selected'] = self.navbar_item_selected
-        kwargs['navbar'] = self.navbar
-        kwargs['navbar_name'] = self.navbar_name
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context = self.get_edc_base_extra_context(context)
         context.update({
-            'DEBUG': settings.DEBUG,
-        })
+            'navbar_item_selected': self.navbar_item_selected,
+            'navbar': self.navbar,
+            'navbar_name': self.navbar_name})
         return context
 
     def get_edc_base_extra_context(self, extra_context):
