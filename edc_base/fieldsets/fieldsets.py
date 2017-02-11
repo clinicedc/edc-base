@@ -42,6 +42,7 @@ class Fieldsets:
         """
         if remove_fields and remove_fields != (None, ):
             fields = self._copy_section_fields(section)
+            remove_fields = tuple(remove_fields[0])
             fields = [f for f in fields if f not in remove_fields]
             self.fieldsets_asdict[section]['fields'] = tuple(fields)
 
