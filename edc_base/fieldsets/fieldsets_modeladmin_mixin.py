@@ -22,14 +22,25 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
     def update_form_labels(self, request, form):
         """Returns a form instance after modifying form labels
         referred to in custom_form_labels.
+
+        For example:
+            custom_form_labels = {
+                'circumcised': {
+                    'label': 'Since we last saw you in {previous}, were you circumcised?',
+                    'callback': lambda obj: True if obj.circumcised == NO else False}
+            }
+
+        where `call_back` evaluates to True if label is to be modified.
         """
         for field, options in self.custom_form_labels.items():
             if field in form.base_fields:
                 obj = self.get_previous_instance(request)
                 if obj:
                     if options.get('callback')(obj):
+                        report_datetime = getattr(
+                            obj, obj.visit_model_attr()).report_datetime
                         form.base_fields[field].label = options.get('label').format(
-                            previous=obj.report_datetime.strftime('%B %Y'))
+                            previous=report_datetime.strftime('%B %Y'))
         return form
 
     def get_form(self, request, obj=None, **kwargs):
@@ -37,22 +48,24 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         return self.update_form_labels(request, form)
 
     def get_previous_instance(self, request, instance=None, **kwargs):
-        """Returns a model instance that is the previous relative to
-        this object's subject_visit.
+        """Returns a model instance that is the first occurrence of a previous
+        instance relative to this object's appointment.
 
         Override this method if not a subject model.
         """
         obj = None
         appointment = instance or self.get_instance(request)
-        if appointment.previous_by_timepoint:
+        while appointment.previous_by_timepoint:
             options = {
                 '{}__appointment'.format(self.model.visit_model_attr()):
                 appointment.previous_by_timepoint}
             try:
-                obj = self.model.objects.get(
-                    **options).order_by('report_datetime')
+                obj = self.model.objects.get(**options)
             except ObjectDoesNotExist:
                 pass
+            else:
+                break
+            appointment = appointment.previous_by_timepoint
         return obj
 
     def get_appointment(self, request):
