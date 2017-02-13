@@ -485,7 +485,7 @@ class ModelAdminFormAutoNumberMixin:
         return form
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(ModelAdminFormAutoNumberMixin, self).get_form(
+        form = super().get_form(
             request, obj, **kwargs)
         form = self.auto_number(form)
         return form

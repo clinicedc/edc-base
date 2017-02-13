@@ -48,3 +48,14 @@ class ApplicableValidationMixin:
                 field_applicable:
                 'This field is applicable'})
         return False
+
+    def applicable_if_true(self, condition, field_applicable=None,
+                           applicable_msg=None, not_applicable_msg=None, **kwargs):
+        if (condition and self.cleaned_data.get(field_applicable) == NOT_APPLICABLE):
+            raise forms.ValidationError({
+                field_applicable:
+                applicable_msg or 'This field is applicable.'})
+        elif (not condition and self.cleaned_data.get(field_applicable) != NOT_APPLICABLE):
+            raise forms.ValidationError({
+                field_applicable:
+                not_applicable_msg or 'This field is not applicable.'})

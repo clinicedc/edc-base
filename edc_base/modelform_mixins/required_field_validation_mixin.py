@@ -13,7 +13,7 @@ class RequiredFieldValidationMixin:
                 and not self.cleaned_data.get(field_required)):
             raise forms.ValidationError({
                 field_required:
-                not_required_msg or 'This field is required.'})
+                required_msg or 'This field is required.'})
         elif (self.cleaned_data.get(field) not in responses
                 and self.cleaned_data.get(field_required)):
             raise forms.ValidationError({
@@ -26,7 +26,7 @@ class RequiredFieldValidationMixin:
         if (condition and not self.cleaned_data.get(field_required)):
             raise forms.ValidationError({
                 field_required:
-                not_required_msg or 'This field is required.'})
+                required_msg or 'This field is required.'})
         elif (not condition and self.cleaned_data.get(field_required)):
             raise forms.ValidationError({
                 field_required:
@@ -47,5 +47,5 @@ class RequiredFieldValidationMixin:
                 and not self.cleaned_data.get(field_required)):
             raise forms.ValidationError({
                 field_required:
-                not_required_msg or 'This field is required.'})
+                required_msg or 'This field is required.'})
         return False

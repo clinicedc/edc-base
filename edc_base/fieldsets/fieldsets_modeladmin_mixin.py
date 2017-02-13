@@ -23,15 +23,29 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """Returns a form instance after modifying form labels
         referred to in custom_form_labels.
 
+        * `label`: label to use. If none, uses current field.label
+        * `callback`: any callback that accepts a single parameter.
+            evaluates to True if label is to be modified.
+        * `{previous}`: inserts the previous visit report datetime.
+
         For example:
+
+            # use custom label if previous instance exists, otherwise use
+            # model verbose_name.
             custom_form_labels = {
                 'circumcised': {
                     'label': 'Since we last saw you in {previous}, were you circumcised?',
                     'callback': lambda obj: True if obj.circumcised == NO else False}
             }
 
-        * `callback`: evaluates to True if label is to be modified.
-        * `{previous}`: inserts the previous visit report datetime.
+            OR
+
+            # use model verbose_name complete if previous instance exists.
+            # in this case, previous instance should always exist
+            custom_form_labels = {
+                'circumcised': {'label': None, 'callback': lambda obj: True}
+            }
+
         """
         for field, options in self.custom_form_labels.items():
             if field in form.base_fields:
@@ -40,8 +54,9 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                     if options.get('callback')(obj):
                         report_datetime = getattr(
                             obj, obj.visit_model_attr()).report_datetime
-                        form.base_fields[field].label = options.get('label').format(
+                        label = options.get('label', form.base_fields[field].label).format(
                             previous=report_datetime.strftime('%B %Y'))
+                        form.base_fields[field].label = label
         return form
 
     def get_form(self, request, obj=None, **kwargs):
