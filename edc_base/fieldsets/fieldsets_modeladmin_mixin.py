@@ -30,7 +30,8 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                     'callback': lambda obj: True if obj.circumcised == NO else False}
             }
 
-        where `call_back` evaluates to True if label is to be modified.
+        * `callback`: evaluates to True if label is to be modified.
+        * `{previous}`: inserts the previous visit report datetime.
         """
         for field, options in self.custom_form_labels.items():
             if field in form.base_fields:
