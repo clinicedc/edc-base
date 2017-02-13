@@ -2,6 +2,7 @@ from django.apps import apps as django_apps
 from django.contrib import admin
 
 from .fieldsets import Fieldsets
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class FieldsetsModelAdminMixin(admin.ModelAdmin):
@@ -43,12 +44,15 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """
         obj = None
         appointment = instance or self.get_instance(request)
-        if appointment:
-            # FIXME: dont hardcode subject_visit as attr name to the
-            # visit model.
-            obj = self.model.objects.filter(
-                subject_visit__appointment__subject_identifier=appointment.subject_identifier).order_by(
-                    'report_datetime').last()
+        if appointment.previous_by_timepoint:
+            options = {
+                '{}__appointment'.format(self.model.visit_model_attr()):
+                appointment.previous_by_timepoint}
+            try:
+                obj = self.model.objects.get(
+                    **options).order_by('report_datetime')
+            except ObjectDoesNotExist:
+                pass
         return obj
 
     def get_appointment(self, request):
