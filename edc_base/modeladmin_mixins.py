@@ -603,3 +603,16 @@ class ModelAdminReadOnlyMixin:
                 {'edc_readonly_next': request.GET.get(self.querystring_name)})
         return super(ModelAdminReadOnlyMixin, self).change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)
+
+
+class FormAsJSONModelAdminMixin:
+
+    """Use with FormAsJSONModelformMixin, FormAsJSONModelMixin.
+    """
+
+    def save_model(self, request, obj, form, change):
+        try:
+            obj.form_as_json = form.as_json()
+        except AttributeError:
+            pass
+        super().save_model(request, obj, form, change)
