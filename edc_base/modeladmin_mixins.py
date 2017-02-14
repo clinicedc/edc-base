@@ -432,12 +432,12 @@ class ModelAdminFormInstructionsMixin:
 
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = self.update_add_instructions(extra_context)
-        return super(ModelAdminFormInstructionsMixin, self).add_view(
+        return super().add_view(
             request, form_url=form_url, extra_context=extra_context)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = self.update_change_instructions(extra_context)
-        return super(ModelAdminFormInstructionsMixin, self).change_view(
+        return super().change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)
 
 

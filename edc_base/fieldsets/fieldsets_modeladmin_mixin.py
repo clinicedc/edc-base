@@ -1,5 +1,6 @@
 from django.apps import apps as django_apps
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from .fieldsets import Fieldsets
 from django.core.exceptions import ObjectDoesNotExist
@@ -56,7 +57,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                             obj, obj.visit_model_attr()).report_datetime
                         label = options.get('label', form.base_fields[field].label).format(
                             previous=report_datetime.strftime('%B %Y'))
-                        form.base_fields[field].label = label
+                        form.base_fields[field].label = mark_safe(label)
         return form
 
     def get_form(self, request, obj=None, **kwargs):
