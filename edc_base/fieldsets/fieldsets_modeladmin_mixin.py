@@ -51,6 +51,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         for field, options in self.custom_form_labels.items():
             if field in form.base_fields:
                 obj = self.get_previous_instance(request)
+                print('obj={}'.format(obj))
                 if obj:
                     if options.get('callback')(obj):
                         report_datetime = getattr(
