@@ -273,6 +273,8 @@ class ModelAdminModelRedirectMixin(ModelAdminRedirectMixin):
 
 class ModelAdminRedirectOnDeleteMixin:
 
+    """A mixin to redirect on delete.
+    """
     post_url_on_delete_name = None
 
     def __init__(self, *args, **kwargs):
@@ -280,23 +282,30 @@ class ModelAdminRedirectOnDeleteMixin:
         self.post_url_on_delete = None
 
     def post_url_on_delete_kwargs(self, request, obj):
+        """Returns kwargs needed to reverse the post_url,
+        `post_url_on_delete_name`.
+
+        Override.
+        """
         return {}
 
     def delete_model(self, request, obj):
+        """Overridden to intercept the obj to reverse the post_url
+        if `post_url_on_delete_name` is not None.
+        """
         if self.post_url_on_delete_name:
             kwargs = self.post_url_on_delete_kwargs(request, obj)
             try:
                 self.post_url_on_delete = reverse(
                     self.post_url_on_delete_name,
                     kwargs=kwargs)
-            except NoReverseMatch as e:
-                print(e)
+            except NoReverseMatch:
                 pass
-        print(kwargs)
-        print(self.post_url_on_delete)
         obj.delete()
 
     def response_delete(self, request, obj_display, obj_id):
+        """Overridden to redirect to `post_url_on_delete`, if not None.
+        """
         if self.post_url_on_delete:
             opts = self.model._meta
             msg = ('The %(name)s "%(obj)s" was deleted successfully.') % {
