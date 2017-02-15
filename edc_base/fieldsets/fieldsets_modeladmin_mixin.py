@@ -17,7 +17,7 @@ class FormLabel:
         if not callback:
             if previous_appointment:
                 self.callback = self.previous_appointment_callback
-            elif previous_instance:  # default
+            else:
                 self.callback = self.previous_instance_callback
 
     def previous_instance_callback(self, obj, appointment):
