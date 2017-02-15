@@ -120,17 +120,18 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """
         obj = None
         appointment = instance or self.get_instance(request)
-        while appointment.previous_by_timepoint:
-            options = {
-                '{}__appointment'.format(self.model.visit_model_attr()):
-                appointment.previous_by_timepoint}
-            try:
-                obj = self.model.objects.get(**options)
-            except ObjectDoesNotExist:
-                pass
-            else:
-                break
-            appointment = appointment.previous_by_timepoint
+        if appointment:
+            while appointment.previous_by_timepoint:
+                options = {
+                    '{}__appointment'.format(self.model.visit_model_attr()):
+                    appointment.previous_by_timepoint}
+                try:
+                    obj = self.model.objects.get(**options)
+                except ObjectDoesNotExist:
+                    pass
+                else:
+                    break
+                appointment = appointment.previous_by_timepoint
         return obj
 
     def get_appointment(self, request):
