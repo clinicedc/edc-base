@@ -6,6 +6,27 @@ from .fieldsets import Fieldsets
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class FormLabel:
+
+    def __init__(self, field, label=None, callback=None,
+                 previous_instance=None,
+                 previous_appointment=None):
+        self.field = field
+        self.label = label
+        self.callback = callback
+        if not callback:
+            if previous_appointment:
+                self.callback = self.previous_appointment_callback
+            elif previous_instance:  # default
+                self.callback = self.previous_instance_callback
+
+    def previous_instance_callback(self, obj, appointment):
+        return True if obj else False
+
+    def previous_appointment_callback(self, obj, appointment):
+        return True if appointment else False
+
+
 class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
     """A class that helps modify fieldsets for subject models
@@ -33,37 +54,51 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
             # use custom label if previous instance exists, otherwise use
             # model verbose_name.
-            custom_form_labels = {
-                'circumcised': {
-                    'label': 'Since we last saw you in {previous}, were you circumcised?',
-                    'callback': lambda obj: True if obj.circumcised == NO else False}
-            }
+            custom_form_labels = [
+                FormLabel(
+                    field='circumcised',
+                    label='Since we last saw you in {previous}, were you circumcised?',
+                    callback=lambda obj: True if obj.circumcised == NO else False)
+            ]
 
             OR
 
             # use model verbose_name complete if previous instance exists.
             # in this case, previous instance should always exist
-            custom_form_labels = {
-                'circumcised': {'label': None, 'callback': lambda obj: True}
-            }
+            custom_form_labels = [FormLabel(field='circumcised')]
 
         """
-        for field, options in self.custom_form_labels.items():
-            if field in form.base_fields:
-                obj = self.get_previous_instance(request)
-                print('obj={}'.format(obj))
-                if obj:
-                    if options.get('callback')(obj):
-                        report_datetime = getattr(
-                            obj, obj.visit_model_attr()).report_datetime
-                        label = options.get('label', form.base_fields[field].label).format(
-                            previous=report_datetime.strftime('%B %Y'))
-                        form.base_fields[field].label = mark_safe(label)
+        for form_label in self.custom_form_labels:
+            if form_label.field in form.base_fields:
+                instance = self.get_previous_instance(request)
+                appointment = self.get_previous_appointment(request)
+                if form_label.callback(instance, appointment):
+                    label = self.format_form_label(
+                        label=form_label.label or form.base_fields[
+                            form_label.field].label,
+                        instance=instance,
+                        appointment=appointment)
+                    form.base_fields[
+                        form_label.field].label = mark_safe(label)
         return form
+
+    def format_form_label(self, label=None, instance=None, appointment=None, **kwargs):
+        report_datetime = getattr(
+            instance, instance.visit_model_attr()).report_datetime
+        label = label.format(
+            previous=report_datetime.strftime('%B %Y'))
+        return label
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj=obj, **kwargs)
         return self.update_form_labels(request, form)
+
+    def get_previous_appointment(self, request):
+        appointment = self.get_appointment(request)
+        try:
+            return appointment.previous_by_timepoint
+        except AttributeError:
+            return None
 
     def get_previous_instance(self, request, instance=None, **kwargs):
         """Returns a model instance that is the first occurrence of a previous
