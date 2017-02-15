@@ -1,14 +1,17 @@
 import re
 
 from django.apps import apps as django_apps
-from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect
-from django.utils.html import format_html
+from django.contrib import messages
 from django.contrib.admin.widgets import AdminDateWidget
+from django.core.urlresolvers import reverse
 from django.forms.widgets import DateInput
+from django.http.response import HttpResponseRedirect
+from django.urls.exceptions import NoReverseMatch
+from django.utils.encoding import force_text
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from .utils import get_utcnow
-from django.utils.safestring import mark_safe
 
 
 audit_fields = ('user_created', 'user_modified',
@@ -266,6 +269,42 @@ class ModelAdminModelRedirectMixin(ModelAdminRedirectMixin):
                 namespace=namespace,
                 app_label=self.redirect_app_label,
                 model_name=self.redirect_model_name))
+
+
+class ModelAdminRedirectOnDeleteMixin:
+
+    post_url_on_delete_name = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.post_url_on_delete = None
+
+    def post_url_on_delete_kwargs(self, request, obj):
+        return {}
+
+    def delete_model(self, request, obj):
+        if self.post_url_on_delete_name:
+            kwargs = self.post_url_on_delete_kwargs(request, obj)
+            try:
+                self.post_url_on_delete = reverse(
+                    self.post_url_on_delete_name,
+                    kwargs=kwargs)
+            except NoReverseMatch as e:
+                print(e)
+                pass
+        print(kwargs)
+        print(self.post_url_on_delete)
+        obj.delete()
+
+    def response_delete(self, request, obj_display, obj_id):
+        if self.post_url_on_delete:
+            opts = self.model._meta
+            msg = ('The %(name)s "%(obj)s" was deleted successfully.') % {
+                'name': force_text(opts.verbose_name),
+                'obj': force_text(obj_display)}
+            messages.add_message(request, messages.SUCCESS, msg)
+            return HttpResponseRedirect(self.post_url_on_delete)
+        return super().response_delete(request, obj_display, obj_id)
 
 
 class ModelAdminChangelistButtonMixin:
