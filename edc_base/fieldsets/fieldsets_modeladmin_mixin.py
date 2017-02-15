@@ -80,7 +80,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                 appointment = self.get_previous_appointment(request)
                 if form_label.previous_appointment and appointment:
                     condition = form_label.callback(instance, appointment)
-                elif form_label.previous_appointment and instance:
+                elif form_label.previous_instance and instance:
                     condition = form_label.callback(instance, appointment)
                 else:
                     condition = None
