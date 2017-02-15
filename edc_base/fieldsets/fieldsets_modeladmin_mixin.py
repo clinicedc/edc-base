@@ -13,11 +13,17 @@ class FormLabel:
                  previous_appointment=None):
         self.field = field
         self.label = label
-        self.callback = callback
-        if not callback:
-            if previous_appointment:
+        self.previous_instance = previous_instance
+        self.previous_appointment = previous_appointment
+        if callback:
+            self.callback = callback
+            if not previous_instance and not previous_appointment:
+                self.previous_instance = True
+        else:
+            if self.previous_appointment:
                 self.callback = self.previous_appointment_callback
             else:
+                self.previous_instance = True
                 self.callback = self.previous_instance_callback
 
     def previous_instance_callback(self, obj, appointment):
@@ -72,7 +78,13 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
             if form_label.field in form.base_fields:
                 instance = self.get_previous_instance(request)
                 appointment = self.get_previous_appointment(request)
-                if form_label.callback(instance, appointment):
+                if form_label.previous_appointment and appointment:
+                    condition = form_label.callback(instance, appointment)
+                elif form_label.previous_appointment and instance:
+                    condition = form_label.callback(instance, appointment)
+                else:
+                    condition = None
+                if condition:
                     label = self.format_form_label(
                         label=form_label.label or form.base_fields[
                             form_label.field].label,
