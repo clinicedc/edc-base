@@ -1,20 +1,25 @@
 from django.apps import apps as django_apps
+from edc_base.exceptions import NavbarError
 
 
 class NavbarItem:
 
     def __init__(self, name=None, app_config_name=None, app_config_attr=None,
-                 label=None, title=None, html_id=None, fa_icon=None, **kwargs):
-        self._url_name = None
+                 label=None, title=None, html_id=None, fa_icon=None,
+                 url_name=None, **kwargs):
+        self._url_name = url_name
         self._app_config = None
         self.app_config_name = app_config_name
         self.app_config_attr = app_config_attr or 'default_url_name'
         self.name = name or app_config_name
-        self.label = label or app_config_name
+        self.label = label
         self.title = title or self.label
         self.html_id = html_id or label
         self.fa_icon = fa_icon
         self.kwargs = kwargs
+        if not label and not fa_icon:
+            raise NavbarError(
+                'Specify a value for label and/or fa_icon. Got None for both.')
 
     def __repr__(self):
         return '{0}(<name={1.name}, app_config_name={1.app_config_name}, ...>)'.format(self.__class__.__name__, self)
