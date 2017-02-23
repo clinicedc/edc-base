@@ -1,18 +1,9 @@
 from django.conf.urls import url, include
-# from django_js_reverse.views import urls_js
+from django.views.generic.base import RedirectView
+
 from edc_base.views import LoginView, LogoutView
 
-"""
-Add to your app as
-
-[
-   ...
-    url(r'home/', HomeView.as_view(), name='home_url'),  # your home view, needed by base.html
-    url(r'', include('edc_base.urls', 'edc-base')),  # login, logout
-]
-
-"""
-from django.views.generic.base import RedirectView
+app_name = 'edc_base'
 
 urlpatterns = [
     # url(r'^jsreverse/$', urls_js, name='js_reverse'),

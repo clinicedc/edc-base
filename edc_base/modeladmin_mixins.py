@@ -3,9 +3,9 @@ import re
 from django.apps import apps as django_apps
 from django.contrib import messages
 from django.contrib.admin.widgets import AdminDateWidget
-from django.core.urlresolvers import reverse
 from django.forms.widgets import DateInput
 from django.http.response import HttpResponseRedirect
+from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.encoding import force_text
 from django.utils.html import format_html

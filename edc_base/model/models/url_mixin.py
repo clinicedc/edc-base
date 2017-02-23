@@ -1,5 +1,5 @@
 from django.apps import apps as django_apps
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 
 
@@ -37,7 +37,8 @@ class UrlMixin(models.Model):
             app_label = self._meta.app_label
             try:
                 # app specific
-                admin_site_name = django_apps.get_app_config(app_label).admin_site_name
+                admin_site_name = django_apps.get_app_config(
+                    app_label).admin_site_name
             except AttributeError:
                 # default
                 admin_site_name = 'admin'
