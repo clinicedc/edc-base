@@ -56,7 +56,7 @@ class ListModelMixin(models.Model):
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.name
-        super(ListModelMixin, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def natural_key(self):
         return (self.short_name, )
