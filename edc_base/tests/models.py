@@ -1,7 +1,7 @@
 from django.db import models
 
-from edc_base.model.models import BaseUuidModel
-from edc_base.model.validators.compare_numbers import CompareNumbersValidator
+from edc_base.model_mixins import BaseUuidModel
+from edc_base.model_validators import CompareNumbersValidator
 
 
 class TestModel(BaseUuidModel):
@@ -17,6 +17,8 @@ class TestValidatorModel(models.Model):
 
     consent_age = models.IntegerField(
         validators=[
-            CompareNumbersValidator(18, '>=', message='Age of consent must be {}. Got {}'),
-            CompareNumbersValidator(64, '<=', message='Age of consent must be {}. Got {}')
+            CompareNumbersValidator(
+                18, '>=', message='Age of consent must be {}. Got {}'),
+            CompareNumbersValidator(
+                64, '<=', message='Age of consent must be {}. Got {}')
         ])

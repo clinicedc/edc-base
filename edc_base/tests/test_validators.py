@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 
 from .models import TestValidatorModel
-from edc_base.model.validators import (
+from ..model_validators import (
     MaxConsentAgeValidator, CompareNumbersValidator, MinConsentAgeValidator)
 
 
@@ -21,13 +21,15 @@ class TestValidators(TestCase):
 
     def test_min_age_validator(self):
         validator = MinConsentAgeValidator(18)
-        self.assertRaises(ValidationError, validator, date.today() - relativedelta(years=17))
+        self.assertRaises(
+            ValidationError, validator, date.today() - relativedelta(years=17))
         self.assertIsNone(validator(date.today() - relativedelta(years=18)))
         self.assertIsNone(validator(date.today() - relativedelta(years=19)))
 
     def test_max_age_validator(self):
         validator = MaxConsentAgeValidator(64)
-        self.assertRaises(ValidationError, validator, date.today() - relativedelta(years=65))
+        self.assertRaises(
+            ValidationError, validator, date.today() - relativedelta(years=65))
         self.assertIsNone(validator(date.today() - relativedelta(years=64)))
         self.assertIsNone(validator(date.today() - relativedelta(years=63)))
 
@@ -53,14 +55,18 @@ class TestValidators(TestCase):
         self.assertRaises(TypeError, CompareNumbersValidator)
 
     def test_compare_numbers_no_value(self):
-        self.assertRaises(ImproperlyConfigured, CompareNumbersValidator, None, '<')
+        self.assertRaises(
+            ImproperlyConfigured, CompareNumbersValidator, None, '<')
 
     def test_compare_numbers_no_values(self):
-        self.assertRaises(ImproperlyConfigured, CompareNumbersValidator, None, None)
+        self.assertRaises(
+            ImproperlyConfigured, CompareNumbersValidator, None, None)
 
     def test_compare_numbers_not_numbers(self):
-        self.assertRaises(TypeError, CompareNumbersValidator, [1, 2], '<')  # nonsense
-        self.assertRaises(TypeError, CompareNumbersValidator, 'ABC', '<')  # nonsense
+        self.assertRaises(
+            TypeError, CompareNumbersValidator, [1, 2], '<')  # nonsense
+        self.assertRaises(
+            TypeError, CompareNumbersValidator, 'ABC', '<')  # nonsense
 
     def test_age_of_consent(self):
         form = TestValidationForm(data={'consent_age': 17})

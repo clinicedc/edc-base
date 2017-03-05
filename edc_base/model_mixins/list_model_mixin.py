@@ -1,6 +1,6 @@
 from django.db import models
 
-from ..managers import BaseListManager
+from ..model_managers import BaseListManager
 
 
 class ListModelMixin(models.Model):

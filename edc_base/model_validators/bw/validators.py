@@ -1,4 +1,4 @@
-from edc_base.model.validators.phone import phone_number
+from ..phone import phone_number
 
 
 def BWCellNumber(value):

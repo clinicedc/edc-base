@@ -3,10 +3,10 @@ import socket
 from django.db import models
 from django_revision import RevisionField
 
-from ...utils import get_utcnow
+from ..utils import get_utcnow
 
-from ..constants import BASE_MODEL_UPDATE_FIELDS
-from ..fields import HostnameModificationField, UserField
+from .constants import BASE_MODEL_UPDATE_FIELDS
+from ..model_fields import HostnameModificationField, UserField
 
 from .common_clean_model_mixin import CommonCleanModelMixin
 from .url_mixin import UrlMixin
@@ -62,7 +62,8 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
     def save(self, *args, **kwargs):
         try:
             # don't allow update_fields to bypass these audit fields
-            update_fields = kwargs.get('update_fields', None) + BASE_MODEL_UPDATE_FIELDS
+            update_fields = kwargs.get(
+                'update_fields', None) + BASE_MODEL_UPDATE_FIELDS
             kwargs.update({'update_fields': update_fields})
         except TypeError:
             pass

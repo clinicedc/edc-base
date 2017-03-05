@@ -1,7 +1,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from edc_base.model.validators.compare_numbers import CompareNumbersValidator
+from .compare_numbers import CompareNumbersValidator
 
 
 class MinConsentAgeValidator(CompareNumbersValidator):

@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.db.models import CharField, DateTimeField, DecimalField
 from django.forms import RegexField
 
-from ...choices import DATE_ESTIMATED, IDENTITY_TYPE
+from ..choices import DATE_ESTIMATED, IDENTITY_TYPE
 
 
 class OtherCharField(CharField):
@@ -41,7 +41,8 @@ class DobField(DateTimeField):
     """field for date of birth"""
 
     description = _("Custom field for date of birth")
-    # TODO: there should be a dob with and without time, validator should be installed, but is this class ever used?
+    # TODO: there should be a dob with and without time, validator should be
+    # installed, but is this class ever used?
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('verbose_name', _('Date of Birth'))
@@ -81,7 +82,8 @@ class NameField(CharField):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('verbose_name', _('Name'))
         kwargs.setdefault('max_length', 50)
-        kwargs.setdefault('help_text', _('Type only letters, all in uppercase and no spaces'))
+        kwargs.setdefault(
+            'help_text', _('Type only letters, all in uppercase and no spaces'))
         CharField.__init__(self, *args, **kwargs)
 
     def get_internal_type(self):
@@ -108,7 +110,8 @@ class InitialsField(CharField):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('verbose_name', _('Initials'))
         kwargs.setdefault('max_length', 3)
-        kwargs.setdefault('help_text', _('Type 2-3 letters, all in uppercase and no spaces'))
+        kwargs.setdefault(
+            'help_text', _('Type 2-3 letters, all in uppercase and no spaces'))
         CharField.__init__(self, *args, **kwargs)
 
     def get_internal_type(self):
@@ -136,7 +139,8 @@ class WeightField(DecimalField):
         kwargs.setdefault('editable', True)
         kwargs.setdefault('max_digits', 5)
         kwargs.setdefault('decimal_places', 2)
-        kwargs.setdefault('help_text', _('Report in kg. Format is 9.99, 99.99, etc'))
+        kwargs.setdefault(
+            'help_text', _('Report in kg. Format is 9.99, 99.99, etc'))
         DecimalField.__init__(self, *args, **kwargs)
 
     def get_internal_type(self):
@@ -202,7 +206,8 @@ class IdentityTypeField(CharField):
     description = _("Custom field for Identity Type")
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('verbose_name', _('What type of identity number is this?'))
+        kwargs.setdefault(
+            'verbose_name', _('What type of identity number is this?'))
         kwargs.setdefault('editable', True)
         kwargs.setdefault('max_length', 15)
         kwargs.setdefault('choices', IDENTITY_TYPE)

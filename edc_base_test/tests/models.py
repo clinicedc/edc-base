@@ -1,8 +1,8 @@
+from django.db.models.deletion import PROTECT
 from django.db import models
 
-from edc_base.model.models.base_uuid_model import BaseUuidModel
-from django.db.models.deletion import PROTECT
 from edc_appointment.models import Appointment
+from edc_base.model_mixins import BaseUuidModel
 from edc_visit_schedule.model_mixins import VisitScheduleModelMixin
 
 

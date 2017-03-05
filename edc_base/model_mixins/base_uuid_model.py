@@ -1,4 +1,4 @@
-from edc_base.model.fields.uuid_auto_field import UUIDAutoField
+from ..model_fields import UUIDAutoField
 
 from .base_model import BaseModel
 
