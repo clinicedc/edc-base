@@ -95,11 +95,12 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         return form
 
     def format_form_label(self, label=None, instance=None, appointment=None, **kwargs):
-        report_datetime = getattr(
-            instance, instance.visit_model_attr()).report_datetime
-        label = label.format(
-            previous=report_datetime.strftime('%B %Y'))
-        return label
+        if instance:
+            report_datetime = getattr(
+                instance, instance.visit_model_attr()).report_datetime
+            label = label.format(
+                previous=report_datetime.strftime('%B %Y'))
+            return label
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj=obj, **kwargs)
