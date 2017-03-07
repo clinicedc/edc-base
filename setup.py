@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='edc-base',
-    version='0.1.8',
+    version='0.2.0',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -22,6 +22,22 @@ setup(
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',
+    install_requires=[
+        'django',
+        'django-braces',
+        'django-simple-history',
+        'django-js-reverse',
+        'django-crispy-forms',
+        'django-extensions',
+        'python-dateutil',
+        'model_mommy',
+        'Faker',
+        'unipath',
+        'pytz',
+        'arrow',
+        'django-tz-detect',
+        'mysqlclient',
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

@@ -20,78 +20,59 @@ Optional __settings__ attributes:
 	# the default is '^[0-9+\(\)#\.\s\/ext-]+$'
 	TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
 	CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$',
-	
-### Audit Trail (edc-audit)
-All Edc models that need an active audit trail import `edc_audit.AuditTrail` via `edc_base`. See `edc_audit`.
 
-    from edc_base.audit_trail import AuditTrail
-    from edc_sync.models import SyncModelMixin
+### ModelForm Mixin
 
-    class MyModel(SyncModelMixin, BaseUuidModel):
+#### CommonCleanModelFormMixin
 
-        history = AuditTrail()
+Works together with `common_clean` on the model that inherits from `BaseModel`.
 
-        class Meta:
-            app_label = 'my_app'
+The validation logic lives on the model but can be called in time for the ModelForm.clean() to re-raise the exceptions and place the error messages on the ModelForm page.
 
-### Encryption
-All Edc models that use encrypted fields import classes from `edc_crypto_fields` via `edc_base.encrypted_fields`.
+If the exception instance has a second `arg` it will be used as the form field name and the error message will be placed by the field on the page.
 
-    from edc_base.audit_trail import AuditTrail
-    from edc_base.encrypted_fields import (
-        IdentityField, EncryptedCharField, FirstnameField, LastnameField, mask_encrypted)
-    from edc_sync.models import SyncModelMixin
+For example:
 
-    class MyModel(SyncModelMixin, BaseUuidModel):
+On the model you must use `BaseModel`:
 
-	first_name = FirstnameField(null=True)
-	last_name = LastnameField(verbose_name="Last name", null=True)
-	initials = EncryptedCharField(null=True)
-
-        history = AuditTrail()
-
-        class Meta:
-            app_label = 'my_app'
+    from edc_base.model.models import BaseModel
 
 
-### Audit trail (HistoricalRecord):
-(in development for PY3)
-HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
-with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
-`get_extra_fields()` method is overridden to change the *history_id* primary key from an 
-`IntegerField` to a `UUIDField` so that it can work with edc-sync. Method `add_extra_methods()`
-is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc_sync` is 
-in INSTALLED_APP.
-=======
-### Audit Trail (edc-audit)
-All Edc models that need an active audit trail import `edc_audit.AuditTrail` via `edc_base`. See `edc_audit`.
+    class MyModel(BaseModel, models.Model):
+    
+        f1 = models.CharField(...)
 
-    from edc_base.audit_trail import AuditTrail
-    from edc_sync.models import SyncModelMixin
-    class MyModel(SyncModelMixin, BaseUuidModel):
-        
-	history = AuditTrail()
-        class Meta:
-            app_label = 'my_app'
+        f2 = models.CharField(...)
 
-### Encryption
-All Edc models that use encrypted fields import classes from `edc_crypto_fields` via `edc_base.encrypted_fields`.
+        def common_clean(self):
+            # note: (1) this code should be validation code. Avoid setting any field attributes here.
+            #       (2) this method will be called in the model save method as well.
+            if f1 != 'happiness': 
+                raise ExceptionOne('Expected happiness.', 'f1')
+            if f2 != 'liberty': 
+                raise ExceptionTwo('Expected liberty.', 'f2')
+            super().common_clean()
 
-    from edc_base.audit_trail import AuditTrail
-    from edc_base.encrypted_fields import (
-        IdentityField, EncryptedCharField, FirstnameField, LastnameField, mask_encrypted)
-    from edc_sync.models import SyncModelMixin
+        @property
+        def common_clean_exceptions(self):
+            common_clean_exceptions = super().common_clean_exceptions
+            common_clean_exceptions.extend([ExceptionOne, ExceptionTwo])
+            return common_clean_exceptions
+    
+On the ModelForm, just add the mixin. If you do override `clean()` be sure to call `super()`.
 
-    class MyModel(SyncModelMixin, BaseUuidModel):
+    from edc_base.form_mixins import CommonCleanModelFormMixin
 
-    first_name = FirstnameField(null=True)
-    last_name = LastnameField(verbose_name="Last name", null=True)
-    initials = EncryptedCharField(null=True)
 
-        history = AuditTrail()
+    MyModelForm(CommonCleanModelFormMixin, for.ModelForm):
 
-        class Meta:
-            app_label = 'my_app'
+        def clean(self):
+            cleaned_data = super().clean()
+            ...
+            ...
+            ...
+            return cleaned_data
+
 
 
 ### Field Validators
