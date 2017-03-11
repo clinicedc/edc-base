@@ -8,6 +8,7 @@ class AddressModelAdminMixin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
+                'contact_name',
                 'name',
                 'address',
                 'postal_code',
