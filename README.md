@@ -21,7 +21,6 @@ Optional __settings__ attributes:
 	TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
 	CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$',
 
-
 ### ModelForm Mixin
 
 #### CommonCleanModelFormMixin
@@ -73,7 +72,6 @@ On the ModelForm, just add the mixin. If you do override `clean()` be sure to ca
             ...
             ...
             return cleaned_data
-
 
 
 
