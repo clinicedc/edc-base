@@ -30,7 +30,7 @@ class ConvertError(Exception):
 
 
 def get_uuid():
-    return str(uuid4())
+    return uuid4().hex
 
 
 def round_up(value, digits):
