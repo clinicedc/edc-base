@@ -17,11 +17,14 @@ class EdcBaseViewMixin(RevisionMixin):
         self.navbars = django_apps.get_app_config('edc_base').navbars
 
     def get_context_data(self, **kwargs):
+        edc_device_app_config = django_apps.get_app_config('edc_device')
         context = super().get_context_data(**kwargs)
         context = self.get_edc_base_extra_context(context)
         context = self.get_navbar_context(context)
         context.update({
             'DEBUG': settings.DEBUG,
+            'device_id': edc_device_app_config.device_id,
+            'device_role': edc_device_app_config.device_role,
         })
         return context
 
