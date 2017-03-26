@@ -185,15 +185,13 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
                     *fieldlist.insert_fields,
                     insert_after=fieldlist.insert_after,
                     section=fieldlist.section)
-            except AttributeError as e:
-                print(e)
+            except AttributeError:
                 pass
             try:
                 fieldsets.remove_fields(
                     *fieldlist.remove_fields,
                     section=fieldlist.section)
-            except AttributeError as e:
-                print(e)
+            except AttributeError:
                 pass
         fieldsets = self.update_fieldset_for_form(
             fieldsets, request)
