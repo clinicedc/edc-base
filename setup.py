@@ -32,7 +32,6 @@ setup(
         'python-dateutil',
         'model_mommy',
         'Faker',
-        'unipath',
         'pytz',
         'arrow',
         'django-tz-detect',
