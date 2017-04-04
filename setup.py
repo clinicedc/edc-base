@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='edc-base',
-    version='0.2.4',
+    version='0.2.5',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -32,7 +32,6 @@ setup(
         'python-dateutil',
         'model_mommy',
         'Faker',
-        'unipath',
         'pytz',
         'arrow',
         'django-tz-detect',
