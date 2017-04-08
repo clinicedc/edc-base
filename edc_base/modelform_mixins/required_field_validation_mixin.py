@@ -1,5 +1,5 @@
 from django import forms
-from edc_constants.constants import DWTA
+from edc_constants.constants import DWTA, NOT_APPLICABLE
 
 
 class RequiredFieldValidationMixin:
@@ -17,12 +17,14 @@ class RequiredFieldValidationMixin:
                     and self.cleaned_data.get(field) == DWTA):
                 pass
             elif (self.cleaned_data.get(field) in responses
-                    and not self.cleaned_data.get(field_required)):
+                    and (not self.cleaned_data.get(field_required)
+                         or self.cleaned_data.get(field_required) == NOT_APPLICABLE)):
                 raise forms.ValidationError({
                     field_required:
                     required_msg or 'This field is required.'})
             elif (self.cleaned_data.get(field) not in responses
-                    and self.cleaned_data.get(field_required)):
+                    and (self.cleaned_data.get(field_required)
+                         and self.cleaned_data.get(field_required) != NOT_APPLICABLE)):
                 raise forms.ValidationError({
                     field_required:
                     not_required_msg or 'This field is not required.'})
@@ -32,11 +34,13 @@ class RequiredFieldValidationMixin:
                          required_msg=None, not_required_msg=None, **kwargs):
         cleaned_data = self.cleaned_data
         if field_required in cleaned_data:
-            if (condition and not self.cleaned_data.get(field_required)):
+            if (condition and (not self.cleaned_data.get(field_required)
+                               or self.cleaned_data.get(field_required) == NOT_APPLICABLE)):
                 raise forms.ValidationError({
                     field_required:
                     required_msg or 'This field is required.'})
-            elif (not condition and self.cleaned_data.get(field_required)):
+            elif (not condition and self.cleaned_data.get(field_required)
+                    and self.cleaned_data.get(field_required) != NOT_APPLICABLE):
                 raise forms.ValidationError({
                     field_required:
                     not_required_msg or 'This field is not required.'})
@@ -55,12 +59,14 @@ class RequiredFieldValidationMixin:
                     and self.cleaned_data.get(field) == DWTA):
                 pass
             elif (self.cleaned_data.get(field) in responses
-                    and self.cleaned_data.get(field_required)):
+                    and (self.cleaned_data.get(field_required)
+                         and self.cleaned_data.get(field_required) != NOT_APPLICABLE)):
                 raise forms.ValidationError({
                     field_required:
                     not_required_msg or 'This field is not required.'})
             elif inverse and (self.cleaned_data.get(field) not in responses
-                              and not self.cleaned_data.get(field_required)):
+                              and (not self.cleaned_data.get(field_required)
+                              or self.cleaned_data.get(field_required) == NOT_APPLICABLE)):
                 raise forms.ValidationError({
                     field_required:
                     required_msg or 'This field is required.'})
