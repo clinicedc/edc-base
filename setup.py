@@ -8,10 +8,9 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
-
 setup(
     name='edc-base',
-    version='0.2.6',
+    version='0.2.7',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
