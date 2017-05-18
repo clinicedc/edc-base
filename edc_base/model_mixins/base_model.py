@@ -31,13 +31,13 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         max_length=50,
         blank=True,
         verbose_name='user created',
-    )
+        help_text='Updated by admin.save_model')
 
     user_modified = UserField(
         max_length=50,
         blank=True,
         verbose_name='user modified',
-    )
+        help_text='Updated by admin.save_model')
 
     hostname_created = models.CharField(
         max_length=50,

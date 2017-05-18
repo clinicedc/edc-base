@@ -17,7 +17,7 @@ setup(
     include_package_data=True,
     url='http://github.com/botswana-harvard/edc-base',
     license='GPL licence, see LICENCE',
-    description='Base models, forms and admin for botswana-harvard/edc modules.',
+    description='Base mixins and utilities for botswana-harvard/edc projects.',
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',
