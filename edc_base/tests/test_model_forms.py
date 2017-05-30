@@ -3,7 +3,6 @@ from django.test import TestCase, tag
 
 from ..modelform_mixins import ReadonlyFieldsFormMixin
 from .models import TestModel
-from pprint import pprint
 
 
 @tag('me')
