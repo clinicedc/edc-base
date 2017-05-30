@@ -4,7 +4,6 @@ from django.test import TestCase, tag
 from ..fieldsets import Fieldsets, FieldsetError, Fieldset
 
 
-@tag('fs')
 class TestFieldsets(TestCase):
 
     def setUp(self):

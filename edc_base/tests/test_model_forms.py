@@ -5,7 +5,6 @@ from ..modelform_mixins import ReadonlyFieldsFormMixin
 from .models import TestModel
 
 
-@tag('me')
 class TestModelForms(TestCase):
 
     def test_readonly_fields(self):
