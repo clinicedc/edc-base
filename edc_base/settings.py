@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from pathlib import PurePath
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,17 +41,17 @@ INSTALLED_APPS = [
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
     'django_js_reverse',
-    'edc_protocol.apps.AppConfig',
-    'edc_device.apps.AppConfig',
-    'edc_identifier.apps.AppConfig',
-    'edc_appointment.apps.AppConfig',
-    'edc_consent.apps.AppConfig',
-    'edc_registration.apps.AppConfig',
-    'edc_timepoint.apps.AppConfig',
-    'edc_visit_tracking.apps.AppConfig',
-    'edc_metadata.apps.AppConfig',
+    #     'edc_protocol.apps.AppConfig',
+    #     'edc_device.apps.AppConfig',
+    #     'edc_identifier.apps.AppConfig',
+    #     'edc_appointment.apps.AppConfig',
+    #     'edc_consent.apps.AppConfig',
+    #     'edc_registration.apps.AppConfig',
+    #     'edc_timepoint.apps.AppConfig',
+    #     'edc_visit_tracking.apps.AppConfig',
+    #     'edc_metadata.apps.AppConfig',
     'edc_base.apps.AppConfig',
-    'edc_example.apps.AppConfig'
+    #'edc_example.apps.AppConfig'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -135,3 +136,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 GIT_DIR = BASE_DIR
+KEY_PATH = os.path.join(BASE_DIR, 'crypto_fields')

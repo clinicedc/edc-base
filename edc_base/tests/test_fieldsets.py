@@ -1,8 +1,7 @@
 from django.contrib.admin.utils import flatten_fieldsets
 from django.test import TestCase, tag
 
-from ..fieldsets import Fieldsets, FieldsetError
-from edc_base.fieldsets import Fieldset
+from ..fieldsets import Fieldsets, FieldsetError, Fieldset
 
 
 @tag('fs')

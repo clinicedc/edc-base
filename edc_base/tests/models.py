@@ -1,7 +1,9 @@
+__all__ = ['TestModel', 'TestValidatorModel']
+
 from django.db import models
 
-from edc_base.model_mixins import BaseUuidModel
-from edc_base.model_validators import CompareNumbersValidator
+from ..model_mixins import BaseUuidModel
+from ..model_validators import CompareNumbersValidator
 
 
 class TestModel(BaseUuidModel):

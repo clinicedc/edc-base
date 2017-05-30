@@ -2,8 +2,8 @@ from django import forms
 from django.test import TestCase, tag
 
 from ..modelform_mixins import ReadonlyFieldsFormMixin
-
-from edc_example.models import TestModel
+from .models import TestModel
+from pprint import pprint
 
 
 @tag('me')
@@ -24,7 +24,7 @@ class TestModelForms(TestCase):
         class TestModelForm2(ReadonlyFieldsFormMixin, forms.ModelForm):
 
             def get_readonly_fields(self):
-                return ['f3']
+                return ['f3', 'f4', 'f5']
 
             class Meta:
                 model = TestModel
