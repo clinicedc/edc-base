@@ -14,19 +14,13 @@ class UrlMixin(models.Model):
 
     @property
     def admin_url_name(self):
-        """Returns the django admin add or change url name."""
+        """Returns the django admin add or change url name.
+        """
         if self.id:
-            admin_url_name = '{admin_site_name}:{app_label}_{object_name}_change'.format(
-                admin_site_name=self.admin_site_name,
-                app_label=self._meta.app_label,
-                object_name=self._meta.object_name.lower()
-            )
+            mode = 'change'
         else:
-            admin_url_name = '{admin_site_name}:{app_label}_{object_name}_add'.format(
-                admin_site_name=self.admin_site_name,
-                app_label=self._meta.app_label,
-                object_name=self._meta.object_name.lower())
-        return admin_url_name
+            mode = 'add'
+        return f'{self.admin_site_name}:{self._meta.app_label}_{self._meta.object_name.lower()}_{mode}'
 
     @property
     def admin_site_name(self):
