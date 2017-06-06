@@ -19,7 +19,7 @@ class OtherSpecifyValidationMixin:
 
         # assume field naming convention
         if not other_specify_field:
-            other_specify_field = '{}_other'.format(field)
+            other_specify_field = f'{field}_other'
 
         if (cleaned_data.get(field)
                 and cleaned_data.get(field) == other
@@ -28,12 +28,12 @@ class OtherSpecifyValidationMixin:
             raise forms.ValidationError(
                 {other_specify_field:
                  required_msg or 'This field is required.{}'.format(
-                     '' if not ref else ' ref: {}'.format(ref))})
+                     '' if not ref else f' ref: {ref}')})
         elif (cleaned_data.get(field)
                 and cleaned_data.get(field) != other
                 and cleaned_data.get(other_specify_field)):
             raise forms.ValidationError(
                 {other_specify_field:
                  not_required_msg or 'This field is not required.{}'.format(
-                     '' if not ref else ' ref: {}'.format(ref))})
+                     '' if not ref else f' ref: {ref}')})
         return False
