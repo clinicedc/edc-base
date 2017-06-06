@@ -45,7 +45,7 @@ class RequiredFieldValidationMixin:
                     field_required:
                     not_required_msg or 'This field is not required.'})
 
-    def not_required_if(self, *responses, field=None, field_required=None,
+    def not_required_if(self, cleaned_data, *responses, field=None, field_required=None,
                         required_msg=None, not_required_msg=None,
                         optional_if_dwta=None, inverse=None,
                         cleaned_data=None, code=None, **kwargs):
