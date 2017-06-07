@@ -3,7 +3,7 @@ from django import forms
 from edc_constants.constants import NOT_APPLICABLE
 
 
-class ApplicableValidationMixin:
+class ApplicableFieldValidator:
 
     def applicable_if(self, *responses, field=None, field_applicable=None):
         return self.applicable(

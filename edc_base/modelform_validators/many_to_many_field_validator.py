@@ -1,8 +1,11 @@
 from django import forms
+
 from edc_constants.constants import NOT_APPLICABLE
 
+from .base_form_validator import BaseFormValidator
 
-class Many2ManyModelValidationMixin:
+
+class ManyToManyFieldValidator(BaseFormValidator):
 
     def m2m_required_if(self, response=None, field=None, m2m_field=None, cleaned_data=None):
         """Raises an exception or returns False.

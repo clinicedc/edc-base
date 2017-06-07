@@ -2,8 +2,10 @@ from django import forms
 
 from edc_constants.constants import OTHER
 
+from .base_form_validator import BaseFormValidator
 
-class OtherSpecifyValidationMixin:
+
+class OtherSpecifyFieldValidator(BaseFormValidator):
     """A modelform mixin that handles 'OTHER/Other specify'
     field pattern.
     """
