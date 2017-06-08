@@ -17,6 +17,7 @@ class ModelFormFieldValidatorError(Exception):
 class BaseFormValidator:
 
     def __init__(self, cleaned_data=None):
+        self._errors = {}
         self.cleaned_data = cleaned_data
         if cleaned_data is None:
             raise ModelFormFieldValidatorError(

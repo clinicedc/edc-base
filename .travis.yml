@@ -1,12 +1,12 @@
 language: python
-python:
-  - "3.6"
+
+python: "3.6"
+
 env:
   - DJANGO_VERSION=1.11.2
-  - PROJECT
+  - PROJECT="edc_base"
 
-services:
-  - mysql
+services: mysql
 
 install:
   - pip3 install --upgrade pip setuptools
