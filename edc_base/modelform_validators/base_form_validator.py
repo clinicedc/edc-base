@@ -14,6 +14,13 @@ class ModelFormFieldValidatorError(Exception):
         self.code = code
 
 
+class ValidationError(Exception):
+    def __init__(self, message, code=None, params=None):
+        self.message = message
+        self.code = code
+        self.params = params
+
+
 class BaseFormValidator:
 
     def __init__(self, cleaned_data=None):

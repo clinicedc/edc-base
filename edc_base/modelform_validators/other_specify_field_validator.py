@@ -1,4 +1,4 @@
-from django import forms
+from django.forms import ValidationError
 
 from edc_constants.constants import OTHER
 
@@ -14,7 +14,7 @@ class OtherSpecifyFieldValidator(BaseFormValidator):
                                required_msg=None, not_required_msg=None,
                                other_stored_value=None,
                                ref=None, **kwargs):
-        """Returns False or raises a forms.ValidationError.
+        """Returns False or raises a ValidationError.
         """
         cleaned_data = self.cleaned_data
         other = other_stored_value or OTHER
@@ -26,16 +26,19 @@ class OtherSpecifyFieldValidator(BaseFormValidator):
         if (cleaned_data.get(field)
                 and cleaned_data.get(field) == other
                 and not cleaned_data.get(other_specify_field)):
-
-            raise forms.ValidationError(
-                {other_specify_field:
-                 required_msg or 'This field is required.{}'.format(
-                     '' if not ref else f' ref: {ref}')})
+            ref = '' if not ref else f' ref: {ref}'
+            message = {
+                other_specify_field:
+                required_msg or f'This field is required.{ref}'}
+            self._errors.update(message)
+            raise ValidationError(message)
         elif (cleaned_data.get(field)
                 and cleaned_data.get(field) != other
                 and cleaned_data.get(other_specify_field)):
-            raise forms.ValidationError(
-                {other_specify_field:
-                 not_required_msg or 'This field is not required.{}'.format(
-                     '' if not ref else f' ref: {ref}')})
+            ref = '' if not ref else f' ref: {ref}'
+            message = {
+                other_specify_field:
+                not_required_msg or f'This field is not required.{ref}'}
+            self._errors.update(message)
+            raise ValidationError(message)
         return False

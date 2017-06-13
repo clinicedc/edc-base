@@ -3,12 +3,13 @@ from django.test import TestCase, tag
 
 from edc_constants.constants import YES, NO, DWTA, NOT_APPLICABLE
 
-from ..modelform_validators import FormValidator
+from ..modelform_validators import FormValidator, ValidationError
 from ..modelform_validators import ModelFormFieldValidatorError, InvalidModelFormFieldValidator
 from .models import TestModel
+from pprint import pprint
 
 
-class TestModelForm1(forms.ModelForm):
+class TestModelForm(forms.ModelForm):
 
     class Meta:
         model = TestModel
@@ -186,3 +187,34 @@ class TestRequiredFieldValidator2(TestCase):
                 YES, field='field_one', field_required='field_two')
         except (ModelFormFieldValidatorError, InvalidModelFormFieldValidator) as e:
             self.fail(f'Exception unexpectedly raised. Got {e}')
+
+
+@tag('forms')
+class TestFormValidatorInForm(TestCase):
+
+    @tag('2')
+    def test_form(self):
+
+        class TestFormValidator(FormValidator):
+            def clean(self):
+                self.required_if(
+                    YES,
+                    field='f1',
+                    field_required='f2')
+
+        class TestModelForm(forms.ModelForm):
+
+            def clean(self):
+                cleaned_data = super().clean()
+                form_validator = TestFormValidator(cleaned_data=cleaned_data)
+                return form_validator.clean()
+
+            class Meta:
+                model = TestModel
+                fields = '__all__'
+
+        form = TestModelForm(data=dict(f1=NO, f2='blah'))
+        self.assertFalse(form.is_valid())
+        self.assertIn('f2', form._errors)
+        form = TestModelForm(data=dict(f1=YES, f2='blah'))
+        self.assertNotIn('f2', form._errors or {})
