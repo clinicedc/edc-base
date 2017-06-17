@@ -13,6 +13,7 @@ class ManyToManyFieldValidator(BaseFormValidator):
 
         m2m_field is required if field  == response
         """
+        message = None
         if (cleaned_data.get(field) == response
                 and not cleaned_data.get(m2m_field)):
             message = {m2m_field: 'This field is required'}
