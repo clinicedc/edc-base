@@ -3,10 +3,9 @@ from django.test import TestCase, tag
 
 from edc_constants.constants import YES, NO, DWTA, NOT_APPLICABLE
 
-from ..modelform_validators import FormValidator, ValidationError
+from ..modelform_validators import FormValidator
 from ..modelform_validators import ModelFormFieldValidatorError, InvalidModelFormFieldValidator
 from .models import TestModel
-from pprint import pprint
 
 
 class TestModelForm(forms.ModelForm):
@@ -49,7 +48,8 @@ class TestFieldValidator(TestCase):
         try:
             FormValidator(cleaned_data={})
         except ModelFormFieldValidatorError as e:
-            self.fail(f'ModelFormFieldValidatorError unexpectedly raised. Got {e}')
+            self.fail(
+                f'ModelFormFieldValidatorError unexpectedly raised. Got {e}')
 
     def test_form_validator_cleaned_data_is_none(self):
         """Asserts raises if cleaned data is None; that is, not
