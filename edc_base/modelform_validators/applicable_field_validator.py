@@ -1,7 +1,8 @@
 from django.forms import ValidationError
 
 from edc_constants.constants import NOT_APPLICABLE
-from edc_base.modelform_validators.base_form_validator import BaseFormValidator
+
+from .base_form_validator import BaseFormValidator
 
 
 class ApplicableFieldValidator(BaseFormValidator):

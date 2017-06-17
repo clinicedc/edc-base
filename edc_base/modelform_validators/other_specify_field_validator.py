@@ -2,7 +2,7 @@ from django.forms import ValidationError
 
 from edc_constants.constants import OTHER
 
-from .base_form_validator import BaseFormValidator
+from .base_form_validator import BaseFormValidator, NOT_REQUIRED_ERROR, REQUIRED_ERROR
 
 
 class OtherSpecifyFieldValidator(BaseFormValidator):
@@ -31,7 +31,8 @@ class OtherSpecifyFieldValidator(BaseFormValidator):
                 other_specify_field:
                 required_msg or f'This field is required.{ref}'}
             self._errors.update(message)
-            raise ValidationError(message)
+            self._error_codes.append(REQUIRED_ERROR)
+            raise ValidationError(message, code=REQUIRED_ERROR)
         elif (cleaned_data.get(field)
                 and cleaned_data.get(field) != other
                 and cleaned_data.get(other_specify_field)):
@@ -40,5 +41,6 @@ class OtherSpecifyFieldValidator(BaseFormValidator):
                 other_specify_field:
                 not_required_msg or f'This field is not required.{ref}'}
             self._errors.update(message)
-            raise ValidationError(message)
+            self._error_codes.append(NOT_REQUIRED_ERROR)
+            raise ValidationError(message, code=NOT_REQUIRED_ERROR)
         return False
