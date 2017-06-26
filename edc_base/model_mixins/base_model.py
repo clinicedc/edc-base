@@ -3,8 +3,6 @@ import socket
 from django.db import models
 from django_revision import RevisionField
 
-from edc_device.model_mixins import DeviceModelMixin
-
 from ..model_fields import HostnameModificationField, UserField
 from ..utils import get_utcnow
 from .common_clean_model_mixin import CommonCleanModelMixin
@@ -12,10 +10,11 @@ from .constants import BASE_MODEL_UPDATE_FIELDS
 from .url_mixin import UrlMixin
 
 
-class BaseModel(DeviceModelMixin, CommonCleanModelMixin, UrlMixin, models.Model):
+class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
-    values for user, date and hostname (computer)."""
+    values for user, date and hostname (computer).
+    """
 
     get_latest_by = 'modified'
 
@@ -68,7 +67,7 @@ class BaseModel(DeviceModelMixin, CommonCleanModelMixin, UrlMixin, models.Model)
         except TypeError:
             pass
         self.modified = get_utcnow()
-        super(BaseModel, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @property
     def verbose_name(self):

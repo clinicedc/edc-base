@@ -1,9 +1,9 @@
 import os
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ETC_DIR = os.path.join(BASE_DIR.ancestor(1), 'etc')
-
+APP_NAME = 'edc_base'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
     'django_js_reverse',
+    'edc_device.apps.AppConfig',
+    'edc_protocol.apps.AppConfig',
     'edc_base.apps.AppConfig',
 ]
 
@@ -114,3 +116,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 GIT_DIR = BASE_DIR
 KEY_PATH = os.path.join(BASE_DIR, 'crypto_fields')
+
+if 'test' in sys.argv:
+
+    class DisableMigrations:
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return None
+
+    MIGRATION_MODULES = DisableMigrations()
+    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
+    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
