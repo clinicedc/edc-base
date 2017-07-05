@@ -39,9 +39,9 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         help_text='Updated by admin.save_model')
 
     hostname_created = models.CharField(
-        max_length=50,
+        max_length=60,
         blank=True,
-        default=socket.gethostname(),
+        default=socket.gethostname,
         help_text="System field. (modified on create only)",
     )
 

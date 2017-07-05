@@ -31,7 +31,7 @@ class HistoricalRecords(SimpleHistoricalRecords):
     def __init__(self, verbose_name=None, bases=(models.Model,),
                  user_related_name='+', table_name=None, inherit=False):
         bases = (SerializableModel, )
-        super(HistoricalRecords, self).__init__(
+        super().__init__(
             verbose_name=verbose_name, bases=bases, user_related_name=user_related_name,
             table_name=table_name, inherit=inherit)
 
