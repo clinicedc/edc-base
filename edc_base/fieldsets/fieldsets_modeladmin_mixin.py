@@ -177,7 +177,10 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         key = self.get_key(request, obj)
         fieldset = self.conditional_fieldsets.get(key)
         if fieldset:
-            fieldsets.add_fieldset(fieldset=fieldset)
+            if type(fieldset) not in [tuple, list]:
+                fieldset = (fieldset,)
+            for f in fieldset:
+                fieldsets.add_fieldset(fieldset=f)
         fieldlist = self.conditional_fieldlists.get(key)
         if fieldlist:
             try:
