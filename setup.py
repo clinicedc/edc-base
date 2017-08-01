@@ -10,14 +10,14 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='edc-base',
-    version='0.2.7',
+    version='0.2.8',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
     include_package_data=True,
     url='http://github.com/botswana-harvard/edc-base',
     license='GPL licence, see LICENCE',
-    description='Base models, forms and admin for botswana-harvard/edc modules.',
+    description='Base mixins and utilities for botswana-harvard/edc projects.',
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',

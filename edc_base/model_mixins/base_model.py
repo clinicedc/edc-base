@@ -3,19 +3,18 @@ import socket
 from django.db import models
 from django_revision import RevisionField
 
-from ..utils import get_utcnow
-
-from .constants import BASE_MODEL_UPDATE_FIELDS
 from ..model_fields import HostnameModificationField, UserField
-
+from ..utils import get_utcnow
 from .common_clean_model_mixin import CommonCleanModelMixin
+from .constants import BASE_MODEL_UPDATE_FIELDS
 from .url_mixin import UrlMixin
 
 
 class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
-    values for user, date and hostname (computer)."""
+    values for user, date and hostname (computer).
+    """
 
     get_latest_by = 'modified'
 
@@ -31,18 +30,18 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         max_length=50,
         blank=True,
         verbose_name='user created',
-    )
+        help_text='Updated by admin.save_model')
 
     user_modified = UserField(
         max_length=50,
         blank=True,
         verbose_name='user modified',
-    )
+        help_text='Updated by admin.save_model')
 
     hostname_created = models.CharField(
-        max_length=50,
+        max_length=60,
         blank=True,
-        default=socket.gethostname(),
+        default=socket.gethostname,
         help_text="System field. (modified on create only)",
     )
 
@@ -68,7 +67,7 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         except TypeError:
             pass
         self.modified = get_utcnow()
-        super(BaseModel, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @property
     def verbose_name(self):

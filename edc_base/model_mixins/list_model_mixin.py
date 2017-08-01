@@ -23,7 +23,6 @@ class ListModelMixin(models.Model):
         max_length=250,
         unique=True,
         db_index=True,
-        null=True,
         help_text='This is the stored value, required',
     )
 

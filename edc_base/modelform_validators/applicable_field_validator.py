@@ -1,9 +1,11 @@
-from django import forms
+from django.forms import ValidationError
 
 from edc_constants.constants import NOT_APPLICABLE
 
+from .base_form_validator import BaseFormValidator
 
-class ApplicableValidationMixin:
+
+class ApplicableFieldValidator(BaseFormValidator):
 
     def applicable_if(self, *responses, field=None, field_applicable=None):
         return self.applicable(
@@ -22,14 +24,14 @@ class ApplicableValidationMixin:
         if field in cleaned_data and field_applicable in cleaned_data:
             if (cleaned_data.get(field) in responses
                     and cleaned_data.get(field_applicable) == NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    'This field is applicable'})
+                message = {field_applicable: 'This field is applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='applicable')
             elif (cleaned_data.get(field) not in responses
                     and cleaned_data.get(field_applicable) != NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    'This field is not applicable'})
+                message = {field_applicable: 'This field is not applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='not_applicable')
         return False
 
     def not_applicable(self, *responses, field=None, field_applicable=None):
@@ -41,14 +43,14 @@ class ApplicableValidationMixin:
         if field in cleaned_data and field_applicable in cleaned_data:
             if (cleaned_data.get(field) in responses
                     and cleaned_data.get(field_applicable) != NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    'This field is not applicable'})
+                message = {field_applicable: 'This field is not applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='not_applicable')
             elif (cleaned_data.get(field) not in responses
                     and cleaned_data.get(field_applicable) == NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    'This field is applicable'})
+                message = {field_applicable: 'This field is not applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='not_applicable')
         return False
 
     def applicable_if_true(self, condition, field_applicable=None,
@@ -56,10 +58,10 @@ class ApplicableValidationMixin:
         cleaned_data = self.cleaned_data
         if field_applicable in cleaned_data:
             if (condition and self.cleaned_data.get(field_applicable) == NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    applicable_msg or 'This field is applicable.'})
+                message = {field_applicable: 'This field is applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='applicable')
             elif (not condition and self.cleaned_data.get(field_applicable) != NOT_APPLICABLE):
-                raise forms.ValidationError({
-                    field_applicable:
-                    not_applicable_msg or 'This field is not applicable.'})
+                message = {field_applicable: 'This field is not applicable'}
+                self._errors.update(message)
+                raise ValidationError(message, code='not_applicable')

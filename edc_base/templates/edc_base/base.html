@@ -92,7 +92,6 @@
             {% block topbar_navbar_apps %}
 
 	            {% for navbar_item in navbar %}
-	
 	                <li id="li-topbar-{{ navbar_item.html_id }}"
 	                   class="{%if navbar_item_selected == navbar_item.name %}active{%endif%}">
 	                    <a title="{{ navbar_item.title }}"

@@ -6,7 +6,8 @@ from edc_base.exceptions import NavbarError
 
 
 class EdcBaseViewMixin(RevisionMixin):
-    """Mixes in common template variables for the navbar and footer, etc."""
+    """Mixes in common template variables for the navbar and footer, etc.
+    """
 
     navbar_item_selected = None
     navbar_name = 'default'

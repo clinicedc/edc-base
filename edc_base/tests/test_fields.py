@@ -5,7 +5,7 @@ import socket
 
 from django.test import TestCase
 
-from edc_example.models import TestModel
+from .models import TestModel
 
 
 class TestFields(TestCase):

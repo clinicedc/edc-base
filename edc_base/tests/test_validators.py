@@ -5,9 +5,9 @@ from django import forms
 from django.test import TestCase
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 
-from .models import TestValidatorModel
 from ..model_validators import (
     MaxConsentAgeValidator, CompareNumbersValidator, MinConsentAgeValidator)
+from .models import TestValidatorModel
 
 
 class TestValidationForm(forms.ModelForm):

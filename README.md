@@ -74,6 +74,10 @@ On the ModelForm, just add the mixin. If you do override `clean()` be sure to ca
             return cleaned_data
 
 
+### ModelForm `FormValidator`
+
+`FormValidator` simplifies common patterns used in `ModelForm.clean`. For example, if there is a reponse to field A then there should not a be response to B and visa-versa. 
+
 
 ### Field Validators
 
@@ -101,7 +105,7 @@ Or you can use the special validators `MinConsentAgeValidator`, `MaxConsentAgeVa
 HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
 with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
 `get_extra_fields()` method is overridden to change the *history_id* primary key from an 
-`IntegerField` to a `UUIDField` so that it can work with edc-sync. Method `add_extra_methods()`
+`IntegerField` to a `UUIDField` so that it can work with module `edc-sync`. Method `add_extra_methods()`
 is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc_sync` is 
 in INSTALLED_APP.
 

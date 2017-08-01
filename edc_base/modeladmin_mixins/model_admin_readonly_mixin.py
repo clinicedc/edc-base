@@ -52,5 +52,5 @@ class ModelAdminReadOnlyMixin:
                 {'edc_readonly': request.GET.get('edc_readonly')})
             extra_context.update(
                 {'edc_readonly_next': request.GET.get(self.querystring_name)})
-        return super(ModelAdminReadOnlyMixin, self).change_view(
+        return super().change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)

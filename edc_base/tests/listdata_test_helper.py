@@ -1,7 +1,7 @@
 from django.apps import apps as django_apps
 
 
-class LoadListDataMixin:
+class ListdataTestHelper:
 
     list_data = None
 

@@ -23,9 +23,9 @@ class BaseModelAdminRedirectMixin:
             redirect_url = self.redirect_url_on_add(request, obj)
         if redirect_url:
             return HttpResponseRedirect(redirect_url)
-        return super().response_add(request, obj)
+        return super().response_add(request, obj, post_url_continue=post_url_continue)
 
-    def response_change(self, request, obj, post_url_continue=None):
+    def response_change(self, request, obj):
         redirect_url = None
         if '_addanother' not in request.POST and '_continue' not in request.POST:
             redirect_url = self.redirect_url_on_change(request, obj)

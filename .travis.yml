@@ -1,31 +1,26 @@
-dist: trusty
-sudo: required
 language: python
-python:
-- 3.5.1
-services:
-- mysql
-before_install:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- sleep 3
-branches:
-  only:
-  - develop
+
+python: "3.6"
+
+env:
+  - DJANGO_VERSION=1.11.2
+
+services: mysql
+
 install:
-- pip install --upgrade pip
-- pip install -r requirements.txt
-- pip install flake8
-- pip install coveralls
+  - pip3 install --upgrade pip setuptools
+  - pip3 install -q Django==$DJANGO_VERSION
+  - pip3 install flake8
+  - pip3 install coveralls
+  - pip3 install mysqlclient
+  - pip3 install -q -r requirements.txt
+
 before_script:
-- flake8 edc_base
-- mysql -e 'create database edc character set utf8;'
-- python manage.py makemigrations
-- python manage.py migrate
-script:
-- coverage run --source=edc_base manage.py test
+  - flake8 edc_base
+  - mysql -e 'create database edc character set utf8;'
+
+script: 
+  - coverage run --source=edc_base manage.py test
+
 after_success:
-- coveralls
-notifications:
-  slack:
-    secure: aAYcj+9lxsufePLZUtp0mQBTv53ShIY67uaBFSbf8/MwIF7IqkRLACyj4C+lSRMeQNFN0r7bkanhhEIPu3heN/UnTfF8pDJtxxzzFGdwdoKHxNqMzJkWkRS4Ro8A4dTG9stKsjD3Yl2Ldvhi6J5TUadsEWNkRN/jWAHJP1qlUrdd6qS/csg+5zTvLhvShXlvfzp9dWBjqcwVFNFh1cBbDEIEw9j+B20Q9K2zfcS7KHYITrgjRe1JtVlTkieO9ndN2QUmN4nGJnqQIzTBQBRLBbwAn+dX+bqOiZ3zgVdAcN5Xbd1TRvb3qo0hCPwFY/SmpXh+ycRLnO73uqtvUqBohIjE/fys4y0x+4uPgsGb6SYL1YXRAu8k6X85VPCfDvJPg9rdog89RP7U1aqS0wAieEvRZWDHOQcP0cilUr0ek07bOhNF9ecnRX1ZW20uyHVkE6lUHirb5+HJDTmzDUuddtPHUpPIrVJvZwkVXtFnd9qU9b6r+foz99QRPbjo+ehJjGtOFTEzPXQDC8tyfZsbncjiLBMUl0DOy7FkMuDg9cHtwjzJ5u2Gt/gHQ6EzyG7dlherzhyGNwuBihB0chCA1QM4cPH0ogIA3Qg2qakcd6DK4F/AMw+Jt6zh9cZ3McgCrGadgQsufsTBylH8hSKElUyCjOR6QGgQ1sBX6jCZWcE=
+  - coveralls

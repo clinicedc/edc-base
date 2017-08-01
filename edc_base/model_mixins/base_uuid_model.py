@@ -1,11 +1,15 @@
 from ..model_fields import UUIDAutoField
 
+from edc_device.model_mixins import DeviceModelMixin
+
 from .base_model import BaseModel
 
 
-class BaseUuidModel(BaseModel):
+class BaseUuidModel(DeviceModelMixin, BaseModel):
 
-    """Base model class for all models using an UUID and not an INT for the primary key. """
+    """Base model class for all models using an UUID and not
+    an INT for the primary key.
+    """
 
     id = UUIDAutoField(
         blank=True,
@@ -13,5 +17,5 @@ class BaseUuidModel(BaseModel):
         help_text="System auto field. UUID primary key.",
         primary_key=True)
 
-    class Meta:
+    class Meta(BaseModel.Meta):
         abstract = True
