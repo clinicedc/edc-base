@@ -6,13 +6,9 @@ from edc_constants.constants import YES, NO, DWTA, NOT_APPLICABLE
 from ..modelform_validators import FormValidator
 from ..modelform_validators import ModelFormFieldValidatorError, InvalidModelFormFieldValidator
 from .models import TestModel
-
-
-class TestModelForm(forms.ModelForm):
-
-    class Meta:
-        model = TestModel
-        fields = '__all__'
+from edc_base.modelform_validators.form_validator_mixin import FormValidatorMixin
+from pprint import pprint
+from edc_base.modelform_validators.base_form_validator import NOT_REQUIRED_ERROR
 
 
 # class TestModelForms(TestCase):
@@ -38,7 +34,6 @@ class TestModelForm(forms.ModelForm):
 #         self.assertTrue(form.is_valid())
 
 
-@tag('forms')
 class TestFieldValidator(TestCase):
 
     def test_form_validator(self):
@@ -83,7 +78,6 @@ class TestFieldValidator(TestCase):
             form_validator.required_if, YES, field='field')
 
 
-@tag('forms')
 class TestRequiredFieldValidator1(TestCase):
     """Test required_if().
     """
@@ -140,7 +134,6 @@ class TestRequiredFieldValidator1(TestCase):
             self.fail(f'forms.ValidationError unexpectedly raised. Got {e}')
 
 
-@tag('forms')
 class TestRequiredFieldValidator2(TestCase):
     """Test not_required_if().
     """
@@ -189,25 +182,21 @@ class TestRequiredFieldValidator2(TestCase):
             self.fail(f'Exception unexpectedly raised. Got {e}')
 
 
-@tag('forms')
 class TestFormValidatorInForm(TestCase):
 
-    @tag('2')
     def test_form(self):
 
         class TestFormValidator(FormValidator):
+
             def clean(self):
                 self.required_if(
                     YES,
                     field='f1',
                     field_required='f2')
 
-        class TestModelForm(forms.ModelForm):
+        class TestModelForm(FormValidatorMixin, forms.ModelForm):
 
-            def clean(self):
-                cleaned_data = super().clean()
-                form_validator = TestFormValidator(cleaned_data=cleaned_data)
-                return form_validator.clean()
+            form_validator_cls = TestFormValidator
 
             class Meta:
                 model = TestModel
@@ -216,5 +205,7 @@ class TestFormValidatorInForm(TestCase):
         form = TestModelForm(data=dict(f1=NO, f2='blah'))
         self.assertFalse(form.is_valid())
         self.assertIn('f2', form._errors)
+        self.assertEqual(['This field is not required.'],
+                         form._errors.get('f2'))
         form = TestModelForm(data=dict(f1=YES, f2='blah'))
         self.assertNotIn('f2', form._errors or {})
