@@ -25,7 +25,8 @@ class UrlMixin(models.Model):
 
     @property
     def admin_url_name(self):
-        """Returns the django admin add or change url name.
+        """Returns the django admin add or change url name
+        (includes namespace).
         """
         if self.id:
             mode = 'change'
