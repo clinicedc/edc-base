@@ -29,6 +29,7 @@ setup(
         'django-crispy-forms',
         'django-extensions',
         'python-dateutil',
+        'docutils',
         'model_mommy',
         'Faker',
         'pytz',
