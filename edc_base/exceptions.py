@@ -17,7 +17,3 @@ class AgeValueError(Exception):
 
 class CommonCleanError(Exception):
     pass
-
-
-class NavbarError(Exception):
-    pass

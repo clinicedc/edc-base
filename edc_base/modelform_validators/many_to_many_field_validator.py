@@ -4,6 +4,7 @@ from edc_constants.constants import NOT_APPLICABLE
 
 from .base_form_validator import BaseFormValidator, NOT_APPLICABLE_ERROR, APPLICABLE_ERROR
 from .base_form_validator import NOT_REQUIRED_ERROR, REQUIRED_ERROR, INVALID_ERROR
+from pprint import pprint
 
 
 class ManyToManyFieldValidator(BaseFormValidator):
@@ -53,7 +54,7 @@ class ManyToManyFieldValidator(BaseFormValidator):
                     raise ValidationError(message, code=INVALID_ERROR)
         return False
 
-    def m2m_other_specify(self, *responses, m2m_field=None, field_other=None, cleaned_data=None):
+    def m2m_other_specify(self, *responses, m2m_field=None, field_other=None):
         """Raises an exception or returns False.
 
         field_other is required if a selected response from m2m_field

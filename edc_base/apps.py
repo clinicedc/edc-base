@@ -7,7 +7,7 @@ from django.core.management.color import color_style
 from django.core.exceptions import ImproperlyConfigured
 
 from .address import Address
-from .navbar_item import NavbarItem
+from .navbar import NavbarItem
 from .utils import get_utcnow
 
 style = color_style()
@@ -36,19 +36,11 @@ class AppConfig(DjangoAppConfig):
             label='Section',
             app_config_name='edc_base')]}
 
-    def __init__(self, app_name, app_module):
-        self._navbars = {}
-        super().__init__(app_name, app_module)
-
-    def get_navbars(self):
-        return self.navbars
-
     def ready(self):
-        self.navbars = self.get_navbars()
-        sys.stdout.write('Loading {} ...\n'.format(self.verbose_name))
+        sys.stdout.write(f'Loading {self.verbose_name} ...\n')
         connection_created.connect(activate_foreign_keys)
         sys.stdout.write(
-            ' * default TIME_ZONE {}.\n'.format(settings.TIME_ZONE))
+            f' * default TIME_ZONE {settings.TIME_ZONE}.\n')
         if not settings.USE_TZ:
             raise ImproperlyConfigured('EDC requires settings.USE_TZ = True')
-        sys.stdout.write(' Done loading {}.\n'.format(self.verbose_name))
+        sys.stdout.write(f' Done loading {self.verbose_name}.\n')

@@ -4,6 +4,7 @@ django-simple-history
 django-js-reverse
 django-crispy-forms
 django-extensions
+docutils
 python-dateutil
 model_mommy
 Faker

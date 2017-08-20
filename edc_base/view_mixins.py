@@ -2,44 +2,22 @@ from django.apps import apps as django_apps
 from django.conf import settings
 from django_revision.views import RevisionMixin
 
-from edc_base.exceptions import NavbarError
+from .navbar import NavbarViewMixin
 
 
-class EdcBaseViewMixin(RevisionMixin):
+class EdcBaseViewMixin(NavbarViewMixin, RevisionMixin):
     """Mixes in common template variables for the navbar and footer, etc.
     """
-
-    navbar_item_selected = None
-    navbar_name = 'default'
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.navbar = None
-        self.navbars = django_apps.get_app_config('edc_base').navbars
 
     def get_context_data(self, **kwargs):
         edc_device_app_config = django_apps.get_app_config('edc_device')
         context = super().get_context_data(**kwargs)
         context = self.get_edc_base_extra_context(context)
-        context = self.get_navbar_context(context)
         context.update({
             'DEBUG': settings.DEBUG,
             'device_id': edc_device_app_config.device_id,
             'device_role': edc_device_app_config.device_role,
         })
-        return context
-
-    def get_navbar_context(self, context):
-        self.navbar = self.navbars.get(self.navbar_name or 'default')
-        if self.navbar_item_selected:
-            if self.navbar_item_selected not in [navbar_item.name for navbar_item in self.navbar]:
-                raise NavbarError(
-                    'Navbar item does not exist. Got {}. Expected one of {}'.format(
-                        self.navbar_item_selected, self.navbar))
-        context.update({
-            'navbar_item_selected': self.navbar_item_selected,
-            'navbar': self.navbar,
-            'navbar_name': self.navbar_name})
         return context
 
     def get_edc_base_extra_context(self, extra_context):

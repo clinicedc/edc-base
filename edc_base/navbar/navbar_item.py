@@ -1,5 +1,8 @@
 from django.apps import apps as django_apps
-from edc_base.exceptions import NavbarError
+
+
+class NavbarError(Exception):
+    pass
 
 
 class NavbarItem:
