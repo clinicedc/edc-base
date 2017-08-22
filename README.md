@@ -76,27 +76,60 @@ On the ModelForm, just add the mixin. If you do override `clean()` be sure to ca
 
 ### ModelForm `FormValidator`
 
-`FormValidator` simplifies common patterns used in `ModelForm.clean`. For example, if there is a reponse to field A then there should not a be response to B and visa-versa. 
+`FormValidator` simplifies common patterns used in `ModelForm.clean`. For example, if there is a response to field A then there should not a be response to B and visa-versa.
 
+Declare a form with it's `form_validator` class and use `FormValidatorMixin`:
 
-### Field Validators
+        class MyFormValidator(FormValidator):
+
+            def clean(self):
+                self.required_if(
+                    YES,
+                    field='f1',
+                    field_required='f2')
+                ...
+
+        class MyModelForm(FormValidatorMixin, forms.ModelForm):
+
+            form_validator_cls = MyFormValidator
+
+            class Meta:
+                model = TestModel
+                fields = '__all__'
+ 
+
+#### Testing:
+
+Test the `form_validator` without having to instantiate the `ModelForm`:
+
+    def test_my_form_validator(self):
+        options = {
+            'f1': YES,
+            'f2': None}
+        form_validator = MyFormValidator(cleaned_data=options)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('f2', form_validator._errors)
+
+### Model Field Validators
 
 __CompareNumbersValidator:__ Compare the field value to a static value. For example, validate that the
 age of consent is between 18 and 64. 
 
-	consent_age = models.IntegerField(
-	    validators=[
-	        CompareNumbersValidator(18, '>=', message='Age of consent must be {}. Got {}'),
-	        CompareNumbersValidator(64, '<=', message='Age of consent must be {}. Got {}')
-	    ]
+    consent_age = models.IntegerField(
+        validators=[
+            CompareNumbersValidator(18, '>=', message='Age of consent must be {}. Got {}'),
+            CompareNumbersValidator(64, '<=', message='Age of consent must be {}. Got {}')
+        ]
 
 Or you can use the special validators `MinConsentAgeValidator`, `MaxConsentAgeValidator`:
 
-	consent_age = models.IntegerField(
-	    validators=[
-	        MinConsentAgeValidator(18),
-	        MaxConsentAgeValidator(64)
-	    ]
+    consent_age = models.IntegerField(
+        validators=[
+            MinConsentAgeValidator(18),
+            MaxConsentAgeValidator(64)
+        ]
+
+
 
 ### Audit trail (HistoricalRecord):
 
