@@ -29,7 +29,7 @@ class Command(BaseCommand):
             import_module(f'{app_label}.{self.module_name}')
 
     def autodiscover(self):
-        """Autodiscovers rules in the metadata_rules.py file
+        """Autodiscovers rules in the "module_name".py file
         of any INSTALLED_APP.
         """
         sys.stdout.write(f' * checking for {self.module_name} ...\n')
@@ -38,9 +38,9 @@ class Command(BaseCommand):
                 mod = import_module(app)
                 try:
                     import_module(f'{app}.{self.module_name}')
-                except Exception:
+                except Exception as e:
                     if module_has_submodule(mod, self.module_name):
-                        raise
+                        raise CommandError(e)
                 else:
                     sys.stdout.write(
                         f'   - imported list data from \'{app}.{self.module_name}\'\n')
