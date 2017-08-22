@@ -33,6 +33,14 @@ class BaseFormValidator:
         if cleaned_data is None:
             raise ModelFormFieldValidatorError(
                 f'{repr(self)}. Expected a cleaned_data dictionary. Got None.')
+        try:
+            self.instance.id
+        except AttributeError:
+            self.add_form = True
+            self.change_form = False
+        else:
+            self.add_form = False
+            self.change_form = True
 
     def __repr__(self):
         return f'{self.__class__.__name__}(cleaned_data={self.cleaned_data})'
