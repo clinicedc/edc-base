@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.db.models import CharField, DateTimeField, DecimalField
 from django.forms import RegexField
 
-from ..choices import DATE_ESTIMATED, IDENTITY_TYPE
+from ..choices import IDENTITY_TYPE
 
 
 class OtherCharField(CharField):
@@ -53,25 +53,6 @@ class DobField(DateTimeField):
 
     def get_internal_type(self):
         return "DateTimeField"
-
-
-class IsDateEstimatedField(CharField):
-
-    """field to question if date is estimated"""
-
-    description = _("Custom field to question if date is estimated")
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('editable', True)
-        kwargs.setdefault('max_length', 25)
-        kwargs.setdefault('choices', DATE_ESTIMATED)
-        kwargs.setdefault(
-            'help_text',
-            _('If the exact date is not known, please indicate which part of the date is estimated.'))
-        CharField.__init__(self, *args, **kwargs)
-
-    def get_internal_type(self):
-        return "CharField"
 
 
 class NameField(CharField):
