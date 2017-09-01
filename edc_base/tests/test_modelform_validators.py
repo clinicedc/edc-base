@@ -182,6 +182,34 @@ class TestRequiredFieldValidator2(TestCase):
             self.fail(f'Exception unexpectedly raised. Got {e}')
 
 
+class TestApplicableFieldValidator(TestCase):
+    """Test applicable_if().
+    """
+
+    def test_applicable_if(self):
+        """Asserts field_two applicable if YES.
+        """
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=YES, field_two=NOT_APPLICABLE))
+        self.assertRaises(
+            forms.ValidationError,
+            form_validator.applicable_if,
+            YES, field='field_one', field_applicable='field_two')
+
+    def test_applicable_if_true(self):
+        """Asserts field_two applicable if test_con1 and test_con2
+        are YES.
+        """
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=('test_con1' == YES and
+                                         'test_con2' == YES),
+                              field_two=NOT_APPLICABLE))
+        self.assertRaises(
+            forms.ValidationError,
+            form_validator.applicable_if_true,
+            condition='field_one', field_applicable='field_two')
+
+
 class TestFormValidatorInForm(TestCase):
 
     def test_form(self):
