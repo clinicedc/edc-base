@@ -4,7 +4,6 @@ from edc_constants.constants import NOT_APPLICABLE
 
 from .base_form_validator import BaseFormValidator, NOT_APPLICABLE_ERROR, APPLICABLE_ERROR
 from .base_form_validator import NOT_REQUIRED_ERROR, REQUIRED_ERROR, INVALID_ERROR
-from pprint import pprint
 
 
 class ManyToManyFieldValidator(BaseFormValidator):
