@@ -209,6 +209,28 @@ class TestApplicableFieldValidator(TestCase):
             form_validator.applicable_if_true,
             condition='field_one', field_applicable='field_two')
 
+    def test_not_applicable_only_if(self):
+        """Asserts field_two is not applicable if test_con1 is No.
+        """
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=NO, field_two=10))
+        self.assertRaises(
+            forms.ValidationError,
+            form_validator.not_applicable_only_if,
+            NO,
+            field='field_one', field_applicable='field_two')
+
+    def test_not_applicable_only_if2(self):
+        """Asserts field_two is not applicable if test_con1 is No.
+        """
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=NO, field_two=None))
+        try:
+            form_validator.not_required_if(
+                NO, field='field_one', field_required='field_two')
+        except (ModelFormFieldValidatorError, InvalidModelFormFieldValidator) as e:
+            self.fail(f'Exception unexpectedly raised. Got {e}')
+
 
 class TestFormValidatorInForm(TestCase):
 
