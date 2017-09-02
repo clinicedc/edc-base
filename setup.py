@@ -10,7 +10,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='edc-base',
-    version='0.2.13',
+    version='0.2.14',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -27,6 +27,7 @@ setup(
         'django-simple-history',
         'django-js-reverse',
         'django-crispy-forms',
+        'django-debug-toolbar',
         'django-extensions',
         'python-dateutil',
         'docutils',
