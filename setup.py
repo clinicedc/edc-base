@@ -27,6 +27,7 @@ setup(
         'django-simple-history',
         'django-js-reverse',
         'django-crispy-forms',
+        'django-debug-toolbar',
         'django-extensions',
         'python-dateutil',
         'docutils',
