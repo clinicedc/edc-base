@@ -4,6 +4,7 @@ django-simple-history
 django-js-reverse
 django-crispy-forms
 django-debug-toolbar
+python3-memcached
 django-extensions
 docutils
 python-dateutil
