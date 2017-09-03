@@ -16,6 +16,18 @@ class ApplicableFieldValidator(BaseFormValidator):
         return self.not_applicable(
             *responses, field=field, field_applicable=field_applicable)
 
+    def not_applicable_only_if(self, *responses, field=None, field_applicable=None, cleaned_data=None):
+
+        cleaned_data = self.cleaned_data
+        if (cleaned_data.get(field) in responses
+            and ((cleaned_data.get(field_applicable)
+                  and cleaned_data.get(field_applicable) != None))):
+            message = {
+                field_applicable: 'This field is not required.'}
+            self._errors.update(message)
+            self._error_codes.append(NOT_APPLICABLE_ERROR)
+            raise ValidationError(message, code=NOT_APPLICABLE_ERROR)
+
     def applicable(self, *responses, field=None, field_applicable=None):
         """Returns False or raises a validation error for field
         pattern where response to question 1 makes
