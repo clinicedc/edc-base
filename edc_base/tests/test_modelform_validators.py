@@ -237,3 +237,59 @@ class TestFormValidatorInForm(TestCase):
                          form._errors.get('f2'))
         form = TestModelForm(data=dict(f1=YES, f2='blah'))
         self.assertNotIn('f2', form._errors or {})
+
+
+class TestRequiredIfNotNoneFieldValidator(TestCase):
+    """Test required_if_not_none().
+    """
+
+    def test_ignored(self):
+        form_validator = FormValidator(cleaned_data=dict(not_this_field=1))
+        try:
+            form_validator.required_if_not_none(
+                field='field_one', field_required='field_two')
+        except (ModelFormFieldValidatorError, InvalidModelFormFieldValidator) as e:
+            self.fail(f'Exception unexpectedly raised. Got {e}')
+
+    def test_raises_for_missing_field_required_value(self):
+        form_validator = FormValidator(cleaned_data=dict(field_one=YES))
+        self.assertRaises(
+            forms.ValidationError,
+            form_validator.required_if_not_none,
+            field='field_one', field_required='field_two')
+
+    def test_required_values_provided_ok(self):
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one='nothing', field_two='something'))
+        try:
+            form_validator.required_if_not_none(
+                field='field_one', field_required='field_two')
+        except forms.ValidationError as e:
+            self.fail(f'forms.ValidationError unexpectedly raised. Got {e}')
+
+    def test_not_required_but_field_value_provided_raises(self):
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=None, field_two='something'))
+        self.assertRaises(
+            forms.ValidationError,
+            form_validator.required_if_not_none,
+            field='field_one', field_required='field_two')
+
+    def test_required_field_value_not_applicable_ok(self):
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=None, field_two=NOT_APPLICABLE))
+        try:
+            form_validator.required_if_not_none(
+                field='field_one', field_required='field_two')
+        except forms.ValidationError as e:
+            self.fail(f'forms.ValidationError unexpectedly raised. Got {e}')
+
+    def test_required_field_value_dwta_ok(self):
+        form_validator = FormValidator(
+            cleaned_data=dict(field_one=DWTA))
+        try:
+            form_validator.required_if_not_none(
+                field='field_one', field_required='field_two',
+                optional_if_dwta=True)
+        except forms.ValidationError as e:
+            self.fail(f'forms.ValidationError unexpectedly raised. Got {e}')
