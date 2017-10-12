@@ -64,7 +64,7 @@ class ApplicableFieldValidator(BaseFormValidator):
                 raise ValidationError(message, code=NOT_APPLICABLE_ERROR)
             elif (cleaned_data.get(field) not in responses
                     and cleaned_data.get(field_applicable) == NOT_APPLICABLE):
-                message = {field_applicable: 'This field is not applicable'}
+                message = {field_applicable: 'This field is applicable'}
                 self._errors.update(message)
                 self._error_codes.append(NOT_APPLICABLE_ERROR)
                 raise ValidationError(message, code=NOT_APPLICABLE_ERROR)
