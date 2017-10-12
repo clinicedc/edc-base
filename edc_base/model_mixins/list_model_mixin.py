@@ -1,6 +1,6 @@
 from django.db import models
 
-from ..model_managers import BaseListManager
+from ..model_managers import ListModelManager
 
 
 class ListModelMixin(models.Model):
@@ -47,7 +47,7 @@ class ListModelMixin(models.Model):
         editable=False,
         default='1.0',
     )
-    objects = BaseListManager()
+    objects = ListModelManager()
 
     def __str__(self):
         return self.name

@@ -30,7 +30,7 @@ class PreloadData:
         """
         for model_name in self.list_data.keys():
             try:
-                model = django_apps.get_model(*model_name.split('.'))
+                model = django_apps.get_model(model_name)
                 for data in self.list_data.get(model_name):
                     short_name, display_value = data
                     try:

@@ -37,6 +37,8 @@ class AppConfig(DjangoAppConfig):
             app_config_name='edc_base')]}
 
     def ready(self):
+        from .signals import update_user_profile_on_post_save
+
         sys.stdout.write(f'Loading {self.verbose_name} ...\n')
         connection_created.connect(activate_foreign_keys)
         sys.stdout.write(
