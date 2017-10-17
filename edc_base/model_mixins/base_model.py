@@ -5,8 +5,8 @@ from django_revision import RevisionField
 
 from ..model_fields import HostnameModificationField, UserField
 from ..utils import get_utcnow
+from ..constants import BASE_MODEL_UPDATE_FIELDS
 from .common_clean_model_mixin import CommonCleanModelMixin
-from .constants import BASE_MODEL_UPDATE_FIELDS
 from .url_mixin import UrlMixin
 
 
