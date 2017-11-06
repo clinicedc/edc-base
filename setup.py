@@ -24,7 +24,7 @@ setup(
     install_requires=[
         'django',
         'django-braces',
-        'django-simple-history',
+        # 'django-simple-history',  until new release
         'django-js-reverse',
         'django-crispy-forms',
         'django-debug-toolbar',

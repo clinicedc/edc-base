@@ -7,7 +7,6 @@ from django.core.management.color import color_style
 from django.core.exceptions import ImproperlyConfigured
 
 from .address import Address
-from .navbar import NavbarItem
 from .utils import get_utcnow
 
 style = color_style()
@@ -22,19 +21,14 @@ def activate_foreign_keys(sender, connection, **kwargs):
 
 class AppConfig(DjangoAppConfig):
     name = 'edc_base'
-    institution = 'My Institution'
-    project_name = 'My Project Title'
+    institution = 'Institution (see edc_base.AppConfig.institution)'
+    project_name = 'Project Title (see edc_base.AppConfig.project_name)'
     physical_address = Address()
     postal_address = Address()
     copyright = get_utcnow().year
     license = None
     disclaimer = 'For research purposes only.'
     default_url_name = 'home_url'
-    navbars = {
-        'default':
-        [NavbarItem(
-            label='Section',
-            app_config_name='edc_base')]}
 
     def ready(self):
         from .signals import update_user_profile_on_post_save

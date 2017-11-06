@@ -10,20 +10,20 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>{{ project_name }}</title>
 
-    <link rel="icon" href="{% static "favicon.ico" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/css/flaticon/flaticon.css" %}"> 
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/flaticon/flaticon.css' %}"> 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/css/bootstrap.min.css" %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/bootstrap.min.css' %}" >
 
     <!--
     <link rel="stylesheet" type="text/css" href="https://nightly.datatables.net/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{% static "datatables/1.10.11/css/select.dataTables.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "datatables/1.10.11/css/buttons.dataTables.min.css" %}">
     -->
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/css/font-awesome/css/font-awesome.min.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/css/sticky-footer-navbar.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/datetimepicker/css/datetimepicker.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "edc_base/css/edc_base.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/sticky-footer-navbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/datetimepicker/css/datetimepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/edc_base.css' %}">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script type="text/javascript" charset="utf8" src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -37,15 +37,15 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/jquery.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/bootstrap.min.js" %}"></script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/ie10-viewport-bug-workaround.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/jquery.form.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/js.cookies.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/moment.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{%static "edc_base/js/edc-base.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/ie10-viewport-bug-workaround.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.form.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/js.cookies.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/moment.min.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/edc-base.js" %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static "edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
 
     <!-- don't forget to run python manage.py collectstatic_js_reverse. See https://github.com/ierror/django-js-reverse -->
@@ -65,7 +65,7 @@
 <!-- end extra-scripts by app ================================================== -->
 {% endblock header %}
   </head>
-<body class="edc-body" >
+<body class="edc-body" >h
 {% block topbar %}
 <!-- topbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -91,39 +91,18 @@
 
             {% block topbar_navbar_apps %}
 
-	            {% for navbar_item in navbar %}
-	                <li id="li-topbar-{{ navbar_item.html_id }}"
-	                   class="{%if navbar_item_selected == navbar_item.name %}active{%endif%}">
-	                    <a title="{{ navbar_item.title }}"
-	                        href="{% url navbar_item.url_name %}">
-	                        {% if navbar_item.fa_icon %}
-	                           <i class="fa {{navbar_item.fa_icon}} fa-fw"></i>
-	                        {% endif %}
-	                        {% if navbar_item.label %}
-	                           {{ navbar_item.label|title }}
-	                        {% endif %}
-	                    </a>
-	                </li>
-	
+	            {% for rendered_navbar_item in rendered_navbar %}
+                    {{ rendered_navbar_item }}
 	            {% endfor %}
 
             {% endblock topbar_navbar_apps %}
 
             {% block topbar_navbar_extra_items %}{% endblock topbar_navbar_extra_items %}
 
-            <li id="li-topbar-home"><a class="glyphicon glyphicon-home" title="home" href="{% url 'home_url' %}"></a></li>
-            
             {% block settings_url %}
-
-              <li id="li-topbar-settings">
-                <a class="fa fa-wrench fa-lg" title="settings" href="{% url 'edc_base:settings_url' %}">
-                </a>
-              </li>
-
             {% endblock settings_url %}
 
-            <li id="li-topbar-user-profile"><a title="user profile" href="{% url "admin:auth_user_change" user.id %}">{{ user.username }}</a></li>
-            <li id="li-topbar-logout"><a class="glyphicon glyphicon-log-out" title="logout" href="{% url 'logout_url' %}"></a></li>
+            <li id="li-topbar-user-profile"><a title="user profile" href="{% url 'admin:auth_user_change' user.id %}">{{ user.username }}</a></li>
           </ul>
         </div>
 

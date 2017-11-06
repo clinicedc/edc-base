@@ -1,9 +1,9 @@
 from django.apps import apps as django_apps
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 
 from .fieldsets import Fieldsets
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class FormLabel:
@@ -138,11 +138,12 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
     def get_appointment(self, request):
         """Returns the appointment instance for this request or None.
         """
-        Appointment = django_apps.get_app_config('edc_appointment').model
+        appointment_model_cls = django_apps.get_model(
+            django_apps.get_app_config('edc_appointment').model)
         try:
-            return Appointment.objects.get(
+            return appointment_model_cls.objects.get(
                 pk=request.GET.get('appointment'))
-        except Appointment.DoesNotExist:
+        except ObjectDoesNotExist:
             return None
 
     def get_instance(self, request):
@@ -177,8 +178,10 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         key = self.get_key(request, obj)
         fieldset = self.conditional_fieldsets.get(key)
         if fieldset:
-            if type(fieldset) not in [tuple, list]:
-                fieldset = (fieldset,)
+            try:
+                fieldset = tuple(fieldset)
+            except TypeError:
+                fieldset = (fieldset, )
             for f in fieldset:
                 fieldsets.add_fieldset(fieldset=f)
         fieldlist = self.conditional_fieldlists.get(key)

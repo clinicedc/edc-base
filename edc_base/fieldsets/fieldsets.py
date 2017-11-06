@@ -27,6 +27,18 @@ class Fieldsets:
             fields = fieldset.fieldset[1]['fields']
         self.fieldsets_asdict.update({section: {'fields': fields}})
 
+    def add_fieldsets(self, fieldsets=None):
+        """Adds a list of fieldsets.
+        """
+        try:
+            fieldsets = list(fieldsets)
+        except TypeError:
+            fieldsets = [fieldsets]
+        for fieldset in fieldsets:
+            section = fieldset.fieldset[0]
+            fields = fieldset.fieldset[1]['fields']
+            self.fieldsets_asdict.update({section: {'fields': fields}})
+
     def insert_fields(self, *insert_fields, insert_after=None, section=None):
         """Inserts fields after insert_after in the given section.
         """
