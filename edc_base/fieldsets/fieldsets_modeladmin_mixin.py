@@ -139,8 +139,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
     def get_appointment(self, request):
         """Returns the appointment instance for this request or None.
         """
-        appointment_model_cls = django_apps.get_model(
-            django_apps.get_model(self.appointment_model))
+        appointment_model_cls = django_apps.get_model(self.appointment_model)
         try:
             return appointment_model_cls.objects.get(
                 pk=request.GET.get('appointment'))
