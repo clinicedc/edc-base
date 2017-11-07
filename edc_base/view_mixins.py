@@ -12,7 +12,6 @@ class EdcBaseViewMixin(RevisionMixin, ContextMixin):
         app_config = django_apps.get_app_config('edc_base')
         edc_device_app_config = django_apps.get_app_config('edc_device')
         context = super().get_context_data(**kwargs)
-        context = self.get_edc_base_extra_context(context)
         context.update({
             'DEBUG': settings.DEBUG,
             'copyright': app_config.copyright,
