@@ -1,6 +1,7 @@
 from django.apps import apps as django_apps
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 from django.utils.safestring import mark_safe
 
 from .fieldsets import Fieldsets
@@ -40,7 +41,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
     * Model is expected to have a relation to have subject_visit__appointment.
     * Expects appointment to be in GET"""
 
-    appointment_model = 'edc_appointment.appointment'
+    appointment_model = settings.DEFAULT_APPOINTMENT_MODEL or 'edc_appointment.appointment'
     # key: value where key is a visit_code. value is a fieldlist object
     conditional_fieldlists = {}
     # key: value where key is a visit code. value is a fieldsets object.
@@ -140,6 +141,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """Returns the appointment instance for this request or None.
         """
         appointment_model_cls = django_apps.get_model(self.appointment_model)
+        print('??????????????_____', appointment_model_cls)
         try:
             return appointment_model_cls.objects.get(
                 pk=request.GET.get('appointment'))
@@ -152,6 +154,7 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
         For example: appointment.
         """
+        print('>>>>>>>>>>>>>>>___', self.get_appointment(request))
         return self.get_appointment(request)
 
     def get_key(self, request, obj=None):
