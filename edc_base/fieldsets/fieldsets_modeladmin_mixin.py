@@ -141,7 +141,6 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
         """Returns the appointment instance for this request or None.
         """
         appointment_model_cls = django_apps.get_model(self.appointment_model)
-        print('??????????????_____', appointment_model_cls)
         try:
             return appointment_model_cls.objects.get(
                 pk=request.GET.get('appointment'))
@@ -154,7 +153,6 @@ class FieldsetsModelAdminMixin(admin.ModelAdmin):
 
         For example: appointment.
         """
-        print('>>>>>>>>>>>>>>>___', self.get_appointment(request))
         return self.get_appointment(request)
 
     def get_key(self, request, obj=None):
