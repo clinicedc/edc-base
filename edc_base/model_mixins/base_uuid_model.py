@@ -1,7 +1,6 @@
-from ..model_fields import UUIDAutoField
-
 from edc_device.model_mixins import DeviceModelMixin
 
+from ..model_fields import UUIDAutoField
 from .base_model import BaseModel
 
 

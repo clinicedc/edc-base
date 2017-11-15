@@ -1,8 +1,7 @@
-import sys
-
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.deletion import PROTECT
-from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
@@ -27,5 +26,5 @@ class UserProfile(models.Model):
         help_text='user\'s country of origin')
 
 
-if 'test' in sys.argv:
+if settings.APP_NAME == 'edc_base':
     from .tests.models import TestModel, TestValidatorModel

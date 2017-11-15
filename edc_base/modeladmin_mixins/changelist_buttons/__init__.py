@@ -11,7 +11,7 @@ class ModelAdminChangelistButtonMixin:
                title=None, namespace=None):
         label = label or 'change'
         if namespace:
-            url_name = '{}:{}'.format(namespace, url_name)
+            url_name = f'{namespace}:{url_name}'
         url = reverse(url_name, args=reverse_args)
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
@@ -19,7 +19,7 @@ class ModelAdminChangelistButtonMixin:
                       label=None, title=None, namespace=None):
         label = label or 'change'
         if namespace:
-            url_name = '{}:{}'.format(namespace, url_name)
+            url_name = f'{namespace}:{url_name}'
         url = reverse(url_name, args=reverse_args)
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
@@ -27,7 +27,7 @@ class ModelAdminChangelistButtonMixin:
                    querystring=None, namespace=None, title=None):
         label = label or 'add'
         if namespace:
-            url_name = '{}:{}'.format(namespace, url_name)
+            url_name = f'{namespace}:{url_name}'
         url = reverse(url_name) + '' if querystring is None else querystring
         return self.button_template(label, url=url, disabled=disabled, title=title)
 
@@ -75,9 +75,7 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
         label = label or 'change'
         namespace = namespace or 'admin'
         url = reverse(
-            '{namespace}:{app_label}_{model_name}_change'.format(
-                namespace=namespace, app_label=app_label,
-                model_name=model_name),
+            f'{namespace}:{app_label}_{model_name}_change',
             args=reverse_args)
         return self.button_template(label, url=url, title=title)
 
@@ -86,8 +84,7 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
         label = label or 'add'
         namespace = namespace or 'admin'
         url = reverse(
-            ('{namespace}:{app_label}_{model_name}_add'.format(
-                namespace=namespace, app_label=app_label, model_name=model_name))
+            (f'{namespace}:{app_label}_{model_name}_add')
             + (querystring or ''))
         return self.button_template(label, url=url, title=title)
 
@@ -100,10 +97,9 @@ class ModelAdminChangelistModelButtonMixin(ModelAdminChangelistButtonMixin):
         namespace = namespace or 'admin'
         querystring = ''
         if querystring_value:
-            querystring = '?q={}'.format(querystring_value)
+            querystring = f'?q={querystring_value}'
         url = reverse(
-            ('{namespace}:{app_label}_{model_name}_changelist'.format(
-                namespace=namespace, app_label=app_label, model_name=model_name))
+            (f'{namespace}:{app_label}_{model_name}_changelist')
             + querystring)
         return self.button_template(label, disabled=disabled, title=title, url=url)
 

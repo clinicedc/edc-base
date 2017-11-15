@@ -1,7 +1,6 @@
-from django.urls import reverse
+from django.urls import reverse, NoReverseMatch
 
 from .base_model_admin_redirect_mixin import BaseModelAdminRedirectMixin
-from django.urls.exceptions import NoReverseMatch
 
 
 class ModelAdminNextUrlRedirectError(Exception):
@@ -34,5 +33,6 @@ class ModelAdminNextUrlRedirectMixin(BaseModelAdminRedirectMixin):
             try:
                 redirect_url = reverse(url_name, kwargs=options)
             except NoReverseMatch as e:
-                raise ModelAdminNextUrlRedirectError(f'{e}. Got url_name={url_name}, kwargs={options}.')
+                raise ModelAdminNextUrlRedirectError(
+                    f'{e}. Got url_name={url_name}, kwargs={options}.')
         return redirect_url

@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
-from django.urls import reverse
-from django.urls.exceptions import NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.utils.encoding import force_text
 
 
