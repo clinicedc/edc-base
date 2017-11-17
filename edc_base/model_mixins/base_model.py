@@ -66,6 +66,8 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
             kwargs.update({'update_fields': update_fields})
         except TypeError:
             pass
+        if not self.id:
+            self.created = get_utcnow()
         self.modified = get_utcnow()
         super().save(*args, **kwargs)
 
