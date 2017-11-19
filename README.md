@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/botswana-harvard/edc-base/badge.svg?branch=develop&service=github)](https://coveralls.io/github/botswana-harvard/edc-base?branch=develop)
 # edc-base
 
-Base model, manager, field, validator, form and admin classes for Edc. 
+Base model, manager, field, form and admin classes for Edc. 
 
 
 Installation
@@ -74,41 +74,6 @@ On the ModelForm, just add the mixin. If you do override `clean()` be sure to ca
             return cleaned_data
 
 
-### ModelForm `FormValidator`
-
-`FormValidator` simplifies common patterns used in `ModelForm.clean`. For example, if there is a response to field A then there should not a be response to B and visa-versa.
-
-Declare a form with it's `form_validator` class and use `FormValidatorMixin`:
-
-        class MyFormValidator(FormValidator):
-
-            def clean(self):
-                self.required_if(
-                    YES,
-                    field='f1',
-                    field_required='f2')
-                ...
-
-        class MyModelForm(FormValidatorMixin, forms.ModelForm):
-
-            form_validator_cls = MyFormValidator
-
-            class Meta:
-                model = TestModel
-                fields = '__all__'
- 
-
-#### Testing:
-
-Test the `form_validator` without having to instantiate the `ModelForm`:
-
-    def test_my_form_validator(self):
-        options = {
-            'f1': YES,
-            'f2': None}
-        form_validator = MyFormValidator(cleaned_data=options)
-        self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('f2', form_validator._errors)
 
 ### Model Field Validators
 
