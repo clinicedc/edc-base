@@ -27,8 +27,6 @@ class ModelAdminReadOnlyMixin:
 
     """
 
-    querystring_name = 'next'
-
     def get_form(self, request, obj=None, **kwargs):
         form = super(ModelAdminReadOnlyMixin, self).get_form(
             request, obj, **kwargs)
@@ -51,6 +49,6 @@ class ModelAdminReadOnlyMixin:
             extra_context.update(
                 {'edc_readonly': request.GET.get('edc_readonly')})
             extra_context.update(
-                {'edc_readonly_next': request.GET.get(self.querystring_name)})
+                {'edc_readonly_next': request.GET.get(self.next_querystring_attr)})
         return super().change_view(
             request, object_id, form_url=form_url, extra_context=extra_context)

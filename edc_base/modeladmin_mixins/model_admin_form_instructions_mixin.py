@@ -1,23 +1,25 @@
+from pprint import pprint
+
 
 class ModelAdminFormInstructionsMixin:
     """Add instructions to the add view context.
 
-    Override the change_form.html to add {{ instructions }}
+    Override the change_form.html to add instructions.
 
-    Create a blank change_form.html in your
-    /templates/admin/<app_label> folder and add this
-    (or something like it):
+    Copy change_form.html from edc_base/admin/ into
+    /templates/admin/<app_label> or create a blank change_form.html in your
+    /templates/admin/<app_label> folder and add this:
 
         {% extends "admin/change_form.html" %}
         {% block field_sets %}
-        {% if instructions %}
-            <H5>Instructions:</H5><p>{{ instructions }}</p>
-        {% endif %}
-        {% if additional_instructions %}
-            <H5>Additional Instructions:</H5><p>{{ additional_instructions }}</p>
-        {% endif %}
-        {{ block.super }}
+            {% instructions %}
+            {% additional_instructions %}
+            {{ block.super }}
         {% endblock %}
+
+    See also edc_base_extras for the inclusion tags
+    `instructions` and `additional_instructions` and the templates
+    involved.
     """
 
     instructions = (
@@ -54,6 +56,7 @@ class ModelAdminFormInstructionsMixin:
 
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = self.update_add_instructions(extra_context)
+        pprint(extra_context)
         return super().add_view(
             request, form_url=form_url, extra_context=extra_context)
 
