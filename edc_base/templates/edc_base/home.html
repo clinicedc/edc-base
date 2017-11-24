@@ -1,0 +1,75 @@
+{% extends 'edc_base/base.html' %}
+
+{% load staticfiles %}
+
+{% block main %}
+
+  <div class="container">
+    <div class="col-sm-12">
+      <h4>Edc for {{ project_name }}</h4>
+      <p><span class="label label-default">rev {{ revision }}</span><BR>The source code for this system is provided under
+      the <span class="label label-default">{{ license }}</span><BR>and is available at
+      <a target="_blank" href="http://github.com/botswana-harvard/?q={{project_name|lower}}">http://github.com/botswana-harvard/</a></p>
+      {% if DEBUG%}
+      <div class="alert alert-danger">
+        <strong><i class="fa fa-exclamation-triangle"></i></strong> This EDC is running in DEBUG-mode. Use for testing only.
+      </div>
+      <div class="alert alert-danger">
+        <strong><i class="fa fa-exclamation-triangle"></i></strong> Do not use this system for production data collection!
+      </div>
+      {% else %}
+      <div class="alert alert-success">
+        <strong>Production</strong> This system is for research purposes only.
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-sm-12">
+      <ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#edc_packages">Edc Packages</a></li>
+        <li><a data-toggle="pill" href="#third_party_packages">Third Party Packages</a></li>
+        <li><a data-toggle="pill" href="#installed_apps">Installed Apps</a></li>
+
+        <div class="tab-content">
+          <div id="edc_packages" class="tab-pane fade in active">
+            <table class="table table-hover responsive">
+          	<thead>
+            		<tr><th>#</th><th name='edc_packages'>Edc Packages</th></tr>
+          	</thead>
+          	<tbody>
+            	{% for package in  edc_packages %}
+             	  <tr><td>{{ forloop.counter }}</td><td>{{ package }}</td></tr>
+            	{% endfor %}
+          	</tbody>
+            </table>
+          </div>
+
+          <div id="third_party_packages" class="tab-pane fade in">
+            <table class="table table-hover responsive">
+            <thead>
+                <tr><th>#</th><th>Third Party Packages</th></tr>
+            </thead>
+            <tbody>
+              {% for package in  third_party_packages %}
+                <tr><td>{{ forloop.counter }}</td><td>{{ package }}</td></tr>
+              {% endfor %}
+            </tbody>
+            </table>
+          </div>
+
+          <div id="installed_apps" class="tab-pane fade in">
+            <table class="table table-hover responsive">
+            <thead>
+                <tr><th>#</th><th>Installed Apps</th></tr>
+            </thead>
+            <tbody>
+              {% for app in installed_apps %}
+                <tr><th>#</th><td>{{ app }}</td></tr>
+              {% endfor %}
+            </tbody>
+            </table>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>
+{% endblock main %}

@@ -1,15 +1,15 @@
-from django.conf.urls import url, include
-from django.views.generic.base import RedirectView
+from django.urls.conf import path
 
-from edc_base.views import LoginView, LogoutView
+from edc_base.views import HomeView
 
 app_name = 'edc_base'
 
 urlpatterns = [
     # url(r'^jsreverse/$', urls_js, name='js_reverse'),
-    url(r'accounts/login', LoginView.as_view(), name='login_url'),
-    url(r'login', LoginView.as_view(), name='login_url'),
-    url(r'logout', LogoutView.as_view(), name='logout_url'),
-    url(r'settings/', RedirectView.as_view(url='/home/'), name='settings_url'),
-    url(r'^tz_detect/', include('tz_detect.urls')),
+    #     path(r'accounts/login', LoginView.as_view(), name='login_url'),
+    #     path(r'login', LoginView.as_view(), name='login_url'),
+    #     path(r'logout', LogoutView.as_view(), name='logout_url'),
+    #     path(r'settings/', RedirectView.as_view(url='/home/'), name='settings_url'),
+    #     path(r'tz_detect/', include('tz_detect.urls')),
+    path(r'', HomeView.as_view(), name='home_url'),
 ]

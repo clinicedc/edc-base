@@ -22,14 +22,15 @@ def activate_foreign_keys(sender, connection, **kwargs):
 
 class AppConfig(DjangoAppConfig):
     name = 'edc_base'
+    verbose_name = 'Edc Base'
     institution = 'Institution (see edc_base.AppConfig.institution)'
     project_name = 'Project Title (see edc_base.AppConfig.project_name)'
     physical_address = Address()
     postal_address = Address()
-    copyright = get_utcnow().year
-    license = None
     disclaimer = 'For research purposes only.'
     default_url_name = 'home_url'
+    copyright = f'2010-{get_utcnow().year}'
+    license = 'GNU GENERAL PUBLIC LICENSE Version 3'
 
     def ready(self):
         from .signals import update_user_profile_on_post_save
