@@ -8,6 +8,10 @@ from django.db.models.deletion import ProtectedError
 style = color_style()
 
 
+class PreloadDataError(Exception):
+    pass
+
+
 class PreloadData:
 
     def __init__(self, list_data=None, model_data=None, unique_field_data=None):
@@ -42,7 +46,8 @@ class PreloadData:
                         obj.name = display_value
                         obj.save()
             except Exception as e:
-                sys.stdout.write(style.ERROR(str(e) + '\n'))
+                raise PreloadDataError(e)
+                # sys.stdout.write(style.ERROR(str(e) + '\n'))
 
     def load_model_data(self):
         """Loads dta into a model.
