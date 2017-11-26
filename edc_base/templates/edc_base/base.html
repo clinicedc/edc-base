@@ -59,7 +59,15 @@
     <script type="text/javascript" charset="utf8" src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" charset="utf8" src="{% static "datatables/1.10.11/js/dataTables.select.min.js" %}"></script>
     -->
+
+    <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>    
+
 {% endblock scripts %}
+
 <!-- begin extra-scripts by app ================================================== -->
 {% block extra-scripts %}{% endblock extra-scripts %}
 <!-- end extra-scripts by app ================================================== -->
