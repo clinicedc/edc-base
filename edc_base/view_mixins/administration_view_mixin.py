@@ -44,6 +44,10 @@ class AdministrationViewMixin(ContextMixin):
         return section
 
     @property
+    def default_sections(self):
+        return {'Accounts': 'admin:index'}
+
+    @property
     def sections(self):
         """Returns a dictionary (sorted) of the administration sections
         to show on the Administration page.
@@ -56,6 +60,7 @@ class AdministrationViewMixin(ContextMixin):
                 include = True
             if include:
                 sections.update(**self.get_section(app_config))
+        sections.update(**self.default_sections)
         keys = list(sections.keys())
         keys.sort()
         return {key: sections.get(key) for key in keys}
