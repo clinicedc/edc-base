@@ -139,7 +139,7 @@
     {% endblock footer_extra_items %}
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-copyright"></span> {{ copyright }}&nbsp;{{ institution }}</p></div>
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-leaf"></span> Revision: {{ revision }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-clock-o"></span> {% now "Y-m-d H:i" %} {% get_current_timezone as TIME_ZONE%} {{TIME_ZONE}}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-clock-o"></span> {% now "SHORT_DATETIME_FORMAT" %} {% get_current_timezone as TIME_ZONE %} {{ TIME_ZONE }}</p></div>
     <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-exclamation"></span> {{ disclaimer }}</p></div>
   </div>
 </footer>
