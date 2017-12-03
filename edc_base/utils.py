@@ -46,6 +46,17 @@ def get_safe_random_string(length=12, safe=None, allowed_chars=None):
     return ''.join([random.choice(allowed_chars) for _ in range(length)])
 
 
+def convert_php_dateformat(php_format_string):
+    php_to_python = {
+        'A': '%p', 'D': '%a', 'F': '%B', 'H': '%H', 'M': '%b',
+        'W': '%W', 'Y': '%Y', 'd': '%d', 'e': '%Z', 'h': '%I', 'i': '%M',
+        'l': '%A', 'm': '%m', 's': '%S', 'w': '%w', 'y': '%y', 'z': '%j'}
+    python_format_string = php_format_string
+    for php, py in php_to_python.items():
+        python_format_string = python_format_string.replace(php, py)
+    return python_format_string
+
+
 def get_utcnow():
     return arrow.utcnow().datetime
 

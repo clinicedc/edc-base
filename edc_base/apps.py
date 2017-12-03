@@ -8,7 +8,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 from .address import Address
 from .utils import get_utcnow
-from edc_base.site_list_data import site_list_data
+
 
 style = color_style()
 
@@ -42,5 +42,4 @@ class AppConfig(DjangoAppConfig):
             f' * default TIME_ZONE {settings.TIME_ZONE}.\n')
         if not settings.USE_TZ:
             raise ImproperlyConfigured('EDC requires settings.USE_TZ = True')
-        site_list_data.autodiscover()
         sys.stdout.write(f' Done loading {self.verbose_name}.\n')
