@@ -63,8 +63,9 @@
     <script>
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
-        $('[data-toggle="popover"]').popover({html:true}); 
+        $('[data-toggle="popover"]').popover({html:true, trigger:'focus'}); 
     });
+
     </script>    
 
 {% endblock scripts %}
