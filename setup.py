@@ -24,8 +24,9 @@ setup(
     install_requires=[
         'django',
         'django-braces',
-        # 'django-simple-history',  until new release
+        # 'django-simple-history',  until new release for DJ2.0
         'django-js-reverse',
+        'django-logentry-admin',
         'django-crispy-forms',
         'django-debug-toolbar',
         'django-extensions',
@@ -35,7 +36,7 @@ setup(
         'Faker',
         'pytz',
         'arrow',
-        'django-tz-detect',
+        'django-tz-detect',  # can this be removed??
         'mysqlclient',
     ],
     classifiers=[
