@@ -39,7 +39,7 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         help_text='Updated by admin.save_model')
 
     hostname_created = models.CharField(
-        max_length=60,
+        max_length=50,
         blank=True,
         default=socket.gethostname,
         help_text="System field. (modified on create only)",
@@ -69,6 +69,8 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         if not self.id:
             self.created = get_utcnow()
         self.modified = get_utcnow()
+        self.hostname_created = self.hostname_created[:50]
+        self.hostname_modified = self.hostname_modified[:50]
         super().save(*args, **kwargs)
 
     @property
