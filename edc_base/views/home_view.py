@@ -2,7 +2,6 @@ from django.views.generic.base import TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from edc_base.view_mixins import EdcBaseViewMixin
-from edc_consent.admin_site import edc_consent_admin
 from edc_navbar import NavbarViewMixin
 from django.conf import settings
 
