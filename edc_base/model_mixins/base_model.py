@@ -6,11 +6,10 @@ from django_revision import RevisionField
 from ..model_fields import HostnameModificationField, UserField
 from ..utils import get_utcnow
 from ..constants import BASE_MODEL_UPDATE_FIELDS
-from .common_clean_model_mixin import CommonCleanModelMixin
 from .url_mixin import UrlMixin
 
 
-class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
+class BaseModel(UrlMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer).
