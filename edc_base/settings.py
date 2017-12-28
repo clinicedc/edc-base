@@ -14,6 +14,8 @@ SECRET_KEY = 'dv$eox1uch^ru@&(buh(d%h+(t6y^s==zdk$&07##)ll^*2%fi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 10
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -25,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
     'django_js_reverse',

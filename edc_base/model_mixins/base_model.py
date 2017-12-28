@@ -41,19 +41,15 @@ class BaseModel(UrlMixin, models.Model):
         max_length=60,
         blank=True,
         default=socket.gethostname,
-        help_text="System field. (modified on create only)",
-    )
+        help_text="System field. (modified on create only)")
 
     hostname_modified = HostnameModificationField(
         max_length=50,
         blank=True,
-        help_text="System field. (modified on every save)",
-    )
+        help_text="System field. (modified on every save)")
 
     revision = RevisionField(
-        help_text="System field. Git repository tag:branch:commit.",
-        blank=True,
-    )
+        help_text="System field. Git repository tag:branch:commit.")
 
     objects = models.Manager()
 

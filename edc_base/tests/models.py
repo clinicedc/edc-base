@@ -2,7 +2,7 @@ __all__ = ['TestModel', 'TestValidatorModel']
 
 from django.db import models
 
-from ..model_mixins import BaseUuidModel
+from ..model_mixins import BaseUuidModel, SiteModelMixin
 from ..model_validators import CompareNumbersValidator
 
 
@@ -25,3 +25,8 @@ class TestValidatorModel(models.Model):
             CompareNumbersValidator(
                 64, '<=', message='Age of consent must be {}. Got {}')
         ])
+
+
+class TestModelWithSite(SiteModelMixin, BaseUuidModel):
+
+    f1 = models.CharField(max_length=10, default='1')
