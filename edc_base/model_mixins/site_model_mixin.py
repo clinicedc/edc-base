@@ -5,11 +5,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class SiteModelMixin(models.Model):
 
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    site = models.ForeignKey(
+        Site, on_delete=models.CASCADE, null=True, editable=False)
 
     def save(self, *args, **kwargs):
         try:
-            self.site
+            if not self.site:
+                self.site = Site.objects.get_current()
         except ObjectDoesNotExist:
             self.site = Site.objects.get_current()
         super().save(*args, **kwargs)

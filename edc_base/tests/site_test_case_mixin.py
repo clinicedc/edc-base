@@ -10,9 +10,11 @@ class SiteTestCaseMixin:
         (40, 'gaborone'),
         (50, 'karakobis')]
 
+    site_names = [s[1] for s in default_sites]
+
     def setUp(self):
         super().setUp()
         Site.objects.all().delete()
         for site_id, site_name in self.default_sites:
             Site.objects.create(
-                pk=site_id, name=site_name, domain=f'{site_name}.ambition.org.bw')
+                pk=site_id, name=site_name, domain=f'{site_name}.edc.bhp.org.bw')
