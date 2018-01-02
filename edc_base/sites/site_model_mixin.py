@@ -1,12 +1,15 @@
+from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
-from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 
 class SiteModelMixin(models.Model):
 
     site = models.ForeignKey(
         Site, on_delete=models.CASCADE, null=True, editable=False)
+
+    on_site = CurrentSiteManager()
 
     def save(self, *args, **kwargs):
         try:

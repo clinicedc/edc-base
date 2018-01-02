@@ -1,5 +1,6 @@
 from django.apps import apps as django_apps
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic.base import ContextMixin
 from django_revision.views import RevisionMixin
 
@@ -21,5 +22,6 @@ class EdcBaseViewMixin(RevisionMixin, ContextMixin):
             'institution': app_config.institution,
             'license': app_config.license,
             'project_name': app_config.project_name,
+            'site': get_current_site(self.request),
         })
         return context
