@@ -1,5 +1,6 @@
 from django.apps import apps as django_apps
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic.base import ContextMixin
 from django_revision.views import RevisionMixin
@@ -24,4 +25,9 @@ class EdcBaseViewMixin(RevisionMixin, ContextMixin):
             'project_name': app_config.project_name,
             'site': get_current_site(self.request),
         })
+        if settings.DEBUG:
+            messages.add_message(
+                self.request, messages.ERROR,
+                ('This EDC is running in DEBUG-mode. Use for testing only. '
+                 'Do not use this system for production data collection!'))
         return context

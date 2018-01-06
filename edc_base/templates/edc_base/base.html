@@ -129,12 +129,14 @@
 {% block bottombar %}{% endblock bottombar %}
 
 {% block footer %} 
-    {% if DEBUG %}
-      <div class="container">
-        <div class="alert alert-danger">Warning: You are currently running in DEBUG-mode</div>
-      </div>    
-    {% endif %}
 <footer class="footer">
+
+    {% if DEBUG %}
+        <div class="container">
+        <div class="alert alert-danger">Warning: You are currently running in DEBUG-mode. This system is not configured for production use.</div>
+        </div>
+    {% endif %}
+
   <div class="container">
 
     {% block footer_extra_items %}
