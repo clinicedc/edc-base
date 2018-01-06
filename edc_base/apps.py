@@ -2,11 +2,13 @@ import sys
 
 from django.apps import AppConfig as DjangoAppConfig
 from django.conf import settings
+from django.core.checks.registry import register
 from django.db.backends.signals import connection_created
 from django.core.management.color import color_style
 from django.core.exceptions import ImproperlyConfigured
 
 from .address import Address
+from .system_checks import edc_base_check
 from .utils import get_utcnow
 
 
@@ -35,7 +37,7 @@ class AppConfig(DjangoAppConfig):
 
     def ready(self):
         from .signals import update_user_profile_on_post_save
-
+        register(edc_base_check)
         sys.stdout.write(f'Loading {self.verbose_name} ...\n')
         connection_created.connect(activate_foreign_keys)
         sys.stdout.write(
