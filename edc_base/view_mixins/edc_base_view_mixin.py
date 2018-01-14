@@ -11,6 +11,12 @@ class EdcBaseViewMixin(RevisionMixin, ContextMixin):
     """
 
     def get_context_data(self, **kwargs):
+
+        self.request.session.set_test_cookie()
+        if not self.request.session.test_cookie_worked():
+            messages.add_message(
+                self.request, messages.ERROR, 'Please enable cookies.')
+        self.request.session.delete_test_cookie()
         app_config = django_apps.get_app_config('edc_base')
         edc_device_app_config = django_apps.get_app_config('edc_device')
         context = super().get_context_data(**kwargs)
