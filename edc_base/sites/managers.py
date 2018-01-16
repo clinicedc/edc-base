@@ -5,8 +5,7 @@ from django.conf import settings
 class CurrentSiteManager(BaseCurrentSiteManager):
 
     def get_queryset(self):
-        site_id = settings.SITE_ID
-        if site_id == '0':
+        if settings.SITE_ID == settings.REVIEWER_SITE_ID:
             queryset = super().get_queryset()
         else:
             return super().get_queryset().filter(
