@@ -7,7 +7,7 @@ from django.conf import settings
 class SiteModelMixin(models.Model):
 
     site = models.ForeignKey(
-        Site, on_delete=models.CASCADE, null=True, editable=False)
+        Site, on_delete=models.PROTECT, null=True, editable=False)
 
     def save(self, *args, **kwargs):
         current = Site.objects.get_current()
