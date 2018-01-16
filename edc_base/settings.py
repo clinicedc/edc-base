@@ -15,7 +15,7 @@ SECRET_KEY = 'dv$eox1uch^ru@&(buh(d%h+(t6y^s==zdk$&07##)ll^*2%fi'
 DEBUG = True
 
 SITE_ID = 10
-
+REVIEWER_SITE_ID = 0
 ALLOWED_HOSTS = []
 
 # Application definition

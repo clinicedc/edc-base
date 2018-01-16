@@ -9,6 +9,7 @@ class ReviewerSiteSaveError(Exception):
 class ModelAdminSitesMixin:
 
     def save_model(self, request, obj, form, change):
+
         if 'django.contrib.sites' in settings.INSTALLED_APPS:
 
             if Site.objects.get_current() == settings.REVIEWER_SITE_ID:
