@@ -23,11 +23,9 @@ setup(
     keywords='django base models fields forms admin',
     install_requires=[
         'django',
-        'django-braces',
         # 'django-simple-history',  until new release for DJ2.0
         'django-js-reverse',
         'django-logentry-admin',
-        'django-crispy-forms',
         'django-debug-toolbar',
         'django-extensions',
         'python-dateutil',
