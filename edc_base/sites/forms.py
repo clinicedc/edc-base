@@ -6,9 +6,9 @@ class SiteModelFormMixin:
 
     def clean(self):
         from django.contrib.sites.models import Site
-        if Site.objects.get_current() == int(settings.REVIEWER_SITE_ID):
+        site = Site.objects.get_current()
+        if int(site.id) == int(settings.REVIEWER_SITE_ID):
             raise forms.ValidationError(
-                'Reviewers may not add or update CRF data. '
-                'You are logged into the "Reviewer\'s system. '
-                'Try logging into one of the site specific systems.')
+                'Adding or changing data has been disabled. '
+                f'See Site configuration. Got \'{site.name.title()}\'.')
         return super().clean()

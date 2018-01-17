@@ -1,7 +1,13 @@
+import sys
+
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.conf import settings
+
+
+class SiteModelError(Exception):
+    pass
 
 
 class SiteModelMixin(models.Model):
@@ -10,8 +16,13 @@ class SiteModelMixin(models.Model):
         Site, on_delete=models.PROTECT, null=True, editable=False)
 
     def save(self, *args, **kwargs):
-        current = Site.objects.get_current()
-        if current != settings.REVIEWER_SITE_ID:
+        site = Site.objects.get_current()
+        if (int(site.id) == int(settings.REVIEWER_SITE_ID)
+                and 'migrate' not in sys.argv):
+            raise SiteModelError(
+                'Adding and updating data has been disabled. '
+                f'See Site configuration. Got {site.name}.')
+        else:
             try:
                 if not self.site:
                     self.site = Site.objects.get_current()

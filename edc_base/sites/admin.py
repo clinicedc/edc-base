@@ -8,8 +8,7 @@ class ReviewerSiteSaveError(Exception):
 class ModelAdminSiteMixin:
 
     def save_model(self, request, obj, form, change):
-        from django.contrib.sites.models import Site
         if 'django.contrib.sites' in settings.INSTALLED_APPS:
-            if Site.objects.get_current() == settings.REVIEWER_SITE_ID:
+            if int(request.site.id) == int(settings.REVIEWER_SITE_ID):
                 raise ReviewerSiteSaveError('Reviewers may not update data.')
         super().save_model(request, obj, form, change)

@@ -1,4 +1,5 @@
-from .add_or_update_django_sites import add_or_update_django_sites
 from .admin import ModelAdminSiteMixin
 from .forms import SiteModelFormMixin
 from .managers import CurrentSiteManager
+from .site_model_mixin import SiteModelMixin
+from .view_mixins import SiteQuerysetViewMixin
