@@ -1,4 +1,4 @@
-from edc_constants.constants import NOT_APPLICABLE
+from edc_constants.constants import NOT_APPLICABLE, OPEN, CLOSED
 
 DATE_ESTIMATED_NA = (
     (NOT_APPLICABLE, 'Not applicable'),
@@ -21,4 +21,10 @@ IDENTITY_TYPE = (
     ('PASSPORT', 'Passport'),
     ('OMANG_RCPT', 'Omang Receipt'),
     ('OTHER', 'Other'),
+)
+
+
+REPORT_STATUS = (
+    (OPEN, 'Open. Some information is still pending.'),
+    (CLOSED, 'Closed. This report is complete'),
 )
