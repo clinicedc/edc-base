@@ -9,7 +9,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
     """Mixes in common template variables for the footer, etc.
     """
-    # login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         super().get_context_data(**kwargs)
@@ -24,8 +23,7 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
             'disclaimer': app_config.disclaimer,
             'institution': app_config.institution,
             'license': app_config.license,
-            'project_name': app_config.project_name,
-        })
+            'project_name': app_config.project_name})
         if settings.DEBUG:
             messages.add_message(
                 self.request, messages.ERROR,
