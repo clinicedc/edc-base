@@ -11,9 +11,8 @@ filename_template = '$site_name.$app_name.clinicedc.org.py'
 template = """# $site_name.$app_name gunicorn.conf
 import os
 
-SOURCE_ROOT = os.path.expanduser('~/')
-errorlog = os.path.join(SOURCE_ROOT, 'logs/$app_name-gunicorn-error.log')
-accesslog = os.path.join(SOURCE_ROOT, 'logs/$app_name-gunicorn-access.log')
+errorlog = '/var/log/$app_name-gunicorn-error.log'
+accesslog = '/var/log/$app_name-gunicorn-access.log'
 loglevel = 'debug'
 workers = 2  # the number of recommended workers is '2 * number of CPUs + 1'
 
