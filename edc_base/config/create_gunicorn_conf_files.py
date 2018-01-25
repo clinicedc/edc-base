@@ -22,13 +22,13 @@ pidfile = os.path.join(SOURCE_ROOT, 'run/$app_name-$site_name.pid')
 
 workers = 2  # the number of recommended workers is '2 * number of CPUs + 1'
 
-raw_env = [f'DJANGO_SETTINGS_MODULE=$app_name.settings.production.$site_name']
+raw_env = [f'DJANGO_SETTINGS_MODULE=$app_name.settings.$live_or_test.$site_name']
 
 bind = "127.0.0.1:90$site_id"
 """
 
 
-def create_gunicorn_conf_files(path=None, sites=None):
+def create_gunicorn_conf_files(path=None, sites=None, live_or_test=None):
     """Generates gunicorn conf files for each site.
 
     "sites" is a tuple of ((site_id, site_name), ...)
@@ -38,14 +38,16 @@ def create_gunicorn_conf_files(path=None, sites=None):
         >>> import os
         >>> from edc_base.config import create_gunicorn_conf_files
         >>> from ambition.sites import ambition_sites
-        >>> path = os.path.expanduser('~/source/ambition/gunicorn')
-        >>> create_gunicorn_conf_files(path=path, sites=ambition_sites)
+        >>> path = os.path.expanduser('~/source/ambition-test/gunicorn')
+        >>> create_gunicorn_conf_files(path=path, sites=ambition_sites, live_or_test='test')
     """
     app_name = settings.APP_NAME
+    live_or_test = 'live' if live_or_test is None else live_or_test
     for site in sites:
         site_id = str(site[ID]).zfill(2)
         s = Template(template).safe_substitute(
-            site_id=site_id, site_name=site[NAME], app_name=app_name)
+            site_id=site_id, site_name=site[NAME], app_name=app_name,
+            live_or_test=live_or_test)
         filename = Template(filename_template).safe_substitute(
             site_name=site[NAME], app_name=app_name)
         with open(os.path.join(path, filename), 'w+') as f:
