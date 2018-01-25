@@ -11,10 +11,18 @@ filename_template = '$site_name.$app_name.clinicedc.org.py'
 template = """# $site_name.$app_name gunicorn.conf
 import os
 
-errorlog = '/var/log/$app_name-gunicorn-error.log'
-accesslog = '/var/log/$app_name-gunicorn-access.log'
+from pathlib import Path
+
+SOURCE_ROOT = str(Path(os.path.dirname(os.path.abspath(__file__))).parent)
+
+errorlog = os.path.join(SOURCE_ROOT, 'log/$app_name-gunicorn-error.log')
+accesslog = os.path.join(SOURCE_ROOT, 'log/$app_name-gunicorn-access.log')
 loglevel = 'debug'
+pidfile = os.path.join(SOURCE_ROOT, 'run/$app_name-$site_name.pid')
+
 workers = 2  # the number of recommended workers is '2 * number of CPUs + 1'
+
+raw_env = [f'DJANGO_SETTINGS_MODULE=$app_name.settings.production.$site_name']
 
 bind = "127.0.0.1:90$site_id"
 """

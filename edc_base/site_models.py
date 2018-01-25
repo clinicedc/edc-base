@@ -42,14 +42,18 @@ class SiteModels:
                 raise SiteModelAlreadyRegistered(
                     f'Model is already registered. Got {model}.')
 
-    def register_for_app(self, app_label=None, include_list_models=None):
+    def register_for_app(self, app_label=None, exclude_models=None, include_list_models=None):
+        from edc_base.model_mixins import ListModelMixin
         models = []
+        exclude_models = exclude_models or []
         app_config = django_apps.get_app_config(app_label)
         for model in app_config.get_models():
-            if not include_list_models:
-                from edc_base.model_mixins import ListModelMixin
-                if not issubclass(model, ListModelMixin):
-                    models.append(model._meta.label_lower)
+            if model._meta.label_lower in exclude_models:
+                pass
+            elif issubclass(model, ListModelMixin) and include_list_models:
+                models.append(model._meta.label_lower)
+            else:
+                models.append(model._meta.label_lower)
         self.register(models)
 
     def get_wrapped_instance(self, instance=None):
