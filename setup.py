@@ -10,7 +10,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='edc-base',
-    version='0.2.17',
+    version='0.2.18',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -34,6 +34,7 @@ setup(
         'Faker',
         'pytz',
         'arrow',
+        'python-memcached',
         'django-tz-detect',  # can this be removed??
         'mysqlclient',
     ],
