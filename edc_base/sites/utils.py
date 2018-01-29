@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def add_or_update_django_sites(apps=None, sites=None, fqdn=None):
     Site = apps.get_model('sites', 'Site')
     Site.objects.filter(name='example.com').delete()
-    for site_id, site_name in sites:
+    for site_id, site_name, _ in sites:
         try:
             site_obj = Site.objects.get(pk=site_id)
         except ObjectDoesNotExist:
