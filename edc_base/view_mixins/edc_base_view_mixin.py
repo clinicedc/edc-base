@@ -29,4 +29,11 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
                 self.request, messages.ERROR,
                 ('This EDC is running in DEBUG-mode. Use for testing only. '
                  'Do not use this system for production data collection!'))
+        try:
+            if settings.WARNING_MESSAGE:
+                messages.add_message(
+                    self.request, messages.WARNING, settings.WARNING_MESSAGE,
+                    extra_tags='warning')
+        except AttributeError:
+            pass
         return context

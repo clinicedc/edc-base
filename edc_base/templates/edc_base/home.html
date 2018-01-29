@@ -6,47 +6,25 @@
 
   <div class="container">
     <div class="col-sm-12">
-      <h4>Edc for {{ project_name }}</h4>
-      <p><span class="label label-default">rev {{ revision }}</span><BR>The source code for this system is provided under
-      the <span class="label label-default">{{ license }}</span><BR>and is available at
-      <a target="_blank" href="http://github.com/botswana-harvard/?q={{project_name|lower}}">http://github.com/botswana-harvard/</a></p>
-      {% if DEBUG%}
-      <div class="alert alert-danger">
-        <strong><i class="fa fa-exclamation-triangle"></i></strong> This EDC is running in DEBUG-mode. Use for testing only.
-      </div>
-      <div class="alert alert-danger">
-        <strong><i class="fa fa-exclamation-triangle"></i></strong> Do not use this system for production data collection!
-      </div>
-      {% else %}
-      <div class="alert alert-success">
-        <strong>Production</strong> This system is for research purposes only.
-      </div>
-      {% endif %}
+      <h4>Edc research data system for {{ project_name }}</h4>
+      <h6>Revision {{ revision }}</h6>
+      <p>The use of this system is strictly for research purposes only and specifically for the {{ project_name }} Trial. The source code for this system is published under 
+      the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">{{ license }}</a> and is available at
+      <a target="_blank" href="http://github.com/botswana-harvard/?q={{project_name|lower}}">http://github.com/botswana-harvard/</a>. The modules developed specifically for the {{ project_name }} trial are named with the prefixed "{{ project_name|lower }}_".
+      All other third party packages and modules used are provided according their specific licenses.
+    </p>
     </div>
     <div class="col-sm-12">
       <ul class="nav nav-pills">
-        <li class="active"><a data-toggle="pill" href="#edc_packages">Edc Packages</a></li>
-        <li><a data-toggle="pill" href="#third_party_packages">Third Party Packages</a></li>
+        <li class="active"><a data-toggle="pill" href="#third_party_packages">Packages</a></li>
         <li><a data-toggle="pill" href="#installed_apps">Installed Apps</a></li>
+        <li><a data-toggle="pill" href="#edc_packages">Develop</a></li>
 
         <div class="tab-content">
-          <div id="edc_packages" class="tab-pane fade in active">
-            <table class="table table-hover responsive">
-          	<thead>
-            		<tr><th>#</th><th name='edc_packages'>Edc Packages</th></tr>
-          	</thead>
-          	<tbody>
-            	{% for package in  edc_packages %}
-             	  <tr><td>{{ forloop.counter }}</td><td>{{ package }}</td></tr>
-            	{% endfor %}
-          	</tbody>
-            </table>
-          </div>
-
-          <div id="third_party_packages" class="tab-pane fade in">
+          <div id="third_party_packages" class="tab-pane fade in active">
             <table class="table table-hover responsive">
             <thead>
-                <tr><th>#</th><th>Third Party Packages</th></tr>
+                <tr><th>#</th><th>Packages</th></tr>
             </thead>
             <tbody>
               {% for package in  third_party_packages %}
@@ -68,6 +46,22 @@
             </tbody>
             </table>
           </div>
+
+          <div id="edc_packages" class="tab-pane fade in">
+            <table class="table table-hover responsive">
+            <thead>
+                <tr><th>#</th><th name='edc_packages'>Develop</th></tr>
+            </thead>
+            <tbody>
+              {% for package in  edc_packages %}
+                <tr><td>{{ forloop.counter }}</td><td>{{ package }}</td></tr>
+              {% endfor %}
+            </tbody>
+            </table>
+          </div>
+
+
+
         </div>
       </ul>
     </div>

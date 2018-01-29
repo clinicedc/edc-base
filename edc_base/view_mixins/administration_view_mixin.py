@@ -1,9 +1,8 @@
 from django.apps import apps as django_apps
-from django.contrib.auth.decorators import login_required
 from django.urls.base import reverse
 from django.urls.exceptions import NoReverseMatch
-from django.utils.decorators import method_decorator
 from django.views.generic.base import ContextMixin
+from math import floor
 
 
 class AdministrationViewMixin(ContextMixin):
@@ -11,14 +10,27 @@ class AdministrationViewMixin(ContextMixin):
     template_name = 'edc_base/administration.html'
     base_template_name = 'edc_base/base.html'
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(base_template_name=self.base_template_name)
-        context.update(sections=self.sections)
+
+        sections = self.sections
+        context.update(sections=sections)
+        index = 0
+        col_one = {}
+        col_two = {}
+        col_three = {}
+        per_col = floor(len(list(sections.keys())) / 3)
+        for k, v in sections.items():
+            index += 1
+            if index <= per_col:
+                col_one.update({k: v})
+            elif index > per_col and index < (per_col * 2):
+                col_two.update({k: v})
+            else:
+                col_three.update({k: v})
+        context.update(
+            col_one=col_one, col_two=col_two, col_three=col_three)
         return context
 
     def get_section(self, app_config=None):

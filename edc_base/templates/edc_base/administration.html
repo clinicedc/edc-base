@@ -6,38 +6,44 @@
 
 
 <div class="container">
+
    <div class="row">
-      <div class="col-md-5">
-        <div class="panel panel-info">
-          <div class="panel-heading">Reports</div>
-            <div class="panel-body">
-            </div>
+      <div class="col-md-12">
+        <div class="jumbotron text-center">
+          <h2>Administration</h2>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel panel-success">
-          <div class="panel-heading">Statistics</div>
-            <div class="panel-body">
-            </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="panel panel-warning">
-          <div class="panel-heading">Administration</div>
-            <div class="panel-body">
-              <a role="button" class="btn btn-sm btn-default btn-block" href="{% url subject_models_url|default:"define a url subject_models_url" %}">Subjects</a>
-            </div>
-        </div>
-        <div class="panel panel-warning">
-          <div class="panel-heading">Edc</div>
-            <div class="panel-body">
-              {% for name, url_name in sections.items %}
-                <a role="button" class="btn btn-sm btn-default btn-block" href="{% url url_name|default:'home_url' %}">{{ name }}</a>
+        <ul class="nav nav-pills nav-stacked">
+              {% for name, url_name in col_one.items %}
+                <li>
+                  <a  href="{% url url_name|default:'home_url' %}">{{ name }}</a>
+                </li>
               {% endfor %}
-            </div>
-        </div>
-        </div>
-      </div>
+        </ul>
     </div>
+
+      <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked">
+              {% for name, url_name in col_two.items %}
+                <li>
+                  <a  href="{% url url_name|default:'home_url' %}">{{ name }}</a>
+                </li>
+              {% endfor %}
+        </ul>
+    </div>
+
+      <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked">
+              {% for name, url_name in col_three.items %}
+                <li>
+                  <a href="{% url url_name|default:'home_url' %}">{{ name }}</a>
+                </li>
+              {% endfor %}
+        </ul>
+      </div>
+
+  </div>
+</div>
 
 {% endblock main %}
