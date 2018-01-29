@@ -1,15 +1,14 @@
-from .address_model_admin_mixin import AddressModelAdminMixin
-from .changelist_buttons import ModelAdminChangelistButtonMixin, ModelAdminChangelistModelButtonMixin
-from .inlines import LimitedAdminInlineMixin, StackedInlineMixin, TabularInlineMixin
-from .form_as_json_model_admin_mixin import FormAsJSONModelAdminMixin
-from .model_admin_audit_fields_mixin import (
-    ModelAdminAuditFieldsMixin, audit_fields, audit_fieldset_tuple)
-from .model_admin_basic_mixin import ModelAdminBasicMixin
-from .model_admin_form_auto_number_mixin import ModelAdminFormAutoNumberMixin
-from .model_admin_form_instructions_mixin import ModelAdminFormInstructionsMixin
-from .model_admin_institution_mixin import ModelAdminInstitutionMixin
-from .model_admin_model_redirect_mixin import ModelAdminModelRedirectMixin
-from .model_admin_next_url_redirect_mixin import ModelAdminNextUrlRedirectMixin
-from .model_admin_readonly_mixin import ModelAdminReadOnlyMixin
-from .model_admin_redirect_on_delete_mixin import ModelAdminRedirectOnDeleteMixin
-from .model_admin_next_url_redirect_mixin import ModelAdminNextUrlRedirectError
+from edc_model_admin import (
+    AddressModelAdminMixin, ModelAdminChangelistButtonMixin, ModelAdminChangelistModelButtonMixin,
+    LimitedAdminInlineMixin, StackedInlineMixin, TabularInlineMixin,
+    FormAsJSONModelAdminMixin, ModelAdminAuditFieldsMixin, audit_fields, audit_fieldset_tuple,
+    ModelAdminBasicMixin, ModelAdminFormAutoNumberMixin,
+    ModelAdminFormInstructionsMixin, ModelAdminInstitutionMixin,
+    ModelAdminModelRedirectMixin, ModelAdminNextUrlRedirectMixin,
+    ModelAdminReadOnlyMixin, ModelAdminRedirectOnDeleteMixin,
+    ModelAdminNextUrlRedirectError)
+
+
+from warnings import warn
+warn('Import path edc_base.modeladmin_mixins is Deprecated and will be removed. '
+     'Import from edc_model_admin instead.', DeprecationWarning, stacklevel=2)

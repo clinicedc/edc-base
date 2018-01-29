@@ -4,11 +4,12 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 
-def phone_number(value, pattern, word):
+def phone_number(value, pattern):
     str_value = "%s" % (value)
+    pattern = pattern or '^[0-9+\(\)#\.\s\/ext-]+$'
     p = re.compile(pattern)
     if not p.match(str_value):
-        raise ValidationError(u'Invalid {} number. Got {}.'.format(word, str_value))
+        raise ValidationError(u'Invalid format.')
 
 
 def CellNumber(value):
@@ -17,10 +18,10 @@ def CellNumber(value):
             CELLPHONE_REGEX = '^[7]{1}[12345678]{1}[0-9]{6}$'
     """
     try:
-        regex = settings.CELLPHONE_REGEX
+        pattern = settings.CELLPHONE_REGEX
     except AttributeError:
-        regex = '^[0-9+\(\)#\.\s\/ext-]+$'
-    phone_number(value, regex, 'cell')
+        pattern = None
+    phone_number(value, pattern)
 
 
 def TelephoneNumber(value):
@@ -29,7 +30,7 @@ def TelephoneNumber(value):
             TELEPHONE_REGEX = '^[2-8]{1}[0-9]{6}$'
     """
     try:
-        regex = settings.TELEPHONE_REGEX
+        pattern = settings.TELEPHONE_REGEX
     except AttributeError:
-        regex = '^[0-9+\(\)#\.\s\/ext-]+$'
-    phone_number(value, regex, 'telephone')
+        pattern = None
+    phone_number(value, pattern)

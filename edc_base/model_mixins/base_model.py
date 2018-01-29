@@ -5,12 +5,11 @@ from django_revision import RevisionField
 
 from ..model_fields import HostnameModificationField, UserField
 from ..utils import get_utcnow
-from .common_clean_model_mixin import CommonCleanModelMixin
-from .constants import BASE_MODEL_UPDATE_FIELDS
+from ..constants import BASE_MODEL_UPDATE_FIELDS
 from .url_mixin import UrlMixin
 
 
-class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
+class BaseModel(UrlMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer).
@@ -42,19 +41,15 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
         max_length=60,
         blank=True,
         default=socket.gethostname,
-        help_text="System field. (modified on create only)",
-    )
+        help_text="System field. (modified on create only)")
 
     hostname_modified = HostnameModificationField(
         max_length=50,
         blank=True,
-        help_text="System field. (modified on every save)",
-    )
+        help_text="System field. (modified on every save)")
 
     revision = RevisionField(
-        help_text="System field. Git repository tag:branch:commit.",
-        blank=True,
-    )
+        help_text="System field. Git repository tag:branch:commit.")
 
     objects = models.Manager()
 
@@ -66,7 +61,11 @@ class BaseModel(CommonCleanModelMixin, UrlMixin, models.Model):
             kwargs.update({'update_fields': update_fields})
         except TypeError:
             pass
+        if not self.id:
+            self.created = get_utcnow()
         self.modified = get_utcnow()
+        self.hostname_created = self.hostname_created[:60]
+        self.hostname_modified = self.hostname_modified[:50]
         super().save(*args, **kwargs)
 
     @property

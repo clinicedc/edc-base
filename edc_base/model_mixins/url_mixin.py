@@ -10,6 +10,8 @@ class UrlMixinNoReverseMatch(Exception):
 
 class UrlMixin(models.Model):
 
+    ADMIN_SITE_NAME = None  # default is '{app_label}_admin'
+
     def get_absolute_url(self):
         try:
             if self.id:
@@ -19,8 +21,10 @@ class UrlMixin(models.Model):
                 absolute_url = reverse(self.admin_url_name)
         except NoReverseMatch as e:
             raise UrlMixinNoReverseMatch(
-                f'{e}. Perhaps define AppConfig.admin_site_name or '
-                'directly on model.ADMIN_SITE_NAME.')
+                f'Tried {self.admin_url_name}. Got {e}. '
+                f'Perhaps define AppConfig.admin_site_name or '
+                f'directly on model.ADMIN_SITE_NAME that refers to your '
+                f'app specific admin site.')
         return absolute_url
 
     @property
@@ -41,10 +45,9 @@ class UrlMixin(models.Model):
 
         e.g. for module plot the default would be 'plot_admin'.
         """
-        try:
-            # model specific
-            admin_site_name = self.ADMIN_SITE_NAME
-        except AttributeError:
+        # model specific
+        admin_site_name = self.ADMIN_SITE_NAME
+        if not admin_site_name:
             app_label = self._meta.app_label
             try:
                 # app specific

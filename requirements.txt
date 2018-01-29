@@ -1,5 +1,4 @@
 django
-django-braces
 django-simple-history
 django-js-reverse
 django-crispy-forms

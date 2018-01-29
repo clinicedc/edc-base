@@ -6,7 +6,7 @@ from django.db.models.fields import AutoField
 from ..utils import get_utcnow
 
 
-class SerializableManager(models.Manager):
+class SerializableModelManager(models.Manager):
 
     def get_by_natural_key(self, history_id):
         return self.get(history_id=history_id)
@@ -14,7 +14,7 @@ class SerializableManager(models.Manager):
 
 class SerializableModel(models.Model):
 
-    objects = SerializableManager()
+    objects = SerializableModelManager()
 
     def natural_key(self):
         return (self.history_id, )
@@ -28,12 +28,11 @@ class HistoricalRecords(SimpleHistoricalRecords):
     """HistoricalRecords that uses a UUID primary key and has a natural key method.
     """
 
-    def __init__(self, verbose_name=None, bases=(models.Model,),
-                 user_related_name='+', table_name=None, inherit=False):
-        bases = (SerializableModel, )
-        super().__init__(
-            verbose_name=verbose_name, bases=bases, user_related_name=user_related_name,
-            table_name=table_name, inherit=inherit)
+    model_cls = SerializableModel
+
+    def __init__(self, **kwargs):
+        kwargs.update(bases=(self.model_cls, ))
+        super().__init__(**kwargs)
 
     def get_history_id_field(self, model):
         """Return a field instance without initially assuming
@@ -50,7 +49,7 @@ class HistoricalRecords(SimpleHistoricalRecords):
         return field
 
     def get_extra_fields(self, model, fields):
-        """Override to set history_id (to UUIDField).
+        """Overridden to set history_id (to UUIDField).
         """
         extra_fields = super(
             HistoricalRecords, self).get_extra_fields(model, fields)
@@ -59,7 +58,7 @@ class HistoricalRecords(SimpleHistoricalRecords):
         return extra_fields
 
     def post_save(self, instance, created, **kwargs):
-        """Override to include \'using\'.
+        """Overridden to include \'using\'.
         """
         if not created and hasattr(instance, 'skip_history_when_saving'):
             return
@@ -68,12 +67,12 @@ class HistoricalRecords(SimpleHistoricalRecords):
                 instance, created and '+' or '~', using=kwargs.get('using'))
 
     def post_delete(self, instance, **kwargs):
-        """Override to include \'using\'.
+        """Overridden to include \'using\'.
         """
         self.create_historical_record(instance, '-', using=kwargs.get('using'))
 
     def create_historical_record(self, instance, history_type, **kwargs):
-        """Override to include \'using\'.
+        """Overridden to include \'using\'.
         """
         history_date = getattr(instance, '_history_date', get_utcnow())
         history_user = self.get_history_user(instance)

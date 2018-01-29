@@ -1,4 +1,6 @@
-import sys
+from django.conf import settings
 
-if 'test' in sys.argv:
+from .auth.models import UserProfile
+
+if settings.APP_NAME == 'edc_base':
     from .tests.models import TestModel, TestValidatorModel

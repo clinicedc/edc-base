@@ -15,25 +15,23 @@ class OtherCharField(CharField):
     DEFAULT_MAX_LENGTH = 35
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('editable', True)
-        kwargs.setdefault('blank', True)
+        kwargs.update(blank=True)
+        kwargs.update(null=True)
         kwargs.setdefault('max_length', self.DEFAULT_MAX_LENGTH)
-        kwargs.setdefault('verbose_name', _('...if "Other", specify'))
-        CharField.__init__(self, *args, **kwargs)
+        kwargs.setdefault('verbose_name', _('If Other, specify ...'))
+        self.max_length = kwargs['max_length']
+        self.verbose_name = kwargs['verbose_name']
+        super().__init__(*args, **kwargs)
 
     def get_internal_type(self):
         return "CharField"
 
     def deconstruct(self):
-        name, path, args, kwargs = super(OtherCharField, self).deconstruct()
-        if kwargs.get('max_length', None) == self.DEFAULT_MAX_LENGTH:
-            del kwargs['max_length']
-        if self.editable is not False:
-            kwargs['editable'] = True
-        if self.blank is not True:
-            kwargs['blank'] = False
-        if self.verbose_name is not _('...if "Other", specify'):
-            kwargs['verbose_name'] = _('...if "Other", specify')
+        name, path, args, kwargs = super().deconstruct()
+        kwargs.update(blank=True)
+        kwargs.update(null=True)
+        kwargs.update(max_length=self.max_length)
+        kwargs.update(verbose_name=self.verbose_name)
         return name, path, args, kwargs
 
 
