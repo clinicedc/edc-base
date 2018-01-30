@@ -15,6 +15,10 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
         app_config = django_apps.get_app_config('edc_base')
         edc_device_app_config = django_apps.get_app_config('edc_device')
         context = super().get_context_data(**kwargs)
+        try:
+            live_system = settings.LIVE_SYSTEM
+        except AttributeError:
+            live_system = None
         context.update({
             'DEBUG': settings.DEBUG,
             'copyright': app_config.copyright,
@@ -23,11 +27,17 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
             'disclaimer': app_config.disclaimer,
             'institution': app_config.institution,
             'license': app_config.license,
-            'project_name': app_config.project_name})
+            'project_name': app_config.project_name,
+            'live_system': live_system})
         if settings.DEBUG:
             messages.add_message(
                 self.request, messages.ERROR,
                 ('This EDC is running in DEBUG-mode. Use for testing only. '
+                 'Do not use this system for production data collection!'))
+        elif not settings.DEBUG and not live_system:
+            messages.add_message(
+                self.request, messages.WARNING,
+                ('This EDC is for testing only. '
                  'Do not use this system for production data collection!'))
         try:
             if settings.WARNING_MESSAGE:
