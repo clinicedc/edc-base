@@ -37,6 +37,7 @@ setup(
         'python-memcached',
         'django-tz-detect',  # can this be removed??
         'mysqlclient',
+        'tqdm',
     ],
     classifiers=[
         'Environment :: Web Environment',
