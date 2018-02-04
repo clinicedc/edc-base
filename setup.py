@@ -36,7 +36,6 @@ setup(
         'pytz',
         'arrow',
         'python-memcached',
-        'django-tz-detect',  # can this be removed??
         'mysqlclient',
         'tqdm',
     ],

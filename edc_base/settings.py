@@ -45,7 +45,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'tz_detect.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'edc_base.urls'
