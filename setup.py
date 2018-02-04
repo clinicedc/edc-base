@@ -10,7 +10,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='edc-base',
-    version='0.2.20',
+    version='0.2.21',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -23,6 +23,7 @@ setup(
     keywords='django base models fields forms admin',
     install_requires=[
         'django',
+        'django[argon2]',
         # 'django-simple-history',  until new release for DJ2.0
         'django-js-reverse',
         'django-logentry-admin',
@@ -35,7 +36,6 @@ setup(
         'pytz',
         'arrow',
         'python-memcached',
-        'django-tz-detect',  # can this be removed??
         'mysqlclient',
         'tqdm',
     ],
