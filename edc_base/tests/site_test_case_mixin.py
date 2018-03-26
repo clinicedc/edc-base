@@ -3,6 +3,8 @@ from django.contrib.sites.models import Site
 
 class SiteTestCaseMixin:
 
+    fqdn = 'clinicedc.org'
+
     default_sites = [
         (10, 'mochudi', 'mochudi'),
         (20, 'molepolole', 'molepolole'),
@@ -14,9 +16,15 @@ class SiteTestCaseMixin:
     def site_names(self):
         return [s[1] for s in self.default_sites]
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         Site.objects.all().delete()
-        for site_id, site_name, _ in self.default_sites:
+        for site_id, site_name, _ in cls.default_sites:
             Site.objects.create(
-                pk=site_id, name=site_name, domain=f'{site_name}.edc.bhp.org.bw')
+                pk=site_id, name=site_name, domain=f'{site_name}.{cls.fqdn}')
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        Site.objects.all().delete()
