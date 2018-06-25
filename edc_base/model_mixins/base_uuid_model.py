@@ -1,5 +1,5 @@
 from edc_device.model_mixins import DeviceModelMixin
-from edc_model_fields import UUIDAutoField
+from edc_model_fields.fields import UUIDAutoField
 
 from .base_model import BaseModel
 
