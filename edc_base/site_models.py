@@ -27,7 +27,7 @@ class SiteModels:
         self.loaded = False
 
     def register(self, models=None, wrapper_cls=None):
-        """Registers with app_label.modelname, SyncModel.
+        """Registers with app_label.modelname, wrapper_cls.
         """
         self.loaded = True
         for model in models:
