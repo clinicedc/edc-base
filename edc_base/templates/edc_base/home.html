@@ -1,6 +1,6 @@
 {% extends 'edc_base/base.html' %}
 
-{% load staticfiles %}
+{% load static %}
 
 {% block main %}
 
@@ -8,10 +8,14 @@
     <div class="col-sm-12">
       <h4>Edc research data system for {{ project_name }}</h4>
       <h6>Revision {{ revision }}</h6>
-      <p>The use of this system is strictly for research purposes only and specifically for the {{ project_name }} Trial. The source code for this system is published under 
-      the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">{{ license }}</a> and is available at
-      <a target="_blank" href="http://github.com/botswana-harvard/?q={{project_name|lower}}">http://github.com/botswana-harvard/</a>. The modules developed specifically for the {{ project_name }} trial are named with the prefixed "{{ project_name|lower }}_".
-      All other third party packages and modules used are provided according their specific licenses.
+      <p>
+      <B>The use of this system is strictly for research purposes only and specifically for the {{ project_name }} trial.</B>
+      <BR>The source code for this system is published under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">{{ license }}</a>.
+      <BR>Source code for the EDC general modules is available at <a target="_blank" href="http://github.com/clinicedc/?q={{project_name|lower}}">http://github.com/clinicedc/</a>.
+      <BR>Source code for modules developed specifically for the {{ project_name }} trial are available at <a target="_blank" href="{{project_repo}}">{{ project_repo }}</a>.
+      
+      <BR><BR>All other third party packages and modules used are provided according their specific licenses.
+    
     </p>
     </div>
     <div class="col-sm-12">
