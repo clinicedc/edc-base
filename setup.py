@@ -29,6 +29,7 @@ setup(
         'django-logentry-admin',
         'django-debug-toolbar',
         'django-extensions',
+        'django-environ',
         'python-dateutil',
         'docutils',
         'model_mommy',
