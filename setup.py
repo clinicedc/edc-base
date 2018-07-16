@@ -22,7 +22,6 @@ setup(
     zip_safe=False,
     keywords='django base models fields forms admin',
     install_requires=[
-        'django',
         'django[argon2]',
         'django-simple-history',
         'django-js-reverse',
