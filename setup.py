@@ -37,6 +37,7 @@ setup(
         'arrow',
         'python-memcached',
         'mysqlclient',
+        'psycopg2-binary',
         'tqdm',
     ],
     classifiers=[
