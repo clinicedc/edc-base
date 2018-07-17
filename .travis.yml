@@ -8,8 +8,12 @@ dist: xenial
 
 sudo: true
 
-services:
-  - postgres
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
 
 install:
   - pip3 install --upgrade pip setuptools
@@ -20,7 +24,7 @@ install:
 
 before_script:
   - flake8 edc_base
-  - mysql -e 'create database edc character set utf8;'
+  - psql -c 'create database edc encoding=UTF8;' -U postgres
 
 script: 
   - coverage run --source=edc_base manage.py test
