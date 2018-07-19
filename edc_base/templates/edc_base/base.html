@@ -33,22 +33,6 @@
 	<!-- end extra-css -->
     
 {% block scripts %}
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/bootstrap.min.js" %}"></script>
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/ie10-viewport-bug-workaround.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.form.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/js.cookies.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/moment.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/edc-base.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
-
-    <!-- don't forget to run python manage.py collectstatic_js_reverse. See https://github.com/ierror/django-js-reverse -->
-    <script type="text/javascript" charset="utf8" src="{% static 'django_js_reverse/js/reverse.js' %}"></script>
 
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
@@ -151,6 +135,26 @@
 
 </body>
 
-{% block extra-scripts-bottom %}{% endblock %}
+{% block extra-scripts-bottom %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/bootstrap.min.js" %}"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/ie10-viewport-bug-workaround.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.form.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/js.cookies.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/moment.min.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/edc-base.js" %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static "edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
+
+    <!-- don't forget to run python manage.py collectstatic_js_reverse. See https://github.com/ierror/django-js-reverse -->
+    <!--
+        <script type="text/javascript" charset="utf8" src="{% static 'django_js_reverse/js/reverse.js' %}"></script>
+    -->
+
+{% endblock %}
 
 </html>
