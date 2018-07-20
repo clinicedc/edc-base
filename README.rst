@@ -38,14 +38,14 @@ Most models require an audit trail. If so, add the ``HistoricalRecord`` model ma
 ``HistoricalRecord`` is an almost identical version of ``simple_history.models.HistoricalRecord``
 with the exception of two methods:  ``get_extra_fields()`` and ``add_extra_methods()``. Method 
 ``get_extra_fields()`` is overridden to change the ``history_id`` primary key from an 
-``IntegerField`` to a ``UUIDField`` so that it can work with module ``django_offline``.
+``IntegerField`` to a ``UUIDField`` so that it can work with module ``django_collect_offline``.
 
 
-The audit trail models created by ``HistoricalRecord`` have a foreign key to ``auth.User``. In order for the models to work with `django_offline` specify the django_offline User model in settings:
+The audit trail models created by ``HistoricalRecord`` have a foreign key to ``auth.User``. In order for the models to work with `django_collect_offline` specify the django_collect_offline User model in settings:
     
 .. code-block:: python
 
-    AUTH_USER_MODEL = 'django_offline.User' 
+    AUTH_USER_MODEL = 'django_collect_offline.User' 
 
 
 Notes
