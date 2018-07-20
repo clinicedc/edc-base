@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/clinicedc/edc-base.svg?branch=develop)](https://travis-ci.org/clinicedc/edc-base)
 [![Coverage Status](https://coveralls.io/repos/clinicedc/edc-base/badge.svg?branch=develop&service=github)](https://coveralls.io/github/clinicedc/edc-base?branch=develop)
+[![PyPI][pypi]](https://pypi.org/project/edc-fieldsets/)
+
 # edc-base
 
 Base model, manager, field, form and admin classes for Edc. 
@@ -127,3 +129,7 @@ In order for the models to work with `django_offline` specify the django_offline
 User created and modified fields behave as follows:
 * created is only set on pre-save add
 * modified is always updated
+
+
+[pypi]: https://img.shields.io/pypi/v/edc-base.svg?style=flat-square
+
