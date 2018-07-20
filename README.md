@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/botswana-harvard/edc-base.svg?branch=develop)](https://travis-ci.org/botswana-harvard/edc-base)
-[![Coverage Status](https://coveralls.io/repos/botswana-harvard/edc-base/badge.svg?branch=develop&service=github)](https://coveralls.io/github/botswana-harvard/edc-base?branch=develop)
+[![Build Status](https://travis-ci.org/clinicedc/edc-base.svg?branch=develop)](https://travis-ci.org/clinicedc/edc-base)
+[![Coverage Status](https://coveralls.io/repos/clinicedc/edc-base/badge.svg?branch=develop&service=github)](https://coveralls.io/github/clinicedc/edc-base?branch=develop)
 # edc-base
 
 Base model, manager, field, form and admin classes for Edc. 
@@ -103,15 +103,12 @@ Or you can use the special validators `MinConsentAgeValidator`, `MaxConsentAgeVa
 HistoricalRecord is an almost identical version of `simple_history.models.HistoricalRecord`
 with the exception of two methods:  `get_extra_fields()` and `add_extra_methods()`. Method 
 `get_extra_fields()` method is overridden to change the *history_id* primary key from an 
-`IntegerField` to a `UUIDField` so that it can work with module `edc-sync`. Method `add_extra_methods()`
-is overridden to add the methods from `edc_sync.mixins.SyncMixin` if module `edc_sync` is 
-in INSTALLED_APP.
+`IntegerField` to a `UUIDField` so that it can work with module `django_offline`. 
 
 
     from edc_base.model.models import HistoricalRecord
-    from edc_sync.mixins import SyncMixin
     
-    class MyModel(SyncMixin, BaseUuidModel):
+    class MyModel(BaseUuidModel):
         
         ...
         history = HistoricalRecord()
@@ -120,9 +117,9 @@ in INSTALLED_APP.
             app_label = 'my_app'    
 
 The audit trail models created by `simple_history` have a foreign key to `auth.User`.
-In order for the models to work with `edc_sync` specify the edc_sync User model in settings:
+In order for the models to work with `django_offline` specify the django_offline User model in settings:
     
-    AUTH_USER_MODEL = 'edc_sync.User' 
+    AUTH_USER_MODEL = 'django_offline.User' 
 
 
 ### Notes

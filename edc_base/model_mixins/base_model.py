@@ -2,10 +2,10 @@ import socket
 
 from django.db import models
 from django_revision import RevisionField
+from edc_model_fields.fields import HostnameModificationField, UserField
 
-from ..model_fields import HostnameModificationField, UserField
-from ..utils import get_utcnow
 from ..constants import BASE_MODEL_UPDATE_FIELDS
+from ..utils import get_utcnow
 from .url_mixin import UrlMixin
 
 

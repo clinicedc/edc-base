@@ -37,7 +37,7 @@ def create_gunicorn_conf_files(path=None, sites=None, live_or_test=None, workers
         $ python manage.py shell
         >>> import os
         >>> from edc_base.config import create_gunicorn_conf_files
-        >>> from ambition.sites import ambition_sites
+        >>> from ambition_sites import ambition_sites
         >>> path = os.path.expanduser('~/source/ambition-test/gunicorn')
         >>> create_gunicorn_conf_files(path=path, sites=ambition_sites, live_or_test='test')
     """

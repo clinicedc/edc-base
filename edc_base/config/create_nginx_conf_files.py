@@ -52,7 +52,7 @@ def create_nginx_conf_files(path=None, sites=None, domain=None):
         $ python manage.py shell
         >>> import os
         >>> from edc_base.config import create_nginx_conf_files
-        >>> from ambition.sites import ambition_sites
+        >>> from ambition_sites import ambition_sites
         >>> path = os.path.expanduser('~/source/ambition/nginx')
         >>> create_nginx_conf_files(path=path, sites=ambition_sites)
     """

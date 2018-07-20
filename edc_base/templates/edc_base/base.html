@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 {% load tz %}
 <!DOCTYPE html>
 <html lang="en">
@@ -14,11 +14,30 @@
     <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/flaticon/flaticon.css' %}"> 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/bootstrap.min.css' %}" >
-
-    <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">    
     <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/sticky-footer-navbar.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'edc_base/datetimepicker/css/datetimepicker.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'edc_base/css/edc_base.css' %}">
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/bootstrap.min.js' %}"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/ie10-viewport-bug-workaround.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/jquery.form.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/js.cookies.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/moment.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/js/edc-base.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <!-- don't forget to run python manage.py collectstatic_js_reverse. See https://github.com/ierror/django-js-reverse -->
+    <!--
+        <script type="text/javascript" charset="utf8" src="{% static 'django_js_reverse/js/reverse.js' %}"></script>
+    -->
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -31,25 +50,14 @@
 	<!-- end extra-css -->
     
 {% block scripts %}
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/bootstrap.min.js" %}"></script>
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/ie10-viewport-bug-workaround.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/jquery.form.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/js.cookies.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/moment.min.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/js/edc-base.js" %}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static "edc_base/datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
-
 
     <script>
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
         $('[data-toggle="popover"]').popover({html:true, trigger:'focus'}); 
+        $("#success-alert").fadeTo(1000, 500).slideUp(500, function(){
+            $("#success-alert").slideUp(500);
+        }); 
     });
 
     </script>    
@@ -87,7 +95,7 @@
           </button>
 
           {% block topbar_title %}
-            <span class="navbar-brand hidden-sm">{{ protocol_name |default:project_name }} {{ request.site.name|title }}{% if live_system %} <i class="fa fa-fire fa-fw"></i>{% else %} TEST{% endif %}</span>
+            <span class="navbar-brand hidden-sm">{{ protocol_name |default:project_name }} {{ request.site.name|title }}{% if live_system %} <i class="fas fa-fire fa-fw"></i>{% else %} TEST{% endif %}</span>
           {% endblock topbar_title %}
 
         </div>
@@ -135,16 +143,17 @@
 
     {% block footer_extra_items %}
     {% endblock footer_extra_items %}
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-copyright"></span> {{ copyright }}&nbsp;{{ institution }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-leaf"></span> Revision: {{ revision }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-clock-o"></span> {% now "SHORT_DATETIME_FORMAT" %} {% get_current_timezone as TIME_ZONE %} {{ TIME_ZONE }}</p></div>
-    <div class="col-md-3"><p class="text-muted small text-center"><span class="fa fa-exclamation"></span> {{ disclaimer }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fas fa-copyright"></span> Licensed for use under <A href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL 3.0</A></p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fas fa-leaf"></span> Revision: {{ revision }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fas fa-clock"></span> {% now "SHORT_DATETIME_FORMAT" %} {% get_current_timezone as TIME_ZONE %} {{ TIME_ZONE }}</p></div>
+    <div class="col-md-3"><p class="text-muted small text-center"><span class="fas fa-exclamation"></span> {{ disclaimer }}</p></div>
   </div>
 </footer>
 {% endblock footer %}
 
 </body>
 
-{% block extra-scripts-bottom %}{% endblock %}
+{% block extra-scripts-bottom %}
+{% endblock %}
 
 </html>

@@ -76,6 +76,20 @@ def to_arrow_utc(dt, timezone=None):
     return r_utc
 
 
+def get_dob(age_in_years, now=None):
+    """Returns a DoB for the given age relative to now.
+
+    Meant for tests.
+    """
+    if now:
+        try:
+            now = now.date()
+        except AttributeError:
+            pass
+    now = now or get_utcnow().date()
+    return now - relativedelta(years=age_in_years)
+
+
 def age(born, reference_dt, timezone=None):
     """Returns a relative delta"""
     # avoid null dates/datetimes

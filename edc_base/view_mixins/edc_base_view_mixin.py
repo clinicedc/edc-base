@@ -28,6 +28,7 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
             'institution': app_config.institution,
             'license': app_config.license,
             'project_name': app_config.project_name,
+            'project_repo': app_config.project_repo,
             'live_system': live_system})
         if settings.DEBUG:
             messages.add_message(

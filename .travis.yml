@@ -1,23 +1,30 @@
 language: python
 
-python: "3.6"
+python:
+- 3.6
+- 3.7
 
-env:
-  - DJANGO_VERSION=1.11.2
+dist: xenial
 
-services: mysql
+sudo: true
+
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
 
 install:
   - pip3 install --upgrade pip setuptools
-  - pip3 install -q Django==$DJANGO_VERSION
   - pip3 install flake8
   - pip3 install coveralls
-  - pip3 install mysqlclient
+  - pip3 install -e .
   - pip3 install -q -r requirements.txt
 
 before_script:
   - flake8 edc_base
-  - mysql -e 'create database edc character set utf8;'
+  - psql -c 'create database edc encoding=UTF8;' -U postgres
 
 script: 
   - coverage run --source=edc_base manage.py test

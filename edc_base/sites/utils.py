@@ -1,9 +1,18 @@
 import sys
 
+from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def add_or_update_django_sites(apps=None, sites=None, fqdn=None):
+def add_or_update_django_sites(apps=None, sites=None, fqdn=None, verbose=None):
+    """
+        sites format:
+            sites = (
+                (<site_id>, <site_name>, <description>),
+                ...)
+    """
+
+    apps = apps or django_apps
     Site = apps.get_model('sites', 'Site')
     Site.objects.filter(name='example.com').delete()
     for site_id, site_name, _ in sites:
@@ -18,5 +27,6 @@ def add_or_update_django_sites(apps=None, sites=None, fqdn=None):
             site_obj.name = site_name
             site_obj.domain = f'{site_name}.{fqdn}'
             site_obj.save()
-    sys.stdout.write(f'Updated sites for {fqdn}.\n')
-    sys.stdout.flush()
+    if verbose:
+        sys.stdout.write(f'Updated sites for {fqdn}.\n')
+        sys.stdout.flush()

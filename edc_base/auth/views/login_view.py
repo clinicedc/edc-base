@@ -1,6 +1,7 @@
 from django.apps import apps as django_apps
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib import messages
+from django_revision.revision import site_revision
 
 
 class LoginView(BaseLoginView):
@@ -24,4 +25,5 @@ class LoginView(BaseLoginView):
             'disclaimer': app_config.disclaimer,
             'institution': app_config.institution,
             'license': app_config.license,
+            'revision': site_revision.tag,
             'project_name': app_config.project_name}

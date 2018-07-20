@@ -28,6 +28,7 @@ class AppConfig(DjangoAppConfig):
     verbose_name = 'Edc Base'
     institution = 'Institution (see edc_base.AppConfig.institution)'
     project_name = 'Project Title (see edc_base.AppConfig.project_name)'
+    project_repo = ''
     physical_address = Address()
     postal_address = Address()
     disclaimer = 'For research purposes only.'
