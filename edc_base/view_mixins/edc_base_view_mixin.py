@@ -19,6 +19,10 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
             live_system = settings.LIVE_SYSTEM
         except AttributeError:
             live_system = None
+        try:
+            sentry_dsn = settings.SENTRY_DSN
+        except AttributeError:
+            sentry_dsn = None
         context.update({
             'DEBUG': settings.DEBUG,
             'copyright': app_config.copyright,
@@ -29,7 +33,8 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
             'license': app_config.license,
             'project_name': app_config.project_name,
             'project_repo': app_config.project_repo,
-            'live_system': live_system})
+            'live_system': live_system,
+            'sentry_dsn': sentry_dsn})
         if settings.DEBUG:
             messages.add_message(
                 self.request, messages.ERROR,
