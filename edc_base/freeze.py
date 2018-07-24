@@ -1,8 +1,11 @@
 import subprocess
 
-freeze = subprocess.Popen(
-    ['pip', 'freeze'], stdout=subprocess.PIPE).stdout.read()
-freeze = freeze.decode("utf-8").split('\n')
+cmd = ['pip', 'freeze']
+process = subprocess.Popen(
+    cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
+    stderr=subprocess.PIPE).stdout.read()
+stdoutdata = process.communicate()[0]
+freeze = stdoutdata.decode("utf-8").split('\n')
 freeze = [x for x in freeze if x]
 
 edc_packages = [
