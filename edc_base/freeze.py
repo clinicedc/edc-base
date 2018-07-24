@@ -1,10 +1,13 @@
 import subprocess
 
-proc = subprocess.Popen(['pip', 'freeze'], stdout=subprocess.PIPE)
-freeze = proc.communicate()[0]
-freeze = freeze.split('\n')
+freeze = subprocess.Popen(
+    ['pip', 'freeze'], stdout=subprocess.PIPE).stdout.read()
+freeze = freeze.decode("utf-8").split('\n')
+freeze = [x for x in freeze if x]
+
 edc_packages = [
     x for x in freeze if 'clinicedc' in x or 'erikvw' in x or 'edc-'in x]
-third_party_packages = [x for x in freeze if x and x not in edc_packages]
 edc_packages.sort()
+
+third_party_packages = [x for x in freeze if x and x not in edc_packages]
 third_party_packages.sort()
