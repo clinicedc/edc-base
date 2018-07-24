@@ -3,7 +3,7 @@ import subprocess
 cmd = ['pip', 'freeze']
 process = subprocess.Popen(
     cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-    stderr=subprocess.PIPE).stdout.read()
+    stderr=subprocess.PIPE)
 stdoutdata = process.communicate()[0]
 freeze = stdoutdata.decode("utf-8").split('\n')
 freeze = [x for x in freeze if x]
