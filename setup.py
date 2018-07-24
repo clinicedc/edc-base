@@ -3,7 +3,7 @@ import os
 from setuptools import setup
 from setuptools import find_packages
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
 
 with open(os.path.join(os.path.dirname(__file__), 'VERSION')) as f:
@@ -19,12 +19,13 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     url='http://github.com/clinicedc/edc-base',
-    license='GPL licence, see LICENCE',
+    license='GPL license, see LICENSE',
     description='Base mixins and utilities for clinicedc/edc projects.',
     long_description=README,
     zip_safe=False,
     keywords='django base models fields forms admin',
     install_requires=[
+        'django',
         'django[argon2]',
         'django-simple-history',
         'django-js-reverse',

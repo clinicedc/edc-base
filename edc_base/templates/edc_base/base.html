@@ -45,7 +45,7 @@
       <script type="text/javascript" charset="utf8" src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-	<!-- begin extra-css -->
+ 	<!-- begin extra-css -->
 	{% block extra-css %}{% endblock extra-css %}
 	<!-- end extra-css -->
     
@@ -59,8 +59,14 @@
             $("#success-alert").slideUp(500);
         }); 
     });
-
     </script>    
+
+   {% if sentry_dsn %}
+      <script type="text/javascript">
+          Raven.config('{sentry_dsn}').install();
+        window.onerror = Raven.process;
+      </script>
+     {% endif %}
 
 {% endblock scripts %}
 
@@ -95,7 +101,7 @@
           </button>
 
           {% block topbar_title %}
-            <span class="navbar-brand hidden-sm">{{ protocol_name |default:project_name }} {{ request.site.name|title }}{% if live_system %} <i class="fas fa-fire fa-fw"></i>{% else %} TEST{% endif %}</span>
+            <span class="navbar-brand hidden-sm">{% if live_system and not DEBUG %}<span class="label label-success">Live</span>{% else %}<span class="label label-danger">Test</span>{% endif %}&nbsp;&nbsp;{{ protocol_name |default:project_name }} {{ request.site.name|title }}</span>
           {% endblock topbar_title %}
 
         </div>
