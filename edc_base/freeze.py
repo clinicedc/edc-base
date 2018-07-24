@@ -1,12 +1,20 @@
-from django.conf import settings
-from subprocess import Popen, PIPE
+# this causes file not found error!
+# import subprocess
+#
+# cmd = ['pip', 'freeze']
+# process = subprocess.Popen(
+#     cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
+#     stderr=subprocess.PIPE)
+# stdoutdata = process.communicate()[0]
+# freeze = stdoutdata.decode("utf-8").split('\n')
+# freeze = [x for x in freeze if x]
+#
+# edc_packages = [
+#     x for x in freeze if 'clinicedc' in x or 'erikvw' in x or 'edc-'in x]
+# edc_packages.sort()
+#
+# third_party_packages = [x for x in freeze if x and x not in edc_packages]
+# third_party_packages.sort()
 
-with Popen(["pip", "freeze"], stdout=PIPE, encoding='utf8', cwd=settings.BASE_DIR) as proc:
-    freeze = proc.stdout.read()
-
-
-freeze = freeze.split('\n')
-edc_packages = [x for x in freeze if 'botswana-harvard' in x or 'erikvw' in x]
-third_party_packages = [x for x in freeze if x and x not in edc_packages]
-edc_packages.sort()
-third_party_packages.sort()
+edc_packages = []
+third_party_packages = []
