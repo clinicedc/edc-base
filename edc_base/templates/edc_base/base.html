@@ -101,7 +101,7 @@
           </button>
 
           {% block topbar_title %}
-            <span class="navbar-brand hidden-sm">{{ protocol_name |default:project_name }} {{ request.site.name|title }}{% if live_system and not DEBUG %} <i title="Live system" class="fas fa-fire fa-fw"></i>{% else %} [ TEST ]{% endif %}</span>
+            <span class="navbar-brand hidden-sm">{{ protocol_name |default:project_name }} {{ request.site.name|title }}{% if live_system and not DEBUG %} <span class="label label-success">Live</span>{% else %}<span class="label label-danger">Test</span>{% endif %}</span>
           {% endblock topbar_title %}
 
         </div>
