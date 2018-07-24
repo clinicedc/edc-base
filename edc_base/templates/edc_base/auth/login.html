@@ -12,7 +12,7 @@
           <div class="panel-heading">
             <h4 class="text-muted text-center">{{ project_name }}</h4>
             <h6 class="text-muted text-center">{{ request.site.name|title }}</h6>            
-            {% if not live_system %}<h6 class="text-center">This site is a test site.</h6>{% endif %}      
+            {% if not live_system %}<h6 class="text-center">This site is for testing and UAT only.</h6>{% endif %}      
           </div>
             <div class="panel-body text-center">
     		{% if form.errors %}
