@@ -47,7 +47,11 @@
                 {# Assumes you setup the password_reset view in your URLconf #}
                 {# <p><a href="{% url 'password_reset' %}">Lost password?</a></p> #}
 
+                {% if INDEX_PAGE and INDEX_PAGE_LABEL %}<p><a href="{{ INDEX_PAGE }}">{{ INDEX_PAGE_LABEL }}</a></p>{% endif %}
+
                 </form>
+
+
             </div>
           </div>
       </div>

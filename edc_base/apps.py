@@ -37,7 +37,6 @@ class AppConfig(DjangoAppConfig):
     license = 'GNU GENERAL PUBLIC LICENSE Version 3'
 
     def ready(self):
-        from .signals import update_user_profile_on_post_save
         register(edc_base_check)
         sys.stdout.write(f'Loading {self.verbose_name} ...\n')
         connection_created.connect(activate_foreign_keys)
