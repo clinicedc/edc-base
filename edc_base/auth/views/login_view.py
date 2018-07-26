@@ -1,8 +1,8 @@
 from django.apps import apps as django_apps
-from django.contrib.auth.views import LoginView as BaseLoginView
-from django.contrib import messages
-from django_revision.revision import site_revision
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.views import LoginView as BaseLoginView
+from django_revision.revision import site_revision
 
 
 class LoginView(BaseLoginView):
@@ -10,7 +10,8 @@ class LoginView(BaseLoginView):
     template_name = 'edc_base/auth/login.html'
 
     def get_context_data(self, **kwargs):
-        """Tests cookies."""
+        """Tests cookies.
+        """
         self.request.session.set_test_cookie()
         if not self.request.session.test_cookie_worked():
             messages.add_message(
@@ -33,4 +34,6 @@ class LoginView(BaseLoginView):
             'license': app_config.license,
             'revision': site_revision.tag,
             'project_name': app_config.project_name,
-            'live_system': live_system}
+            'live_system': live_system,
+            'INDEX_PAGE': getattr(settings, 'INDEX_PAGE', None),
+            'INDEX_PAGE_LABEL': getattr(settings, 'INDEX_PAGE_LABEL', None)}
