@@ -1,0 +1,14 @@
+Changelog
+=========
+All notable changes to this project will be documented in this file as of 0.2.25.
+
+The format is *inspired* by `Keep a Changelog <http://keepachangelog.com/en/1.0.0/>`_
+and this project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`_.
+
+
+`v0.2.26`_ - 31-July-2018
+--------------------------
+Removed
++++++++
+  - ``edc_base.auth`` has been moved to it's own module: ``edc_auth``.
+  - The ``UserProfile`` model now lives in ``edc_auth``. You may wish to copy this table to ``edc_auth`` before running migrations. See ``edc_auth`` README.
