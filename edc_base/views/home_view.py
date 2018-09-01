@@ -8,7 +8,7 @@ from edc_navbar import NavbarViewMixin
 
 class HomeView(EdcBaseViewMixin, NavbarViewMixin, TemplateView):
 
-    template_name = 'edc_base/home.html'
+    template_name = f'edc_base/bootstrap{settings.EDC_BOOTSTRAP}/home.html'
     navbar_name = 'edc_base'
     navbar_selected_item = 'edc_base'
 
