@@ -24,7 +24,6 @@ class EdcBaseViewMixin(LoginRequiredMixin, RevisionMixin, ContextMixin):
         except AttributeError:
             sentry_dsn = None
         context.update({
-            'DEBUG': settings.DEBUG,
             'copyright': app_config.copyright,
             'device_id': edc_device_app_config.device_id,
             'device_role': edc_device_app_config.device_role,
