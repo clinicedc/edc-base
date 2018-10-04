@@ -3,4 +3,4 @@ from django.contrib.sites.managers import CurrentSiteManager as BaseCurrentSiteM
 
 class CurrentSiteManager(BaseCurrentSiteManager):
 
-    pass
+    use_in_migrations = True
