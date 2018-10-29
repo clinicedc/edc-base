@@ -39,8 +39,9 @@ def round_up(value, digits):
 
 def get_safe_random_string(length=12, safe=None, allowed_chars=None):
     safe = True if safe is None else safe
-    allowed_chars = (allowed_chars or
-                     'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ012346789!@#%^&*()?<>.,[]{}')
+    allowed_chars = (
+        allowed_chars or
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ012346789!@#%^&*()?<>.,[]{}')
     if safe:
         allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
     return ''.join([random.choice(allowed_chars) for _ in range(length)])
@@ -63,7 +64,9 @@ def get_utcnow():
 
 
 def to_arrow_utc(dt, timezone=None):
-    """Returns a datetime after converting date or datetime from the given timezone string to \'UTC\'."""
+    """Returns a datetime after converting date or datetime from
+    the given timezone string to \'UTC\'.
+    """
     try:
         dt.date()
     except AttributeError:
@@ -139,7 +142,8 @@ def get_age_in_days(reference_datetime, dob):
 
 
 def convert_from_camel(name):
-    """Converts from camel case to lowercase divided by underscores."""
+    """Converts from camel case to lowercase divided by underscores.
+    """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
@@ -196,7 +200,7 @@ class Convert(object):
         return string_value or force_text(self.value)
 
     def to_time(self, string_value):
-        if re.match('^[0-9]{1,2}\:[0-9]{2}$', string_value):
+        if re.match(r'^[0-9]{1,2}\:[0-9]{2}$', string_value):
             return string_value
         else:
             raise ConvertError()
