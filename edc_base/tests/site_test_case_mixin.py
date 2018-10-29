@@ -1,4 +1,5 @@
 from django.contrib.sites.models import Site
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class SiteTestCaseMixin:
@@ -21,10 +22,13 @@ class SiteTestCaseMixin:
         super().setUpClass()
         Site.objects.all().delete()
         for site_id, site_name, _ in cls.default_sites:
-            Site.objects.create(
-                pk=site_id, name=site_name, domain=f'{site_name}.{cls.fqdn}')
+            try:
+                Site.objects.get(pk=site_id)
+            except ObjectDoesNotExist:
+                Site.objects.create(
+                    pk=site_id, name=site_name, domain=f'{site_name}.{cls.fqdn}')
 
-    @classmethod
-    def tearDownClass(cls):
-        super().tearDownClass()
-        Site.objects.all().delete()
+#     @classmethod
+#     def tearDownClass(cls):
+#         super().tearDownClass()
+        # Site.objects.all().delete()
