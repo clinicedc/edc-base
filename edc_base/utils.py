@@ -12,6 +12,8 @@ from django.conf import settings
 from django.utils.encoding import force_text
 
 from edc_base.exceptions import AgeValueError
+from arrow.arrow import Arrow
+import pytz
 
 safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
 
@@ -139,6 +141,16 @@ def formatted_age(born, reference_dt=None, timezone=None):
 def get_age_in_days(reference_datetime, dob):
     age_delta = age(dob, reference_datetime)
     return age_delta.days
+
+
+def formatted_datetime(aware_datetime, php_dateformat=None, tz=None):
+    """Returns a formatted datetime string, localized by default.
+    """
+    php_dateformat = php_dateformat or settings.SHORT_DATETIME_FORMAT
+    tz = tz or pytz.timezone(settings.TIME_ZONE)
+    utc = Arrow.fromdatetime(aware_datetime)
+    local = utc.to(tz)
+    return local.datetime.strftime(convert_php_dateformat(php_dateformat))
 
 
 def convert_from_camel(name):
