@@ -153,6 +153,12 @@ def formatted_datetime(aware_datetime, php_dateformat=None, tz=None):
     return local.datetime.strftime(convert_php_dateformat(php_dateformat))
 
 
+def to_utc(dt):
+    """Returns UTC datetime from any aware datetime.
+    """
+    return Arrow.fromdatetime(dt, dt.tzinfo).to('utc').datetime
+
+
 def convert_from_camel(name):
     """Converts from camel case to lowercase divided by underscores.
     """
