@@ -1,13 +1,14 @@
 import arrow
 import pytz
 
-from dateutil import tz
 from datetime import datetime, date
-
+from dateutil import tz
 from django.test import TestCase, tag
 
-from ..utils import age, get_age_in_days, formatted_age, get_safe_random_string
 from ..exceptions import AgeValueError
+from ..utils import age, get_age_in_days, formatted_age, get_safe_random_string
+from ..utils import formatted_datetime, get_utcnow
+from arrow.arrow import Arrow
 
 
 class TestUtils(TestCase):
@@ -105,3 +106,8 @@ class TestUtils(TestCase):
         dst_hours, _ = divmod(seconds, 3600)
         self.assertEqual(
             age(born.datetime, reference_dt.datetime).hours, 7 + 2 - dst_hours)
+
+    def test_formatted_datetime(self):
+        born = arrow.get(datetime(1990, 5, 2, 0, 0),
+                         tz.gettz('Africa/Gaborone')).datetime
+        self.assertTrue(formatted_datetime(born))
