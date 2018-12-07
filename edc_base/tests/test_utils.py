@@ -5,10 +5,12 @@ from datetime import datetime, date
 from dateutil import tz
 from django.test import TestCase, tag
 
-from ..exceptions import AgeValueError
-from ..utils import age, get_age_in_days, formatted_age, get_safe_random_string
-from ..utils import formatted_datetime, get_utcnow
-from arrow.arrow import Arrow
+from ..utils import AgeValueError
+from ..utils import age
+from ..utils import formatted_age
+from ..utils import formatted_datetime
+from ..utils import get_age_in_days
+from ..utils import get_safe_random_string
 
 
 class TestUtils(TestCase):
@@ -76,7 +78,6 @@ class TestUtils(TestCase):
             datetime(1990, 5, 1, 0, 0), tz.gettz('UTC')).datetime
         self.assertEqual(age(born, reference_dt).hours, 0)
 
-    @tag('me')
     def test_age_zero3(self):
         """Assert born after reference date considering timezones."""
         born = arrow.get(datetime(1990, 5, 2, 5, 0),
@@ -85,7 +86,6 @@ class TestUtils(TestCase):
             datetime(1990, 5, 2, 2, 0), tz.gettz('UTC')).datetime
         self.assertRaises(AgeValueError, age, born, reference_dt)
 
-    @tag('me')
     def test_age_zero4(self):
         """Assert born 2hrs before reference date considering timezones."""
         born = arrow.get(datetime(1990, 5, 2, 0, 0),

@@ -1,6 +1,8 @@
+
 class Address:
 
-    def __init__(self, contact_name=None, company_name=None, address=None, city=None, state=None,
+    def __init__(self, contact_name=None, company_name=None, address=None,
+                 city=None, state=None,
                  postal_code=None, country=None, tel=None,
                  mobile=None, fax=None):
         self.contact_name = contact_name or 'CONTACT NAME'
@@ -11,5 +13,5 @@ class Address:
         self.postal_code = postal_code or ''
         self.country = country or 'COUNTRY'
         self.tel = tel or 'TELEPHONE'
-        self.mobile = tel or 'MOBILE'
+        self.mobile = mobile or 'MOBILE'
         self.fax = fax or 'FAX'

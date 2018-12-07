@@ -3,9 +3,11 @@ import arrow
 from django.core.exceptions import ValidationError
 from django.utils.timezone import get_default_timezone
 
-from ..exceptions import FutureDateError
-
 from .date import date_not_future
+
+
+class FutureDateError(Exception):
+    pass
 
 
 def dob_not_future(value):

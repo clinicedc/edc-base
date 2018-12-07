@@ -2,8 +2,7 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from math import ceil
 
-from ..exceptions import AgeValueError
-from ..utils import age, get_utcnow
+from ..utils import age, get_utcnow, AgeValueError
 
 register = template.Library()
 
