@@ -1,19 +1,16 @@
 import arrow
+import pytz
 import random
 import re
 
+from arrow.arrow import Arrow
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal, InvalidOperation
-from math import ceil
-from uuid import uuid4
-
 from django.conf import settings
 from django.utils.encoding import force_text
-
-from edc_base.exceptions import AgeValueError
-from arrow.arrow import Arrow
-import pytz
+from math import ceil
+from uuid import uuid4
 
 safe_allowed_chars = 'ABCDEFGHKMNPRTUVWXYZ2346789'
 
@@ -25,6 +22,10 @@ class MyTimezone:
             self.tzinfo = tz.gettz(timezone)
         else:
             self.tzinfo = tz.gettz(settings.TIME_ZONE)
+
+
+class AgeValueError(Exception):
+    pass
 
 
 class ConvertError(Exception):
