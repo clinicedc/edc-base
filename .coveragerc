@@ -2,7 +2,9 @@
 omit =
     */wsgi.py
     setup.py
+    */navbars.py
     manage.py
+    */config_utils/*
     */migrations/*
     */mommy_*
     venv/*

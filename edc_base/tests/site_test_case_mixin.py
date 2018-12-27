@@ -1,17 +1,21 @@
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 
+fqdn = 'clinicedc.org'
+
+default_sites = [
+    (10, 'mochudi', 'mochudi'),
+    (20, 'molepolole', 'molepolole'),
+    (30, 'lobatse', 'lobatse'),
+    (40, 'gaborone', 'gaborone'),
+    (50, 'karakobis', 'karakobis')]
+
 
 class SiteTestCaseMixin:
 
-    fqdn = 'clinicedc.org'
+    fqdn = fqdn
 
-    default_sites = [
-        (10, 'mochudi', 'mochudi'),
-        (20, 'molepolole', 'molepolole'),
-        (30, 'lobatse', 'lobatse'),
-        (40, 'gaborone', 'gaborone'),
-        (50, 'karakobis', 'karakobis')]
+    default_sites = default_sites
 
     @property
     def site_names(self):
@@ -27,8 +31,3 @@ class SiteTestCaseMixin:
             except ObjectDoesNotExist:
                 Site.objects.create(
                     pk=site_id, name=site_name, domain=f'{site_name}.{cls.fqdn}')
-
-#     @classmethod
-#     def tearDownClass(cls):
-#         super().tearDownClass()
-        # Site.objects.all().delete()

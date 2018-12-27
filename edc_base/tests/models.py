@@ -1,10 +1,29 @@
-__all__ = ['TestModel', 'TestValidatorModel']
-
+from dateutil.relativedelta import relativedelta
 from django.db import models
 
-from ..model_mixins import BaseUuidModel
+from ..model_managers.historical_records import HistoricalRecords
+from ..model_mixins import BaseUuidModel, BaseModel, ReportStatusModelMixin
+from ..model_validators import datetime_is_future, date_is_future
+from ..model_validators import datetime_not_future, date_not_future
+from ..model_validators import CellNumber, TelephoneNumber
 from ..sites import SiteModelMixin
-from ..model_validators import CompareNumbersValidator
+from ..utils import get_utcnow
+
+
+class TestSimpleModel(BaseModel):
+
+    f1 = models.CharField(max_length=10, null=True)
+
+
+class TestBaseModel(BaseModel):
+
+    f1 = models.CharField(max_length=10)
+    f2 = models.CharField(max_length=10)
+
+
+class TestBaseModelWithStatus(BaseModel, ReportStatusModelMixin):
+
+    f1 = models.CharField(max_length=10)
 
 
 class TestModel(BaseUuidModel):
@@ -17,17 +36,39 @@ class TestModel(BaseUuidModel):
     f5_other = models.CharField(max_length=10, null=True)
 
 
-class TestValidatorModel(models.Model):
-
-    consent_age = models.IntegerField(
-        validators=[
-            CompareNumbersValidator(
-                18, '>=', message='Age of consent must be {}. Got {}'),
-            CompareNumbersValidator(
-                64, '<=', message='Age of consent must be {}. Got {}')
-        ])
-
-
 class TestModelWithSite(SiteModelMixin, BaseUuidModel):
 
     f1 = models.CharField(max_length=10, default='1')
+
+
+class TestModelWithHistory(SiteModelMixin, BaseUuidModel):
+
+    f1 = models.CharField(max_length=10, default='1')
+
+    history = HistoricalRecords()
+
+
+class TestModelWithDateValidators(BaseModel):
+
+    datetime_not_future = models.DateTimeField(
+        validators=[datetime_not_future],
+        default=get_utcnow())
+
+    date_not_future = models.DateField(
+        validators=[date_not_future],
+        default=get_utcnow())
+
+    datetime_is_future = models.DateTimeField(
+        validators=[datetime_is_future],
+        default=get_utcnow() + relativedelta(days=10))
+
+    date_is_future = models.DateField(
+        validators=[date_is_future],
+        default=get_utcnow().date() + relativedelta(days=10))
+
+
+class TestModelWithPhoneValidators(BaseModel):
+
+    cell = models.CharField(max_length=25, null=True, validators=[CellNumber])
+    tel = models.CharField(max_length=25, null=True,
+                           validators=[TelephoneNumber])

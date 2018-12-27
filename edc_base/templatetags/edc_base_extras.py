@@ -9,8 +9,7 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def age_in_years(context, born):
-    age_in_years = None
-    reference_datetime = context.get('reference_datetime', get_utcnow())
+    reference_datetime = context.get('reference_datetime') or get_utcnow()
     try:
         age_in_years = age(born, reference_datetime).years
     except AgeValueError:

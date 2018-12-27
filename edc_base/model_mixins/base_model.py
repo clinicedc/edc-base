@@ -6,10 +6,10 @@ from edc_model_fields.fields import HostnameModificationField, UserField
 
 from ..constants import BASE_MODEL_UPDATE_FIELDS
 from ..utils import get_utcnow
-from .url_mixin import UrlMixin
+from .url_model_mixin import UrlModelMixin
 
 
-class BaseModel(UrlMixin, models.Model):
+class BaseModel(UrlModelMixin, models.Model):
 
     """Base model class for all models. Adds created and modified'
     values for user, date and hostname (computer).
@@ -58,13 +58,15 @@ class BaseModel(UrlMixin, models.Model):
             # don't allow update_fields to bypass these audit fields
             update_fields = kwargs.get(
                 'update_fields', None) + BASE_MODEL_UPDATE_FIELDS
-            kwargs.update({'update_fields': update_fields})
         except TypeError:
             pass
+        else:
+            kwargs.update({'update_fields': update_fields})
+        dte_modified = get_utcnow()
         if not self.id:
-            self.created = get_utcnow()
-        self.modified = get_utcnow()
-        self.hostname_created = self.hostname_created[:60]
+            self.created = dte_modified
+            self.hostname_created = self.hostname_created[:60]
+        self.modified = dte_modified
         self.hostname_modified = self.hostname_modified[:50]
         super().save(*args, **kwargs)
 

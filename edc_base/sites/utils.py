@@ -5,13 +5,16 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def add_or_update_django_sites(apps=None, sites=None, fqdn=None, verbose=None):
-    """
-        sites format:
+    """Removes default site and adds/updates given `sites`, etc.
+
+    kwargs:
+        * sites: format
             sites = (
                 (<site_id>, <site_name>, <description>),
                 ...)
     """
 
+    fqdn = fqdn or 'example.com'
     apps = apps or django_apps
     Site = apps.get_model('sites', 'Site')
     Site.objects.filter(name='example.com').delete()

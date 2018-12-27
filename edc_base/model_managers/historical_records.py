@@ -30,15 +30,16 @@ class HistoricalRecords(SimpleHistoricalRecords):
     model_cls = SerializableModel
 
     def __init__(self, **kwargs):
-        """Defaults use of UUIDField instead of AutoField.
+        """Defaults use of UUIDField instead of AutoField and
+        serializable base.
         """
         kwargs.update(bases=(self.model_cls, ))
         kwargs.update(history_id_field=models.UUIDField(default=uuid.uuid4))
         super().__init__(**kwargs)
 
-    def get_extra_fields(self, model, fields):
-        """Overridden to add natural key.
-        """
-        extra_fields = super().get_extra_fields(model, fields)
-        extra_fields.update({'natural_key': lambda x: (x.history_id, )})
-        return extra_fields
+#     def get_extra_fields(self, model, fields):
+#         """Overridden to add natural key.
+#         """
+#         extra_fields = super().get_extra_fields(model, fields)
+#         extra_fields.update({'natural_key': lambda x: (x.history_id, )})
+#         return extra_fields
