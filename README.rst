@@ -21,7 +21,7 @@ The mixin:
 
 * sets the id fields to a ``UUIDField`` instead of an integer;
 * adds audit fields through ``BaseModel`` (user_created, user_modified, date_created, etc);
-* adds ``UrlMixin``, ``DeviceModelMixin``
+* adds ``UrlModelMixin``, ``DeviceModelMixin``
 
 Most models require an audit trail. If so, add the ``HistoricalRecord`` model manager.
 

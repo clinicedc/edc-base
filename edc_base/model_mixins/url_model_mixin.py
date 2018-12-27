@@ -4,11 +4,11 @@ from django.db import models
 from django.urls.exceptions import NoReverseMatch
 
 
-class UrlMixinNoReverseMatch(Exception):
+class UrlModelMixinNoReverseMatch(Exception):
     pass
 
 
-class UrlMixin(models.Model):
+class UrlModelMixin(models.Model):
 
     ADMIN_SITE_NAME = None  # default is '{app_label}_admin'
 
@@ -20,7 +20,7 @@ class UrlMixin(models.Model):
             else:
                 absolute_url = reverse(self.admin_url_name)
         except NoReverseMatch as e:
-            raise UrlMixinNoReverseMatch(
+            raise UrlModelMixinNoReverseMatch(
                 f'Tried {self.admin_url_name}. Got {e}. '
                 f'Perhaps define AppConfig.admin_site_name or '
                 f'directly on model.ADMIN_SITE_NAME that refers to your '
@@ -32,10 +32,7 @@ class UrlMixin(models.Model):
         """Returns the django admin add or change url name
         (includes namespace).
         """
-        if self.id:
-            mode = 'change'
-        else:
-            mode = 'add'
+        mode = 'change' if self.id else 'add'
         return (f'{self.admin_site_name}:'
                 f'{self._meta.app_label}_{self._meta.object_name.lower()}_{mode}')
 

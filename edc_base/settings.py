@@ -2,7 +2,7 @@ import os
 import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# ETC_DIR = os.path.join(BASE_DIR.ancestor(1), 'etc')
+
 APP_NAME = 'edc_base'
 
 # Quick-start development settings - unsuitable for production
@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
-    'django_js_reverse',
+    # 'django_js_reverse',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
     'edc_base.apps.AppConfig',

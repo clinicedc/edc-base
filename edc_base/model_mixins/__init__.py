@@ -4,6 +4,5 @@ from ..constants import (
 from .address_mixin import AddressMixin
 from .base_model import BaseModel
 from .base_uuid_model import BaseUuidModel
-from .form_as_json_model_mixin import FormAsJSONModelMixin
 from .report_status_model_mixin import ReportStatusModelMixin
-from .url_mixin import UrlMixin
+from .url_model_mixin import UrlModelMixin, UrlModelMixinNoReverseMatch

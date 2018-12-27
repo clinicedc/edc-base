@@ -6,9 +6,7 @@ import re
 from arrow.arrow import Arrow
 from dateutil import tz
 from dateutil.relativedelta import relativedelta
-from decimal import Decimal, InvalidOperation
 from django.conf import settings
-from django.utils.encoding import force_text
 from math import ceil
 from uuid import uuid4
 
@@ -165,88 +163,3 @@ def convert_from_camel(name):
     """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
-
-class Convert(object):
-
-    def __init__(self, value, convert=None, time_format=None):
-        self.value = value
-        self.convert = False if convert is False else True
-        self.time_format = time_format or '%H:%M'
-
-    def to_value(self):
-        """Converts a string representation of a value into
-        its original datatype.
-
-        For dates and datetimes always returns a time zone
-        aware datetime.
-        """
-        string_value = self.value.strip(' "')
-        if self.convert:
-            try:
-                return self.to_time(string_value)
-            except ConvertError:
-                pass
-            try:
-                return self.to_boolean(string_value)
-            except ConvertError:
-                pass
-            try:
-                return self.to_decimal(string_value)
-            except ConvertError:
-                pass
-            try:
-                return self.to_int(string_value)
-            except ConvertError:
-                pass
-            try:
-                return self.to_datetime(string_value)
-            except ConvertError:
-                pass
-        return string_value
-
-    def to_string(self):
-        try:
-            string_value = self.value.isoformat()
-            try:
-                self.value.time()
-                string_value = '{} {}'.format(
-                    string_value, self.value.strftime(self.time_format))
-            except AttributeError:
-                pass
-        except AttributeError:
-            string_value = str(self.value)
-        return string_value or force_text(self.value)
-
-    def to_time(self, string_value):
-        if re.match(r'^[0-9]{1,2}\:[0-9]{2}$', string_value):
-            return string_value
-        else:
-            raise ConvertError()
-
-    def to_boolean(self, string_value):
-        if string_value.lower() in ['true', 'false', 'none']:
-            return eval(string_value)
-        else:
-            raise ConvertError()
-
-    def to_decimal(self, string_value):
-        if '.' in string_value:
-            try:
-                value = Decimal(string_value)
-                if str(value) == string_value:
-                    return value
-            except ValueError:
-                pass
-            except InvalidOperation:
-                pass
-        raise ConvertError()
-
-    def to_int(self, string_value):
-        try:
-            value = int(string_value)
-            if str(value) == string_value:
-                return value
-        except ValueError:
-            pass
-        raise ConvertError()
