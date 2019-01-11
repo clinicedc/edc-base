@@ -23,8 +23,9 @@ class SerializableModel(models.Model):
 
 class HistoricalRecords(SimpleHistoricalRecords):
 
-    """HistoricalRecords that uses a UUID primary key
-    and has a natural key method available for serialization.
+    """HistoricalRecords that forces a UUID primary key,
+    has a natural key method available for serialization,
+    and respects \'using\'.
     """
 
     model_cls = SerializableModel
@@ -36,10 +37,3 @@ class HistoricalRecords(SimpleHistoricalRecords):
         kwargs.update(bases=(self.model_cls, ))
         kwargs.update(history_id_field=models.UUIDField(default=uuid.uuid4))
         super().__init__(**kwargs)
-
-#     def get_extra_fields(self, model, fields):
-#         """Overridden to add natural key.
-#         """
-#         extra_fields = super().get_extra_fields(model, fields)
-#         extra_fields.update({'natural_key': lambda x: (x.history_id, )})
-#         return extra_fields
