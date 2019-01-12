@@ -10,6 +10,10 @@ from ..sites import SiteModelMixin
 from ..utils import get_utcnow
 
 
+def get_future_date():
+    return get_utcnow() + relativedelta(days=10)
+
+
 class TestSimpleModel(BaseModel):
 
     f1 = models.CharField(max_length=10, null=True)
@@ -52,19 +56,19 @@ class TestModelWithDateValidators(BaseModel):
 
     datetime_not_future = models.DateTimeField(
         validators=[datetime_not_future],
-        default=get_utcnow())
+        default=get_utcnow)
 
     date_not_future = models.DateField(
         validators=[date_not_future],
-        default=get_utcnow())
+        default=get_utcnow)
 
     datetime_is_future = models.DateTimeField(
         validators=[datetime_is_future],
-        default=get_utcnow() + relativedelta(days=10))
+        default=get_future_date)
 
     date_is_future = models.DateField(
         validators=[date_is_future],
-        default=get_utcnow().date() + relativedelta(days=10))
+        default=get_future_date)
 
 
 class TestModelWithPhoneValidators(BaseModel):

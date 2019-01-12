@@ -31,7 +31,7 @@ setup(
         'django-extensions',
         'django-js-reverse',
         'django-logentry-admin',
-        'django-simple-history>2.6.0',
+        #'django-simple-history>2.6.0',
         'django-crypto-fields',
         'django-revision',
         'edc-constants',
