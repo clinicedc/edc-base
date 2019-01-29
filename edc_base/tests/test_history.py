@@ -9,6 +9,8 @@ from .models import TestModelWithHistory
 
 class TestHistory(TestCase):
 
+    databases = '__all__'
+
     def test_history_creates(self):
         obj = TestModelWithHistory.objects.create()
         self.assertEqual(obj.history.all().count(), 1)

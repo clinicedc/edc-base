@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
     'django_revision.apps.AppConfig',
-    # 'django_js_reverse',
     'edc_device.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
     'edc_base.apps.AppConfig',
