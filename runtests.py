@@ -83,9 +83,6 @@ DEFAULT_SETTINGS = dict(
     APP_NAME=app_name,
     EDC_BOOTSTRAP=3,
 
-    #     GIT_DIR = BASE_DIR
-    #     KEY_PATH = os.path.join(BASE_DIR, 'crypto_fields')
-
     DEFAULT_FILE_STORAGE='inmemorystorage.InMemoryStorage',
     MIGRATION_MODULES=DisableMigrations(),
     PASSWORD_HASHERS=('django.contrib.auth.hashers.MD5PasswordHasher', ),
