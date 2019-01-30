@@ -12,10 +12,6 @@ addons:
   apt_packages:
   - libcups2-dev
 
-branches:
-  only:
-  - develop
-
 install:
 - pip install flake8 coveralls tox
 - pip install -e .
@@ -26,7 +22,7 @@ before_script:
 - mysql -e 'create database edc character set utf8;'
 
 script:
-- coverage run --source=edc_base manage.py test
+- coverage run --source=edc_base setup.py test
 
 after_success:
 - coveralls
