@@ -6,7 +6,7 @@ from string import Template
 ID = 0
 NAME = 1
 
-filename_template = '$site_name.$app_name.clinicedc.org.py'
+filename_template = "$site_name.$app_name.clinicedc.org.py"
 
 template = """# $site_name.$app_name gunicorn.conf
 import os
@@ -42,14 +42,19 @@ def create_gunicorn_conf_files(path=None, sites=None, live_or_test=None, workers
         >>> create_gunicorn_conf_files(path=path, sites=ambition_sites, live_or_test='test')
     """
     app_name = settings.APP_NAME
-    live_or_test = 'live' if live_or_test is None else live_or_test
-    workers = workers or '2'
+    live_or_test = "live" if live_or_test is None else live_or_test
+    workers = workers or "2"
     for site in sites:
         site_id = str(site[ID]).zfill(2)
         s = Template(template).safe_substitute(
-            site_id=site_id, site_name=site[NAME], app_name=app_name,
-            live_or_test=live_or_test, workers=workers)
+            site_id=site_id,
+            site_name=site[NAME],
+            app_name=app_name,
+            live_or_test=live_or_test,
+            workers=workers,
+        )
         filename = Template(filename_template).safe_substitute(
-            site_name=site[NAME], app_name=app_name)
-        with open(os.path.join(path, filename), 'w+') as f:
+            site_name=site[NAME], app_name=app_name
+        )
+        with open(os.path.join(path, filename), "w+") as f:
             f.write(s)

@@ -5,16 +5,9 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('edc_base', '0005_userprofile_print_server'),
-    ]
+    dependencies = [("edc_base", "0005_userprofile_print_server")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='userprofile',
-            name='user',
-        ),
-        migrations.DeleteModel(
-            name='UserProfile',
-        ),
+        migrations.RemoveField(model_name="userprofile", name="user"),
+        migrations.DeleteModel(name="UserProfile"),
     ]

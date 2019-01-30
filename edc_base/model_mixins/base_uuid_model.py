@@ -14,7 +14,8 @@ class BaseUuidModel(DeviceModelMixin, BaseModel):
         blank=True,
         editable=False,
         help_text="System auto field. UUID primary key.",
-        primary_key=True)
+        primary_key=True,
+    )
 
     class Meta(BaseModel.Meta):
         abstract = True

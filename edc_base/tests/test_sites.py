@@ -12,14 +12,12 @@ from pprint import pprint
 
 
 class TestForm(SiteModelFormMixin, forms.ModelForm):
-
     class Meta:
         model = TestModelWithSite
-        fields = '__all__'
+        fields = "__all__"
 
 
 class TestSites(SiteTestCaseMixin, TestCase):
-
     @override_settings(SITE_ID=20)
     def test_20(self):
         obj = TestModelWithSite.objects.create()
@@ -43,7 +41,8 @@ class TestSites(SiteTestCaseMixin, TestCase):
     def test_reviewer(self):
         site = Site.objects.get(pk=30)
         self.assertRaises(
-            ReviewerSiteSaveError, TestModelWithSite.objects.create, site=site)
+            ReviewerSiteSaveError, TestModelWithSite.objects.create, site=site
+        )
 
     @override_settings(SITE_ID=30, REVIEWER_SITE_ID=0)
     def test_reviewer_passes(self):
@@ -51,32 +50,30 @@ class TestSites(SiteTestCaseMixin, TestCase):
         try:
             TestModelWithSite.objects.create(site=site)
         except ReviewerSiteSaveError:
-            self.fail('SiteModelError unexpectedly raised')
+            self.fail("SiteModelError unexpectedly raised")
 
     @override_settings(SITE_ID=30, REVIEWER_SITE_ID=0)
     def test_raise_on_save_if_reviewer(self):
         try:
             raise_on_save_if_reviewer(site_id=30)
         except ReviewerSiteSaveError:
-            self.fail('SiteModelError unexpectedly raised')
+            self.fail("SiteModelError unexpectedly raised")
 
-        self.assertRaises(ReviewerSiteSaveError,
-                          raise_on_save_if_reviewer, site_id=0)
+        self.assertRaises(ReviewerSiteSaveError, raise_on_save_if_reviewer, site_id=0)
 
     @override_settings(SITE_ID=30, REVIEWER_SITE_ID=30)
     def test_raise_on_save_in_form(self):
-        form = TestForm(data={'f1': '100'})
+        form = TestForm(data={"f1": "100"})
         self.assertFalse(form.is_valid())
         self.assertIn(
-            'Adding or changing data has been disabled',
-            form.errors.get('__all__')[0])
+            "Adding or changing data has been disabled", form.errors.get("__all__")[0]
+        )
 
 
 class TestSites2(TestCase):
-
     def test_updates_sites(self):
 
-        self.assertIn('example.com', [str(obj) for obj in Site.objects.all()])
+        self.assertIn("example.com", [str(obj) for obj in Site.objects.all()])
 
         sites = default_sites
 
@@ -85,8 +82,7 @@ class TestSites2(TestCase):
         for site in default_sites:
             self.assertIn(site[0], [obj.id for obj in Site.objects.all()])
 
-        self.assertNotIn('example.com', [
-            str(obj) for obj in Site.objects.all()])
+        self.assertNotIn("example.com", [str(obj) for obj in Site.objects.all()])
 
         add_or_update_django_sites(sites=sites, verbose=True)
 
