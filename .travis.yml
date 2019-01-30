@@ -22,7 +22,7 @@ install:
 - pip install -r requirements.txt
 
 before_script:
-- flake8 edc_metadata
+- flake8 edc_base
 - mysql -e 'create database edc character set utf8;'
 
 script:
