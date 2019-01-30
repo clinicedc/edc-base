@@ -8,16 +8,17 @@ from edc_navbar import NavbarViewMixin
 
 class HomeView(EdcBaseViewMixin, NavbarViewMixin, TemplateView):
 
-    template_name = f'edc_base/bootstrap{settings.EDC_BOOTSTRAP}/home.html'
-    navbar_name = 'edc_base'
-    navbar_selected_item = 'edc_base'
+    template_name = f"edc_base/bootstrap{settings.EDC_BOOTSTRAP}/home.html"
+    navbar_name = "edc_base"
+    navbar_selected_item = "edc_base"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(
-            edc_packages=['not available'],
-            third_party_packages=['not available'],
-            installed_apps=settings.INSTALLED_APPS)
+            edc_packages=["not available"],
+            third_party_packages=["not available"],
+            installed_apps=settings.INSTALLED_APPS,
+        )
         return context
 
     @method_decorator(login_required)

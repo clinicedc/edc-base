@@ -42,12 +42,12 @@ class TestModel(BaseUuidModel):
 
 class TestModelWithSite(SiteModelMixin, BaseUuidModel):
 
-    f1 = models.CharField(max_length=10, default='1')
+    f1 = models.CharField(max_length=10, default="1")
 
 
 class TestModelWithHistory(SiteModelMixin, BaseUuidModel):
 
-    f1 = models.CharField(max_length=10, default='1')
+    f1 = models.CharField(max_length=10, default="1")
 
     history = HistoricalRecords()
 
@@ -55,24 +55,21 @@ class TestModelWithHistory(SiteModelMixin, BaseUuidModel):
 class TestModelWithDateValidators(BaseModel):
 
     datetime_not_future = models.DateTimeField(
-        validators=[datetime_not_future],
-        default=get_utcnow)
+        validators=[datetime_not_future], default=get_utcnow
+    )
 
-    date_not_future = models.DateField(
-        validators=[date_not_future],
-        default=get_utcnow)
+    date_not_future = models.DateField(validators=[date_not_future], default=get_utcnow)
 
     datetime_is_future = models.DateTimeField(
-        validators=[datetime_is_future],
-        default=get_future_date)
+        validators=[datetime_is_future], default=get_future_date
+    )
 
     date_is_future = models.DateField(
-        validators=[date_is_future],
-        default=get_future_date)
+        validators=[date_is_future], default=get_future_date
+    )
 
 
 class TestModelWithPhoneValidators(BaseModel):
 
     cell = models.CharField(max_length=25, null=True, validators=[CellNumber])
-    tel = models.CharField(max_length=25, null=True,
-                           validators=[TelephoneNumber])
+    tel = models.CharField(max_length=25, null=True, validators=[TelephoneNumber])

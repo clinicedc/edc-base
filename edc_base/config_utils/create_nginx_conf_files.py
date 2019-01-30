@@ -6,7 +6,7 @@ from string import Template
 ID = 0
 NAME = 1
 
-filename_template = '$site_name.$app_name.$domain.conf'
+filename_template = "$site_name.$app_name.$domain.conf"
 
 template = """# nginx.conf
 
@@ -57,13 +57,14 @@ def create_nginx_conf_files(path=None, sites=None, domain=None):
         >>> create_nginx_conf_files(path=path, sites=ambition_sites)
     """
     app_name = settings.APP_NAME
-    domain = domain or 'clinicedc.org'
+    domain = domain or "clinicedc.org"
     for site in sites:
         site_id = str(site[ID]).zfill(2)
         s = Template(template).safe_substitute(
-            site_name=site[NAME], site_id=site_id,
-            app_name=app_name, domain=domain)
+            site_name=site[NAME], site_id=site_id, app_name=app_name, domain=domain
+        )
         filename = Template(filename_template).safe_substitute(
-            site_name=site[NAME], app_name=app_name, domain=domain)
-        with open(os.path.join(path, filename), 'w+') as f:
+            site_name=site[NAME], app_name=app_name, domain=domain
+        )
+        with open(os.path.join(path, filename), "w+") as f:
             f.write(s)

@@ -10,8 +10,7 @@ class SiteModelError(Exception):
 
 class SiteModelMixin(models.Model):
 
-    site = models.ForeignKey(
-        Site, on_delete=models.PROTECT, null=True, editable=False)
+    site = models.ForeignKey(Site, on_delete=models.PROTECT, null=True, editable=False)
 
     def save(self, *args, **kwargs):
         raise_on_save_if_reviewer()

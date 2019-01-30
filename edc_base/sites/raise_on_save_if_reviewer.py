@@ -14,7 +14,8 @@ def raise_on_save_if_reviewer(site_id=None):
         REVIEWER_SITE_ID = settings.REVIEWER_SITE_ID
     except AttributeError:
         REVIEWER_SITE_ID = 0
-    if int(site_id) == int(REVIEWER_SITE_ID) and 'migrate' not in sys.argv:
+    if int(site_id) == int(REVIEWER_SITE_ID) and "migrate" not in sys.argv:
         raise ReviewerSiteSaveError(
-            f'Adding or changing data has been disabled. '
-            f'Got site \'{site_id}\' is a \'review only\' site code.')
+            f"Adding or changing data has been disabled. "
+            f"Got site '{site_id}' is a 'review only' site code."
+        )

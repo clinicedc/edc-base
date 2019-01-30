@@ -5,7 +5,6 @@ from simple_history.models import HistoricalRecords as SimpleHistoricalRecords
 
 
 class SerializableModelManager(models.Manager):
-
     def get_by_natural_key(self, history_id):
         return self.get(history_id=history_id)
 
@@ -15,7 +14,7 @@ class SerializableModel(models.Model):
     objects = SerializableModelManager()
 
     def natural_key(self):
-        return (self.history_id, )
+        return (self.history_id,)
 
     class Meta:
         abstract = True
@@ -34,6 +33,6 @@ class HistoricalRecords(SimpleHistoricalRecords):
         """Defaults use of UUIDField instead of AutoField and
         serializable base.
         """
-        kwargs.update(bases=(self.model_cls, ))
+        kwargs.update(bases=(self.model_cls,))
         kwargs.update(history_id_field=models.UUIDField(default=uuid.uuid4))
         super().__init__(**kwargs)
