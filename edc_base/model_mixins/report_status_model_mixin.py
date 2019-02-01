@@ -1,7 +1,5 @@
 from django.db import models
 
-# from edc_constants.constants import CLOSED, OPEN
-
 from ..choices import REPORT_STATUS
 from ..model_validators.date import datetime_not_future
 
@@ -20,15 +18,6 @@ class ReportStatusModelMixin(models.Model):
         validators=[datetime_not_future],
         verbose_name=("Date and time report closed."),
     )
-
-    #     @property
-    #     def status(self):
-    #         if self.report_status == CLOSED:
-    #             return 'Closed'
-    #         elif self.report_status == OPEN:
-    #             return 'Open'
-    #         else:
-    #             return self.report_status
 
     class Meta:
         abstract = True
