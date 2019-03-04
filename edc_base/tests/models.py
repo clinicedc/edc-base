@@ -1,13 +1,12 @@
 from dateutil.relativedelta import relativedelta
 from django.db import models
-
-from ..model_managers.historical_records import HistoricalRecords
-from ..model_mixins import BaseUuidModel, BaseModel, ReportStatusModelMixin
-from ..model_validators import datetime_is_future, date_is_future
-from ..model_validators import datetime_not_future, date_not_future
-from ..model_validators import CellNumber, TelephoneNumber
-from ..sites import SiteModelMixin
-from ..utils import get_utcnow
+from edc_utils import get_utcnow
+from edc_model.models import HistoricalRecords
+from edc_model.models import BaseUuidModel, BaseModel, ReportStatusModelMixin
+from edc_model.validators import datetime_is_future, date_is_future
+from edc_model.validators import datetime_not_future, date_not_future
+from edc_model.validators import CellNumber, TelephoneNumber
+from edc_sites.models import SiteModelMixin
 
 
 def get_future_date():
@@ -40,11 +39,6 @@ class TestModel(BaseUuidModel):
     f5_other = models.CharField(max_length=10, null=True)
 
 
-class TestModelWithSite(SiteModelMixin, BaseUuidModel):
-
-    f1 = models.CharField(max_length=10, default="1")
-
-
 class TestModelWithHistory(SiteModelMixin, BaseUuidModel):
 
     f1 = models.CharField(max_length=10, default="1")
@@ -58,7 +52,8 @@ class TestModelWithDateValidators(BaseModel):
         validators=[datetime_not_future], default=get_utcnow
     )
 
-    date_not_future = models.DateField(validators=[date_not_future], default=get_utcnow)
+    date_not_future = models.DateField(
+        validators=[date_not_future], default=get_utcnow)
 
     datetime_is_future = models.DateTimeField(
         validators=[datetime_is_future], default=get_future_date
@@ -72,4 +67,5 @@ class TestModelWithDateValidators(BaseModel):
 class TestModelWithPhoneValidators(BaseModel):
 
     cell = models.CharField(max_length=25, null=True, validators=[CellNumber])
-    tel = models.CharField(max_length=25, null=True, validators=[TelephoneNumber])
+    tel = models.CharField(max_length=25, null=True,
+                           validators=[TelephoneNumber])

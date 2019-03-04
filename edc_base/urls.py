@@ -1,6 +1,7 @@
 from django.urls.conf import path
 from django.conf import settings
-from edc_base.views import HomeView
+
+from .views import HomeView
 
 app_name = "edc_base"
 
