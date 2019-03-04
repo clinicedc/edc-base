@@ -1,8 +1,7 @@
 from django import template
 from django.template.defaultfilters import stringfilter
+from edc_utils import age, get_utcnow, AgeValueError
 from math import ceil
-
-from ..utils import age, get_utcnow, AgeValueError
 
 register = template.Library()
 
@@ -21,5 +20,5 @@ def age_in_years(context, born):
 @stringfilter
 def human(value):
     return "-".join(
-        [value[i * 4 : (i + 1) * 4] for i in range(0, ceil(len(value) / 4))]
+        [value[i * 4: (i + 1) * 4] for i in range(0, ceil(len(value) / 4))]
     )

@@ -1,8 +1,8 @@
-from django.test import TestCase, tag
-from ..templatetags.edc_base_extras import age_in_years, human
-from edc_base.utils import get_utcnow
 from dateutil.relativedelta import relativedelta
-from uuid import uuid4
+from django.test import TestCase, tag  # noqa
+from edc_utils import get_utcnow
+
+from ..templatetags.edc_base_extras import age_in_years, human
 
 
 class TestTemplateTags(TestCase):

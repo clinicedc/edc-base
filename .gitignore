@@ -1,3 +1,6 @@
+.project
+.pyproject
+.settings/
 crypto_fields/
 venv/
 # Swap

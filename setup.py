@@ -10,7 +10,7 @@ with open(join(dirname(__file__), 'README.rst')) as readme:
 with open(join(dirname(__file__), 'VERSION')) as f:
     VERSION = f.read()
 
-tests_require = []
+tests_require = ["edc_model", "edc_utils"]
 with open(join(dirname(abspath(__file__)), 'requirements.txt')) as f:
     for line in f:
         tests_require.append(line.strip())
@@ -41,10 +41,12 @@ setup(
         'django-crypto-fields',
         'django-revision',
         'edc-constants',
-        'edc-device',
+        #         'edc-device',
+        #         'edc-model',
         'edc-model-fields',
         'edc-navbar',
         'edc-protocol',
+        #         'edc-utils',
         'mysqlclient',
         # 'psycopg2-binary',
         'python-dateutil',
