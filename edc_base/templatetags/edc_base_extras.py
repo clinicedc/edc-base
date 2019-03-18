@@ -20,5 +20,5 @@ def age_in_years(context, born):
 @stringfilter
 def human(value):
     return "-".join(
-        [value[i * 4: (i + 1) * 4] for i in range(0, ceil(len(value) / 4))]
+        [value[i * 4 : (i + 1) * 4] for i in range(0, ceil(len(value) / 4))]
     )

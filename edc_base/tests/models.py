@@ -52,8 +52,7 @@ class TestModelWithDateValidators(BaseModel):
         validators=[datetime_not_future], default=get_utcnow
     )
 
-    date_not_future = models.DateField(
-        validators=[date_not_future], default=get_utcnow)
+    date_not_future = models.DateField(validators=[date_not_future], default=get_utcnow)
 
     datetime_is_future = models.DateTimeField(
         validators=[datetime_is_future], default=get_future_date
@@ -67,5 +66,4 @@ class TestModelWithDateValidators(BaseModel):
 class TestModelWithPhoneValidators(BaseModel):
 
     cell = models.CharField(max_length=25, null=True, validators=[CellNumber])
-    tel = models.CharField(max_length=25, null=True,
-                           validators=[TelephoneNumber])
+    tel = models.CharField(max_length=25, null=True, validators=[TelephoneNumber])
